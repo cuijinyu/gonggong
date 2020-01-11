@@ -453,9 +453,20 @@ class AstParser {
         }
         const method = this.getMethodById(id);
         if (method) {
+            method.relatedNodeId.forEach(nid => {
+                const node = this.getNodeById(nid);
+                if (node) {
+                    this.deleteRelationBtMandN(
+                        method,
+                        node
+                    );
+                }
+            })
             const idx = this.astTree.methods.indexOf(method);
+            if (idx === -1) {
+                return false;
+            }
             this.astTree.methods.splice(idx, 1);
-            this.save(`删除方法，方法ID为${id}`);
             return true;
         }
         return false;
@@ -504,7 +515,27 @@ class AstParser {
     }
 
     public deleteStateById(id: string) {
-        this.save(`删除state，state的id为${id}`);
+        if (!this.astTree.states) {
+            this.astTree.states = [];
+            return false;
+        }
+        const state = this.getStateById(id);
+        if (state) {
+            state.relatedNodeId.forEach(nid => {
+                const node = this.getNodeById(nid);
+                if (!node) {
+                    return;
+                }
+                this.deleteRelationBtSandN(state, node);
+            })
+            const stateIdx = this.astTree.states.indexOf(state);
+            if (stateIdx === -1) {
+                return false;
+            }
+            this.astTree.states.splice(stateIdx, 1);
+            return true;
+            // this.save(`删除state，state的id为${id}`);
+        }
     }
 
     // 把 state 和 node 添加关联性
