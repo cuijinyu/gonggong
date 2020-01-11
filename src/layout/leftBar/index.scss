@@ -1,0 +1,10 @@
+@import "../../common/style/mixin.scss";
+
+body {
+    @include b(leftBar) {
+        @include e(wrapper) {
+            @include size(193px, 100%);
+            background: #F3F3F3;
+        }
+    }
+}

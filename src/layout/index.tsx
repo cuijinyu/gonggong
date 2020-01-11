@@ -4,17 +4,24 @@ import Content from './content/content';
 import LeftBar from './leftBar';
 import RightBar from './rightBar';
 import Footer from './footer';
+import "./index.scss";
+import { BEM } from '../common/utils/bem';
+import ErrorBoundary from '../components/errorBoundary/errorBoundary';
 
 const Layout: React.FC<{}> = function () {
     return (
-        <div>
+        <div className={BEM('layout', 'wrapper')}>
             <Header />
-            <div>
+            <div className={BEM('layout', 'middle')}>
                 <LeftBar />
-                    <Content />
+                <div className={BEM('layout', 'middleContent')}>
+                    <ErrorBoundary>
+                        <Content />
+                    </ErrorBoundary>
+                    <Footer />
+                </div>
                 <RightBar />
             </div>
-            <Footer></Footer>
         </div>
     );
 }
