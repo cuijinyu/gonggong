@@ -24,71 +24,71 @@ const { GGErrorLogger, uuid } = Utils;
 /**
  * 每个component的类型
  */
-type AstNodeType = {
+interface AstNodeType {
 
     /**
      * node 的名称 
-     **/ 
+     **/
     name: string,
 
     /** 
      * 是否为布局 node
-     **/ 
+     **/
     isLayoutNode: boolean,
 
     /**
      * node 的容纳能力
-     **/ 
+     **/
     layoutCapacity: number,
 
     /**
      * 放置 node 需求的能力
-     **/ 
+     **/
     nodeDemandCapacity: number,
 
     /**
      * node 的类型
-     **/ 
+     **/
     type: string,
 
     /**
      * node 的id
-     **/ 
+     **/
     id: string,
 
     /**
      * node 相关的 states 的 id 数组
-     **/ 
+     **/
     states: string[],
 
     /**
      * node 相关的配置
-     **/ 
+     **/
     config: ConfigType,
 
     /**
      * node 的父节点 可选项
-     **/ 
-    parentNode?: AstNodeType,
+     **/
+    parentNode?: string,
 
     /**
      * node 的子节点 可选项
-     **/ 
+     **/
     children?: AstNodeType[],
 
     /**
      * node 的下一个兄弟节点 可选项
-     **/ 
+     **/
     nextNode?: string,
 
     /**
      * node 的上一个兄弟节点 可选项
-     **/ 
+     **/
     prevNode?: string,
 
     /**
      * node 关联的方法 ids
-     **/ 
+     **/
     methods: string[],
 
     /**
@@ -131,8 +131,10 @@ type MethodConfigValue = {
     methodId: string
 }
 
+type ConfigValueType = StateConfigValue | StaticConfigValue | MethodConfigValue;
+
 type ConfigType = {
-    [configKey: string]: StateConfigValue | StaticConfigValue | MethodConfigValue
+    [configKey: string]: ConfigValueType
 }
 
 type HistoryType = {
@@ -190,25 +192,78 @@ type AstType = {
  *        2.AstNode 类和物料库进行关联，物料库类的配置传入 AstNode 类生成符合 AstNodeType 规范要求的数据结构
  *        3.ConfigItem 类是用来进行生成符合 config 配置项的要求规范的数据结构的类
  *        4.工厂方法位于 AstParser 类中
- **/ 
-class AstNode {
+ **/
+class AstNode implements AstNodeType {
+    public id: string;
+    public name: string;
+    public isLayoutNode: boolean;
+    public layoutCapacity: number;
+    public nodeDemandCapacity: number;
+    public type: string;
+    public states: string[] = [];
+    public config: ConfigType = {};
+    public parentNode: string | undefined = undefined;
+    public parentPage: string | undefined = undefined;
+    public children: AstNodeType[] = [];
+    public nextNode: string | undefined = undefined;
+    public prevNode: string | undefined = undefined;
+    public methods: string[] = [];
+    public isFirstLevelNode: boolean = false;
 
+    constructor(
+        config: Omit<
+            AstNodeType,
+            'id' | 'nextNode' | 'prevNode' |
+            'method' | 'states' | 'children' |
+            'isFirstLevelNode' | 'parentPage' |
+            'config' | 'parentNode' | 'methods'
+        >
+    ) {
+        this.id = uuid();
+        const {
+            layoutCapacity,
+            isLayoutNode,
+            nodeDemandCapacity,
+            type,
+            name
+        } = config;
+        this.isLayoutNode = isLayoutNode;
+        this.layoutCapacity = layoutCapacity;
+        this.nodeDemandCapacity = nodeDemandCapacity;
+        this.type = type;
+        this.name = name;
+    }
 }
 
-class ConfigItem {
-
+class ConfigItem<T> {
+    public type: 'static' | 'state' | 'method' | undefined;
+    constructor(type: 'static' | 'state' | 'method') {
+        this.type = type;
+    }
 }
 
-class StaticConfigItem extends ConfigItem {
-
+class StaticConfigItem extends ConfigItem<any> {
+    public value: any;
+    constructor(value: any) {
+        super('static');
+        this.value = value;
+    }
 }
 
-class StateConfigItem extends ConfigItem {
-
+class StateConfigItem extends ConfigItem<string> {
+    public stateId: string;
+    constructor(stateId: string) {
+        super('state');
+        this.stateId = stateId;
+    }
 }
 
-class MethodConfigItem extends ConfigItem {
-
+class MethodConfigItem extends ConfigItem<string> {
+    public methodId: string;
+    constructor(methodId: string) {
+        super('method');
+        this.methodId = methodId;
+    }
 }
 
 /**
@@ -283,7 +338,7 @@ class AstParser {
      * 检测是否为有效的AST node节点
      * @param node 
      */
-    private isUsefulNodeType (node: Object): boolean {
+    private isUsefulNodeType(node: Object): boolean {
         if (
             _.has(node, 'type') &&
             _.has(node, 'isLayoutNode')
@@ -293,12 +348,12 @@ class AstParser {
         return false;
     }
 
-     /**
-      * 深搜的内层依赖方法
-      * @param cmp 
-      * @param resultArray 
-      */
-    private walkInComponent (cmp: AstNodeType, resultArray: AstNodeType[]) {
+    /**
+     * 深搜的内层依赖方法
+     * @param cmp 
+     * @param resultArray 
+     */
+    private walkInComponent(cmp: AstNodeType, resultArray: AstNodeType[]) {
         if (
             cmp.isLayoutNode &&
             cmp.children &&
@@ -321,7 +376,7 @@ class AstParser {
      * @param page 
      * @param resultArray 
      */
-    private walkIn (page: PageType, resultArray: AstNodeType[]) {
+    private walkIn(page: PageType, resultArray: AstNodeType[]) {
         if (page.components) {
             resultArray = [
                 ...resultArray,
@@ -330,7 +385,7 @@ class AstParser {
             page.components.forEach(cmp => {
                 this.walkInComponent(cmp, resultArray);
             })
-            return;  
+            return;
         }
         return;
     }
@@ -399,7 +454,7 @@ class AstParser {
         const method = this.getMethodById(id);
         if (method) {
             const idx = this.astTree.methods.indexOf(method);
-            this.astTree.methods.splice(idx, 1);        
+            this.astTree.methods.splice(idx, 1);
             this.save(`删除方法，方法ID为${id}`);
             return true;
         }
@@ -452,12 +507,160 @@ class AstParser {
         this.save(`删除state，state的id为${id}`);
     }
 
+    // 把 state 和 node 添加关联性
+    public relateStateToNode(
+        state: StateType,
+        node: AstNodeType
+    ) {
+        if (
+            !this.isUsefulNodeType(node)
+        ) {
+            GGErrorLogger('请检查关联节点是否正确');
+            return false;
+        }
+        state.relatedNodeId = _.uniqWith(
+            [
+                ...state.relatedNodeId,
+                node.id
+            ]
+        )
+        node.states = _.uniqWith(
+            [
+                ...node.states,
+                node.id
+            ]
+        )
+        return true;
+    }
+
+    // 把 method 和 node 添加关联性
+    public relateMethodToNode(
+        method: MethodType,
+        node: AstNodeType
+    ) {
+        if (
+            !this.isUsefulNodeType(node)
+        ) {
+            GGErrorLogger('请检查关联节点是否正确');
+            return false;
+        }
+        method.relatedNodeId = _.uniqWith(
+            [
+                ...method.relatedNodeId,
+                method.id
+            ]
+        )
+        node.states = _.uniqWith(
+            [
+                ...node.states,
+                method.id
+            ]
+        )
+    }
+
+    // 删除 method 和 node 之间的关联
+    public deleteRelationBtMandN(
+        method: MethodType,
+        node: AstNodeType
+    ) {
+        if (
+            !this.isUsefulNodeType(node)
+        ) {
+            GGErrorLogger('请检查关联节点是否正确');
+            return false;
+        }
+        const methodId = method.id;
+        const nodeId = node.id;
+        const nodeIdIdx = method.relatedNodeId.indexOf(nodeId);
+        const methodIdIdx = node.methods.indexOf(methodId);
+
+        if (nodeIdIdx === -1) {
+            GGErrorLogger('方法关联node列表中没有该node ID');
+        } else {
+            method.relatedNodeId.splice(nodeIdIdx, 1);
+        }
+
+        if (methodIdIdx === -1) {
+            GGErrorLogger('node节点中没有该方法的ID');
+        } else {
+            node.methods.splice(methodIdIdx, 1);
+        }
+
+        return true;
+    }
+
+    // 删除 state 和 node 之间的关联
+    public deleteRelationBtSandN(
+        state: StateType,
+        node: AstNodeType
+    ) {
+        if (
+            !this.isUsefulNodeType(node)
+        ) {
+            GGErrorLogger('请检查关联节点是否正确');
+            return false;
+        }
+
+        const stateId = state.id;
+        const nodeId = node.id;
+        const nodeIdIdx = state.relatedNodeId.indexOf(nodeId);
+        const stateIdIdx = node.methods.indexOf(stateId);
+
+        if (nodeIdIdx === -1) {
+            GGErrorLogger('state 关联node列表中没有该node ID');
+        } else {
+            state.relatedNodeId.splice(nodeIdIdx, 1);
+        }
+
+        if (stateIdIdx === -1) {
+            GGErrorLogger('node节点中没有该 state 的ID');
+        } else {
+            node.methods.splice(stateIdIdx, 1);
+        }
+
+        return true;
+    }
+
+    private clearAllComponentsRelation(node: AstNodeType) {
+        const allComponents = this.getComponentNodeList(node);
+        if (allComponents) {
+            // 清空所有关联
+            allComponents.forEach(cmp => {
+                cmp.methods.forEach(m => {
+                    const md = this.getMethodById(m);
+                    if (md) {
+                        this.deleteRelationBtMandN(
+                            md,
+                            node
+                        )
+                    }
+                })
+
+                cmp.states.forEach(s => {
+                    const st = this.getStateById(s);
+                    if (st) {
+                        this.deleteRelationBtSandN(
+                            st,
+                            node
+                        )
+                    }
+                });
+            })
+            return true;
+        }
+        return false;
+    }
+
     public hasParent(node: AstNodeType) {
         return _.has(node, 'parentNode');
     }
 
     public getParent(node: AstNodeType) {
-        return _.get(node, 'parentNode');
+        const nodeId = _.get(node, 'parentNode');
+        if (nodeId) {
+            return this.getNodeById(nodeId);
+        }
+        return null;
     }
 
     public hasChildren(node: AstNodeType) {
@@ -569,7 +772,7 @@ class AstParser {
 
     public getNodeById(id: string) {
         const resultArray = this.getNodeList();
-        
+
         if (!resultArray) {
             return null;
         }
@@ -609,6 +812,7 @@ class AstParser {
                 const idx = parentPage.components.indexOf(node);
                 if (idx !== -1) {
                     // 如果 idx 存在
+                    this.clearAllComponentsRelation(node);
                     parentPage.components.splice(idx, 1);
                     return true;
                 }
@@ -619,7 +823,23 @@ class AstParser {
             return false;
         } else {
             // 如果不是顶层节点，那么需要归还其顶层节点的存储能力
-
+            const parentNode = this.getParent(node);
+            if (
+                parentNode &&
+                parentNode.children
+            ) {
+                const idx = parentNode.children.indexOf(node);
+                if (idx !== -1) {
+                    this.clearAllComponentsRelation(node);
+                    parentNode.layoutCapacity += node.nodeDemandCapacity;
+                    parentNode.children.splice(idx, 1);
+                    return true;
+                }
+                GGErrorLogger('请检查你的 parentNode 中是否有当前节点');
+                return false;
+            }
+            GGErrorLogger('当前节点的 parentNode 不存在');
+            return false;
         }
     }
 
@@ -657,14 +877,14 @@ class AstParser {
             this.isNodePluggable(target) &&
             target.layoutCapacity >= node.nodeDemandCapacity
         ) {
-           (node as AstNodeType).id = uuid();
-           (node as AstNodeType).isFirstLevelNode = false;
+            (node as AstNodeType).id = uuid();
+            (node as AstNodeType).isFirstLevelNode = false;
             if (target.children.length > 0) {
                 const lastChild = target.children[target.children.length - 1];
                 node.prevNode = lastChild.id;
                 lastChild.nextNode = (node as AstNodeType).id;
             }
-            node.parentNode = target;
+            node.parentNode = target.id;
             target.children.push(node as AstNodeType);
             target.layoutCapacity = target.layoutCapacity - node.nodeDemandCapacity;
             return true;
@@ -680,11 +900,11 @@ class AstParser {
     public appendNodeToPage(node: Omit<AstNodeType, 'id' | 'isFirstLevelNode'>) {
         if (!this.astTree.pages)
             return false;
-        if (!this.selectPage) 
+        if (!this.selectPage)
             return false;
         const page = this.getPageById(this.selectPage);
         if (page) {
-            if(!page.components) {
+            if (!page.components) {
                 page.components = [];
             }
             (node as AstNodeType).id = uuid();
@@ -737,7 +957,7 @@ class AstParser {
                     node.nextNode = target.nextNode;
                 }
                 node.prevNode = target.id;
-                node.parentNode = parentNode;
+                node.parentNode = parentNode.id;
                 (node as AstNodeType).isFirstLevelNode = false;
                 (target as AstNodeType).nextNode = (node as AstNodeType).id;
                 (parentNode as Required<AstNodeType>).children.splice(idx + 1, 0, node as AstNodeType);
@@ -787,7 +1007,7 @@ class AstParser {
                     node.prevNode = target.prevNode;
                 }
                 node.nextNode = target.id;
-                node.parentNode = parentNode;
+                node.parentNode = parentNode.id;
                 (node as AstNodeType).isFirstLevelNode = false;
                 (target as AstNodeType).prevNode = (node as AstNodeType).id;
                 (parentNode as Required<AstNodeType>).children.splice(idx, 0, node as AstNodeType);
@@ -941,32 +1161,58 @@ class AstParser {
         console.groupEnd();
     }
 
-    public makeLayoutNode() {
+    public makeLayoutNode(
+        config: Omit<
+            ConstructorParameters<
+                typeof AstNode
+            >[0],
+            'isLayoutNode'
+        >
+    ) {
+        (config as AstNodeType).isLayoutNode = true;
         // 布局节点的工厂函数
+        return new AstNode(config as AstNodeType);
     }
 
-    public makeFunctionNode() {
+    public makeFunctionNode(
+        config: Omit<
+            ConstructorParameters<
+                typeof AstNode
+            >[0],
+            'isLayoutNode' | 'layoutCapacity'
+        >
+    ) {
         // 功能节点的工厂函数
+        (config as AstNodeType).isLayoutNode = false;
+        return new AstNode(config as AstNodeType);
     }
 
-    public makeConfig() {
+    public makeConfig<T>(
+        node: AstNodeType,
+        k: string,
+        value: ConfigValueType
+    ) {
         // 节点 config 的工厂函数
+        node.config = {
+            ...node.config,
+            k: value
+        }
+        return true;
     }
 
-    public makeValueConfig() {
+    public makeValueConfig(value: any) {
         // config 配置静态 value 的工厂函数
+        return new StaticConfigItem(value) as StaticConfigValue;
     }
 
-    public makeStateConfig() {
+    public makeStateConfig(stateId: string) {
         // config 配置 state 的工厂函数
+        return new StateConfigItem(stateId) as StateConfigValue;
     }
 
-    public makeMethodConfig() {
+    public makeMethodConfig(methodId: string) {
         // config 配置 method 的工厂函数
-    }
-
-    public makePage() {
-        // 页面的工厂函数
+        return new MethodConfigItem(methodId) as MethodConfigValue;
     }
 }
 

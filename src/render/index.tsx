@@ -58,15 +58,33 @@ const node4 = _.cloneDeep(node2);
 node3.name = 'node3';
 node4.name = 'node4';
 
-astParser.appendNodeToPage(node);
+astParser.appendNodeToPage(
+    astParser.makeFunctionNode({
+        name: 'test',
+        type: 'card',
+        nodeDemandCapacity: 2
+    })
+);
 // astParser.appendMethod('function() {}', 'test', node);
 astParser.displayAstTree();
 
 const page = astParser.getSelectPageComponents()[0];
 
-astParser.appendNodeAfter(page, node2);
+astParser.appendNodeAfter(
+    page, 
+    astParser.makeLayoutNode({
+        name: 'layout1',
+        layoutCapacity: 12,
+        nodeDemandCapacity: 1,
+        type: 'row'
+    })
+);
 astParser.appendNodeAfter(page, node3);
 astParser.appendNodeBefore(page, node4);
+console.log(astParser.tree);
+
+astParser.deleteNode(page);
+
 console.log(astParser.tree);
 
 // astParser.appendNode(node, {
@@ -79,10 +97,6 @@ console.log(astParser.tree);
 //     config: {},
 //     methods: []
 // })
-
-astParser.getSelectPageComponents();
-
-console.log(astParser.getNodeList());
 
 
 const Render = function () {
