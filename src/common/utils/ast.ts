@@ -581,9 +581,10 @@ class AstParser {
         node.states = _.uniqWith(
             [
                 ...node.states,
-                node.id
+                state.id
             ]
         )
+        this.save('关联state');
         return true;
     }
 
@@ -601,7 +602,7 @@ class AstParser {
         method.relatedNodeId = _.uniqWith(
             [
                 ...method.relatedNodeId,
-                method.id
+                node.id
             ]
         )
         node.states = _.uniqWith(
@@ -610,6 +611,8 @@ class AstParser {
                 method.id
             ]
         )
+        this.save('关联method')
+        return true;
     }
 
     // 删除 method 和 node 之间的关联
@@ -1091,6 +1094,37 @@ class AstParser {
             }
         }
         this.save('在节点前新增了节点');
+    }
+
+    // TODO: 增加拷贝方法
+    /**
+     * 拷贝节点方法，主要用于列表循环和动态的物料渲染
+     * @param node 被拷贝的 node
+     */
+    public copyNode(node: AstNodeType) {    
+        const clonedNode = _.cloneDeep(node);
+        const cmps = this.walkInComponent(clonedNode);
+        cmps.forEach(component => {
+            component.id = uuid();
+            if (
+                component.states &&
+                component.states.length > 0
+            ) {
+                // 拷贝所有的方法引用
+                if (component.methods) {
+
+                }
+
+                // 拷贝所有的状态引用
+                if (component.states) {
+
+                }
+            }
+        })
+    }
+
+    public compileMethodRelations(method: string): string[] {
+        return [];
     }
 
     public setNodeConfig(node: AstNodeType, config: ConfigType) {

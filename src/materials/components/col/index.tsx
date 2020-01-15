@@ -8,6 +8,20 @@ import { Col } from 'antd';
 @Reflect.metadata('layoutCapacity', 100)
 @Reflect.metadata('nodeDemandCapacity', '1')
 @Reflect.metadata('type', 'Col')
+@Reflect.metadata('config', {
+    span: {
+        name: '列宽度',
+        type: 'select',
+        min: 1,
+        max: 24,
+        default: 1,
+        unit: null
+    },
+    gutter: {
+        name: '间隙',
+        type: 'select'
+    }
+})
 class ColMaterial extends BaseMaterial {
     constructor(props: any) {
         super(props);

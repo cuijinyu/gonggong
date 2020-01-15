@@ -7,8 +7,10 @@ import Util from './helper';
 import Materials from '../materials/index';
 import 'antd/dist/antd.css'
 import { useGlobalContext } from '../context/global';
-// import store from './store/renderStore';
+import { Provider } from 'react-redux';
+import store from './store/renderStore';
 import AstParser, { AstNodeType, ConfigType } from '../common/utils/ast';
+import { addState } from './store/renderAction';
 
 const { injectMethod } = Util;
 
@@ -75,23 +77,50 @@ const Render = function () {
                 input2
             )
 
+            const state = astTool.appendState({
+                name: 'test',
+                initValue: 1
+            })
+            console.log(state);
+            console.log(input)
+            astTool.relateStateToNode(
+                state as any,
+                input
+            )
+
+            dispatch(addState(state));
+
             console.log(astTool);
         }
     }, [astTool, ast]);
 
     useEffect(() => {
         RenderByAstTree();
+        console.log(store.getState());
+        console.log(store.getState());
         return () => {
             
         };
     }, [])
 
+    const { dispatch } = store;
+
     const mapStoreStateToMaterial = (stateId: string) => {
-        
+        const { stateReducer } = store.getState();
+        const filterdStates = stateReducer.states.filter(state => {
+            return state.id === stateId
+        })
+        if (
+            filterdStates &&
+            filterdStates.length > 0
+        ) {
+            return filterdStates[0];
+        }
     }
 
     const mapStoreMethodToMaterial = (methodId: string) => {
-
+        const { methodReducer } = store.getState();
+        const filterdMethod = methodReducer
     }
 
     const mapConfigToMaterial = (config: ConfigType) => {
@@ -145,11 +174,16 @@ const Render = function () {
                 if (astTool.hasChildren(cmp)) {
                     child = renderComponent(cmp);
                 }
+                const rss = astTool.getRelatedStates(cmp) && astTool.getRelatedStates(cmp)[0];
+                if (rss) {
+                    console.log(mapStoreStateToMaterial(rss.id));
+                }
                 return React.createElement(
                     _.get(Materials, cmp.type),
                     {
                         key: cmp.id,
-                        children: child
+                        children: child,
+                        value: rss && mapStoreStateToMaterial(rss.id)
                     }
                 )
             });
@@ -158,13 +192,15 @@ const Render = function () {
     }
 
     return (
-        <div className={BEM('render', 'wrapper')}>
-            <ErrorBoundary>
-                <div>
-                    {renderPage()}
-                </div>
-            </ErrorBoundary>
-        </div>
+        <Provider store={store}>
+            <div className={BEM('render', 'wrapper')}>
+                <ErrorBoundary>
+                    <div>
+                        {renderPage()}
+                    </div>
+                </ErrorBoundary>
+            </div>
+        </Provider>
     )
 }
 

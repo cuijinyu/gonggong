@@ -8,6 +8,9 @@ import { Row } from 'antd';
 @Reflect.metadata('layoutCapacity', 24)
 @Reflect.metadata('nodeDemandCapacity', '1')
 @Reflect.metadata('type', 'Row')
+@Reflect.metadata('config', {
+    
+})
 class RowMaterial extends BaseMaterial {
     constructor(props: any) {
         super(props);

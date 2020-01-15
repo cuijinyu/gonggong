@@ -8,12 +8,21 @@ import { Input } from 'antd';
 @Reflect.metadata('isLayoutNode', false)
 @Reflect.metadata('nodeDemandCapacity', '1')
 @Reflect.metadata('type', 'Input')
-export default class InputMaterial extends BaseMaterial {
+export default class InputMaterial extends BaseMaterial<
+    { value: string }
+> {
     constructor(props: any) {
         super(props);
     }
 
+    onChange(value: Event) {
+        if (value.target) {
+            console.log((value.target as any).value);
+        }
+    }
+
     render() {
-        return <Input />
+        return <Input value={this.props.value} 
+                      onChange={this.onChange as any}/>
     }
 }

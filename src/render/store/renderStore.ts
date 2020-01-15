@@ -7,5 +7,6 @@ const initStore = {
 }
 
 export default createStore(
-    reducer
+    reducer,
+    initStore as any
 );
