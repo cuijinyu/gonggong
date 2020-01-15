@@ -56,7 +56,7 @@ type StateType = {
 type MethodType = {
     id: string,
     name: string,
-    value: any
+    method: any
 }
 
 const stateReducer = function (
@@ -105,7 +105,9 @@ const stateReducer = function (
 }
 
 const methodReducer = function (
-    state = {
+    state: {
+        methods: MethodType[]
+    } = {
         methods: []
     }, 
     action: MethodReducerAction
@@ -113,15 +115,25 @@ const methodReducer = function (
     switch (action.type) {
         case 'addMethod':
             return produce(state, draft => {
-
+                draft.methods.push(
+                    action.payload
+                )
             })
         case 'setMethod':
             return produce(state, draft => {
-
+                const filtedMethod = draft.methods.find(method => method.id === action.payload.id);
+                if (filtedMethod) {
+                    filtedMethod.method = action.payload.value;
+                }
+                return draft;
             })
         case 'deleteMethod':
             return produce(state, draft => {
-                
+                const filtedMethodIdx = draft.methods.findIndex(method => method.id === action.payload.id);
+                if (filtedMethodIdx) {
+                    draft.methods.splice(filtedMethodIdx, 1);
+                }
+                return draft;
             })
         default:
             return state;
