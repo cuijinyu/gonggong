@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
-type MaterialInfoType = {
-    icon: string
-}
+export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
+    getStateById() {
 
-export abstract class BaseMaterial extends Component<{}, MaterialInfoType> {
-    abstract getMaterialInfo (): MaterialInfoType;
-    abstract setMaterialConfig (): {};
+    }
+
+    getMethodById() {
+
+    }
 }

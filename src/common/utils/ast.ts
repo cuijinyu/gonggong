@@ -24,7 +24,7 @@ const { GGErrorLogger, uuid } = Utils;
 /**
  * 每个component的类型
  */
-interface AstNodeType {
+export interface AstNodeType {
 
     /**
      * node 的名称 
@@ -102,10 +102,22 @@ interface AstNodeType {
     parentPage?: string
 }
 
+/**
+ * 用以描述 state 的数据类型
+ */
 type StateType = {
     id: string,
+    /**
+     * 引用此 state 的 node 的 id 数组
+     */
     relatedNodeId: string[],
+    /**
+     * 此 state 的名称
+     */
     name: string,
+    /**
+     * 此 state 的初始值
+     */
     initValue: any
 }
 
@@ -133,7 +145,7 @@ type MethodConfigValue = {
 
 type ConfigValueType = StateConfigValue | StaticConfigValue | MethodConfigValue;
 
-type ConfigType = {
+export type ConfigType = {
     [configKey: string]: ConfigValueType
 }
 
@@ -353,7 +365,8 @@ class AstParser {
      * @param cmp 
      * @param resultArray 
      */
-    private walkInComponent(cmp: AstNodeType, resultArray: AstNodeType[]) {
+    private walkInComponent(cmp: AstNodeType) {
+        let resultArray: AstNodeType[] = [];
         if (
             cmp.isLayoutNode &&
             cmp.children &&
@@ -364,30 +377,36 @@ class AstParser {
                 ...cmp.children
             ];
             cmp.children.forEach(component => {
-                this.walkInComponent(component, resultArray);
+                resultArray = [
+                    ...resultArray,
+                    ...this.walkInComponent(component)
+                ];
             });
-            return;
         }
-        return;
+        return resultArray;
     }
 
     /**
+     * FIX: resultArray 数组赋值有问题
      * 深搜的外层依赖方法
      * @param page 
      * @param resultArray 
      */
-    private walkIn(page: PageType, resultArray: AstNodeType[]) {
+    private walkIn(page: PageType) {
+        let resultArray: AstNodeType[] = [];
         if (page.components) {
             resultArray = [
                 ...resultArray,
                 ...page.components
             ];
             page.components.forEach(cmp => {
-                this.walkInComponent(cmp, resultArray);
+                resultArray = [
+                    ...resultArray,
+                    ...this.walkInComponent(cmp)
+                ];
             })
-            return;
         }
-        return;
+        return resultArray;
     }
 
     public resetAst(ast: string) {
@@ -440,6 +459,7 @@ class AstParser {
         this.astTree.methods.push(methodOption);
         node.methods.push(uid);
         this.save('新增方法');
+        return methodOption;
     }
 
     /**
@@ -506,12 +526,15 @@ class AstParser {
         return this.astTree.states;
     }
 
-    public appendState(stateConfig: StateType) {
+    public appendState(stateConfig: Omit<StateType, 'id' | 'relatedNodeId'>) {
         if (!this.astTree.states) {
             this.astTree.states = [];
         }
-        this.astTree.states.push(stateConfig);
+        (stateConfig as StateType).id = uuid();
+        (stateConfig as StateType).relatedNodeId = [];
+        this.astTree.states.push(stateConfig as StateType);
         this.save(`新增state`);
+        return stateConfig;
     }
 
     public deleteStateById(id: string) {
@@ -695,7 +718,11 @@ class AstParser {
     }
 
     public hasChildren(node: AstNodeType) {
-        return _.has(node, 'children');
+        return (
+            _.has(node, 'children') &&
+            _.isArray(_.get(node, 'children')) &&
+            _.get(node, 'children', []).length > 0
+        );
     }
 
     public getChildren(node: AstNodeType) {
@@ -766,7 +793,7 @@ class AstParser {
         if (this.isUsefulNodeType(node)) {
             resultArray.push(node);
             if (this.isNodePluggable(node)) {
-                this.walkInComponent(node, resultArray);
+                this.walkInComponent(node);
             }
             return resultArray;
         }
@@ -779,7 +806,7 @@ class AstParser {
             page &&
             page.components
         ) {
-            this.walkIn(page, resultArray);
+            resultArray = this.walkIn(page);
             return resultArray;
         }
         return [];
@@ -795,7 +822,10 @@ class AstParser {
         }
 
         this.astTree.pages.forEach(page => {
-            this.walkIn(page, resultArray);
+            resultArray = [
+                ...resultArray,
+                ...this.walkIn(page)
+            ];
         })
 
         return resultArray;
@@ -908,7 +938,9 @@ class AstParser {
             this.isNodePluggable(target) &&
             target.layoutCapacity >= node.nodeDemandCapacity
         ) {
-            (node as AstNodeType).id = uuid();
+            if (!(node as AstNodeType).id) {
+                (node as AstNodeType).id = uuid();
+            }
             (node as AstNodeType).isFirstLevelNode = false;
             if (target.children.length > 0) {
                 const lastChild = target.children[target.children.length - 1];
@@ -918,9 +950,9 @@ class AstParser {
             node.parentNode = target.id;
             target.children.push(node as AstNodeType);
             target.layoutCapacity = target.layoutCapacity - node.nodeDemandCapacity;
+            this.save('新增节点');
             return true;
         }
-        this.save('新增节点');
         return false;
     }
 
@@ -938,7 +970,9 @@ class AstParser {
             if (!page.components) {
                 page.components = [];
             }
-            (node as AstNodeType).id = uuid();
+            if (!(node as AstNodeType).id) {
+                (node as AstNodeType).id = uuid();
+            }
             (node as AstNodeType).isFirstLevelNode = true;
             (node as AstNodeType).parentPage = page.id;
             page.components.push(node as AstNodeType);
@@ -953,7 +987,9 @@ class AstParser {
      * @param node 节点
      */
     public appendNodeAfter(target: AstNodeType, node: Omit<AstNodeType, 'id' | 'isFirstLevelNode'>) {
-        (node as AstNodeType).id = uuid();
+        if (!(node as AstNodeType).id) {
+            (node as AstNodeType).id = uuid();
+        }
         if (target.isFirstLevelNode) {
             const parentPage = this.getParentPageId(target);
             if (parentPage) {
@@ -980,6 +1016,9 @@ class AstParser {
         } else {
             const parentNode = this.getParent(target);
             if (parentNode) {
+                if (parentNode.layoutCapacity < node.nodeDemandCapacity) {
+                    return false;
+                }
                 const idx = (parentNode as Required<AstNodeType>).children.indexOf(target);
                 if (idx === -1) {
                     return false;
@@ -987,6 +1026,7 @@ class AstParser {
                 if (target.nextNode) {
                     node.nextNode = target.nextNode;
                 }
+                parentNode.layoutCapacity -= node.nodeDemandCapacity;
                 node.prevNode = target.id;
                 node.parentNode = parentNode.id;
                 (node as AstNodeType).isFirstLevelNode = false;
@@ -1003,7 +1043,9 @@ class AstParser {
      * @param node 节点
      */
     public appendNodeBefore(target: AstNodeType, node: Omit<AstNodeType, 'id' | 'isFirstLevelNode'>) {
-        (node as AstNodeType).id = uuid();
+        if (!(node as AstNodeType).id) {
+            (node as AstNodeType).id = uuid();
+        }
         if (target.isFirstLevelNode) {
             const parentPage = this.getParentPageId(target);
             if (parentPage) {
@@ -1030,6 +1072,9 @@ class AstParser {
         } else {
             const parentNode = this.getParent(target);
             if (parentNode) {
+                if (parentNode.layoutCapacity < node.nodeDemandCapacity) {
+                    return false;
+                }
                 const idx = (parentNode as Required<AstNodeType>).children.indexOf(target);
                 if (idx === -1) {
                     return false;
@@ -1037,6 +1082,7 @@ class AstParser {
                 if (target.prevNode) {
                     node.prevNode = target.prevNode;
                 }
+                parentNode.layoutCapacity -= node.nodeDemandCapacity;
                 node.nextNode = target.id;
                 node.parentNode = parentNode.id;
                 (node as AstNodeType).isFirstLevelNode = false;
@@ -1078,14 +1124,15 @@ class AstParser {
         if (!this.astTree.pages) {
             this.astTree.pages = [];
         }
-        this.astTree.pages.push({
+        const page = {
             id: uuid(),
             name,
             isIndex,
             path
-        });
+        }
+        this.astTree.pages.push(page);
         this.save('新增了页面');
-        return true;
+        return page;
     }
 
     /**
@@ -1131,6 +1178,11 @@ class AstParser {
      * @param id 
      */
     public setIndexPageById(id: string) {
+        const haveIndexPage = this.getIndexPage();
+        if (haveIndexPage) {
+            GGErrorLogger('已经设置首页了哦');
+            return false;
+        }
         const page = this.getPageById(id);
         if (page) {
             page.isIndex = true;
@@ -1140,10 +1192,33 @@ class AstParser {
         return false;
     }
 
+    public getIndexPage() {
+        const pages = this.tree.pages;
+        if (!pages) {
+            return null;
+        }
+        const filterPage = pages.filter(page => {
+            return page.isIndex === true;
+        });
+        if (
+            filterPage &&
+            filterPage.length > 0
+        ) {
+            return filterPage[0];
+        }
+        return null;
+    }
+
     // 切换页面
     public changePage(id: string) {
         this.selectPage = id;
         return true;
+    }
+
+    public hasSelectPage() {
+        if (this.selectPage)
+            return true;
+        return false;
     }
 
     /**
@@ -1226,7 +1301,7 @@ class AstParser {
         // 节点 config 的工厂函数
         node.config = {
             ...node.config,
-            k: value
+            [k]: value
         }
         return true;
     }

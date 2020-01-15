@@ -1,116 +1,168 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import ErrorBoundary from '../components/errorBoundary/errorBoundary';
+import "reflect-metadata";
 import { BEM } from '../common/utils/bem';
-import { Card, Input } from 'antd';
+import Util from './helper';
+import Materials from '../materials/index';
 import 'antd/dist/antd.css'
-import AstParser from '../common/utils/ast';
+import { useGlobalContext } from '../context/global';
+// import store from './store/renderStore';
+import AstParser, { AstNodeType, ConfigType } from '../common/utils/ast';
 
-const Material = {
-    Card,
-    Input
-}
-
-const astParser = new AstParser('{}', (ast: string) => {});
-
-astParser.createNewPage({
-    name: 'test',
-    isIndex: false,
-    path: '/index'
-})
-
-astParser.createNewPage({
-    name: 'test2',
-    isIndex: true,
-    path: '/bbq'
-})
-
-let pages = astParser.getPageList();
-if (pages)
-    astParser.changePage(pages[0].id);
-const node = {
-    name: 'node1',
-    isLayoutNode: true,
-    layoutCapacity: 12,
-    nodeDemandCapacity: 1,
-    type: 'card',
-    id: '123123',
-    states: [],
-    config: {},
-    methods: []
-}
-
-const node2 = {
-    name: 'node2',
-    isLayoutNode: true,
-    layoutCapacity: 12,
-    nodeDemandCapacity: 1,
-    type: 'card',
-    id: '123123',
-    states: [],
-    config: {},
-    methods: []
-}
-
-const node3 = _.cloneDeep(node2);
-const node4 = _.cloneDeep(node2);
-
-node3.name = 'node3';
-node4.name = 'node4';
-
-astParser.appendNodeToPage(
-    astParser.makeFunctionNode({
-        name: 'test',
-        type: 'card',
-        nodeDemandCapacity: 2
-    })
-);
-// astParser.appendMethod('function() {}', 'test', node);
-astParser.displayAstTree();
-
-const page = astParser.getSelectPageComponents()[0];
-
-astParser.appendNodeAfter(
-    page, 
-    astParser.makeLayoutNode({
-        name: 'layout1',
-        layoutCapacity: 12,
-        nodeDemandCapacity: 1,
-        type: 'row'
-    })
-);
-astParser.appendNodeAfter(page, node3);
-astParser.appendNodeBefore(page, node4);
-console.log(astParser.tree);
-
-astParser.deleteNode(page);
-
-console.log(astParser.tree);
-
-// astParser.appendNode(node, {
-//     name: '',
-//     isLayoutNode: false,
-//     layoutCapacity: 0,
-//     nodeDemandCapacity: 1,
-//     type: 'card',
-//     states: [],
-//     config: {},
-//     methods: []
-// })
-
+const { injectMethod } = Util;
 
 const Render = function () {
-    // const { ast, setAst } = useGlobalContext();
-    const test1 = React.createElement(_.get(Material, 'Input'), {
-        placeholder: '123',
-        onChange: (e) => {
-            console.log(e);
+    const [updater, setUpdater] = useState(0);
+    const tst = React.createElement(Materials.Input, {
+        onClick: injectMethod(`
+            () => {
+                listen('123');
+                emit('234');
+            }
+        `)
+    })
+    const { ast, astTool } = useGlobalContext();
+    const RenderByAstTree = useCallback(() => {
+        const page = astTool.createNewPage({
+            name: 'index',
+            isIndex: true,
+            path: '/index'
+        });
+        astTool.changePage(page.id);
+        if (page) {
+            const row = astTool.makeLayoutNode(
+                Materials.getMetaInfo(
+                    Materials.Row
+                ) as any
+            )
+
+            const col = astTool.makeLayoutNode(
+                Materials.getMetaInfo(
+                    Materials.Col
+                ) as any
+            )
+
+            const input = astTool.makeFunctionNode(
+                Materials.getMetaInfo(
+                    Materials.Input
+                )
+            )
+
+            const input2 = astTool.makeFunctionNode(
+                Materials.getMetaInfo(
+                    Materials.Input
+                )
+            )
+
+            astTool.appendNodeToPage(
+                row
+            )
+
+            astTool.appendNode(
+                row,
+                col
+            )
+
+            astTool.appendNode(
+                col, 
+                input
+            )
+
+
+            astTool.appendNodeAfter(
+                input,
+                input2
+            )
+
+            console.log(astTool);
         }
-    });
+    }, [astTool, ast]);
+
+    useEffect(() => {
+        RenderByAstTree();
+        return () => {
+            
+        };
+    }, [])
+
+    const mapStoreStateToMaterial = (stateId: string) => {
+        
+    }
+
+    const mapStoreMethodToMaterial = (methodId: string) => {
+
+    }
+
+    const mapConfigToMaterial = (config: ConfigType) => {
+        Object.keys(config).map(key => {
+            switch(config[key].type) {
+                case 'static':
+                    break;
+                case 'state':
+                    break;
+                case 'method':
+                    break;
+                default:
+            }
+        })
+    }
+
+    const renderPage = () => {
+        let cmps: AstNodeType[] = [];
+        if (astTool.hasSelectPage()) {
+            cmps = astTool.getSelectPageComponents();
+        } else {
+            const indexPage = astTool.getIndexPage();
+            if (indexPage) {
+                cmps = astTool.getPageComponents(indexPage);
+            }
+
+            const pages = astTool.getPageList();
+            if (
+                pages &&
+                pages.length > 0
+            ) {
+                cmps = astTool.getPageComponents(pages[0]);
+            }
+        }
+
+        return cmps.map(cmp => {
+            return React.createElement(
+                _.get(Materials, cmp.type),
+                {
+                    children: renderComponent(cmp),
+                    key: cmp.id
+                }
+            )
+        })
+    }
+
+    const renderComponent = (father: AstNodeType):any => {
+        if (father.children) {
+            return father.children.map(cmp => {
+                let child = null;
+                if (astTool.hasChildren(cmp)) {
+                    child = renderComponent(cmp);
+                }
+                return React.createElement(
+                    _.get(Materials, cmp.type),
+                    {
+                        key: cmp.id,
+                        children: child
+                    }
+                )
+            });
+        }
+        return null;
+    }
+
     return (
         <div className={BEM('render', 'wrapper')}>
             <ErrorBoundary>
-                {test1}
+                <div>
+                    {renderPage()}
+                </div>
             </ErrorBoundary>
         </div>
     )
