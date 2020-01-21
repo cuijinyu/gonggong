@@ -9,12 +9,14 @@ import 'antd/dist/antd.css'
 import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
 import store from './store/renderStore';
-import AstParser, { AstNodeType, ConfigType } from '../common/utils/ast';
-import { addState } from './store/renderAction';
+import AstParser, { AstNodeType, ConfigType, StaticConfigValue, StateConfigValue, MethodConfigValue } from '../common/utils/ast';
+import { addState, setStateById, addMethod } from './store/renderAction';
+import MaterialHOC from './materialHOC';
+import { configConsumerProps } from 'antd/lib/config-provider';
 
 const { injectMethod } = Util;
 
-const Render = function () {
+const Render: React.FC = function () {
     const [updater, setUpdater] = useState(0);
     const tst = React.createElement(Materials.Input, {
         onClick: injectMethod(`
@@ -81,14 +83,57 @@ const Render = function () {
                 name: 'test',
                 initValue: 1
             })
-            console.log(state);
-            console.log(input)
+            const state2 = astTool.appendState({
+                name: 'test2',
+                initValue: 2
+            })
+            const value = astTool.makeValueConfig(2);
+            const value2 = astTool.makeStateConfig(state2.id);
+            const method = astTool.appendMethod(
+                `
+                (() => {
+                    return function abc(getState, changeState, ajax) {
+                        console.log('compiled')
+                    }
+                })()
+                `,
+                'test',
+                input
+            );
+            const md = astTool.makeMethodConfig(method?.id || '');
+
+            astTool.setNodeKeyConfig(
+                input,
+                'value',
+                value
+            )
+
+            astTool.setNodeKeyConfig(
+                input,
+                'value2',
+                value2
+            )
+
+            astTool.setNodeKeyConfig(
+                input,
+                'onChange',
+                md
+            )
+
             astTool.relateStateToNode(
                 state as any,
                 input
             )
 
             dispatch(addState(state));
+            dispatch(addState(state2));
+            if (method) {
+                dispatch(addMethod({
+                    id: method.id,
+                    name: method.name,
+                    method: method.methodCode as any
+                }))
+            }
 
             console.log(astTool);
         }
@@ -96,46 +141,9 @@ const Render = function () {
 
     useEffect(() => {
         RenderByAstTree();
-        console.log(store.getState());
-        console.log(store.getState());
-        return () => {
-            
-        };
     }, [])
 
     const { dispatch } = store;
-
-    const mapStoreStateToMaterial = (stateId: string) => {
-        const { stateReducer } = store.getState();
-        const filterdStates = stateReducer.states.filter(state => {
-            return state.id === stateId
-        })
-        if (
-            filterdStates &&
-            filterdStates.length > 0
-        ) {
-            return filterdStates[0];
-        }
-    }
-
-    const mapStoreMethodToMaterial = (methodId: string) => {
-        const { methodReducer } = store.getState();
-        const filterdMethod = methodReducer
-    }
-
-    const mapConfigToMaterial = (config: ConfigType) => {
-        Object.keys(config).map(key => {
-            switch(config[key].type) {
-                case 'static':
-                    break;
-                case 'state':
-                    break;
-                case 'method':
-                    break;
-                default:
-            }
-        })
-    }
 
     const renderPage = () => {
         let cmps: AstNodeType[] = [];
@@ -157,13 +165,13 @@ const Render = function () {
         }
 
         return cmps.map(cmp => {
-            return React.createElement(
-                _.get(Materials, cmp.type),
-                {
-                    children: renderComponent(cmp),
-                    key: cmp.id
-                }
-            )
+            return <MaterialHOC config={cmp.config}
+                                materialType={cmp.type}
+                   >
+                       {
+                           renderComponent(cmp)
+                       }
+                   </MaterialHOC>
         })
     }
 
@@ -174,18 +182,10 @@ const Render = function () {
                 if (astTool.hasChildren(cmp)) {
                     child = renderComponent(cmp);
                 }
-                const rss = astTool.getRelatedStates(cmp) && astTool.getRelatedStates(cmp)[0];
-                if (rss) {
-                    console.log(mapStoreStateToMaterial(rss.id));
-                }
-                return React.createElement(
-                    _.get(Materials, cmp.type),
-                    {
-                        key: cmp.id,
-                        children: child,
-                        value: rss && mapStoreStateToMaterial(rss.id)
-                    }
-                )
+                return <MaterialHOC config={cmp.config}
+                                    materialType={cmp.type}>
+                        {child}
+                       </MaterialHOC>
             });
         }
         return null;

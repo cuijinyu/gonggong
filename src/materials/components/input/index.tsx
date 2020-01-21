@@ -9,20 +9,32 @@ import { Input } from 'antd';
 @Reflect.metadata('nodeDemandCapacity', '1')
 @Reflect.metadata('type', 'Input')
 export default class InputMaterial extends BaseMaterial<
-    { value: string }
+    { 
+        value: string,
+        onClick: any,
+        onChange?: any
+    }
 > {
     constructor(props: any) {
         super(props);
+        console.log(this.props);
     }
 
     onChange(value: Event) {
-        if (value.target) {
-            console.log((value.target as any).value);
-        }
+        console.log(this)
+        console.log(value)
+        // if (!this.props.onChange) {
+        //     if (value.target) {
+        //         console.log((value.target as any).value);
+        //     }
+        //     return;
+        // }
+        // this.props.onChange()
     }
 
     render() {
         return <Input value={this.props.value} 
-                      onChange={this.onChange as any}/>
+                      onClick={this.props.onClick}
+                      onChange={this.props.onChange as any}/>
     }
 }

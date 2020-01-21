@@ -128,17 +128,17 @@ type MethodType = {
     methodCode: string
 }
 
-type StaticConfigValue = {
+export type StaticConfigValue = {
     type: 'static',
     value: any
 }
 
-type StateConfigValue = {
+export type StateConfigValue = {
     type: 'state',
     stateId: string
 }
 
-type MethodConfigValue = {
+export type MethodConfigValue = {
     type: 'method',
     methodId: string
 }
@@ -535,7 +535,7 @@ class AstParser {
         (stateConfig as StateType).relatedNodeId = [];
         this.astTree.states.push(stateConfig as StateType);
         this.save(`新增state`);
-        return stateConfig;
+        return stateConfig as StateType;
     }
 
     public deleteStateById(id: string) {
@@ -1131,6 +1131,11 @@ class AstParser {
     public setNodeConfig(node: AstNodeType, config: ConfigType) {
         node.config = config;
         this.save('保存了节点配置');
+        return true;
+    }
+
+    public setNodeKeyConfig(node: AstNodeType, key: string, config: ConfigValueType) {
+        node.config[key] = config;
         return true;
     }
 
