@@ -125,6 +125,8 @@ type MethodType = {
     id: string,
     name: string,
     relatedNodeId: string[],
+    listen?: string[],
+    emit?: string[],
     methodCode: string
 }
 
@@ -292,10 +294,17 @@ class AstParser {
      * @param initAst 初始化的 Ast 字符串
      * @param astSetter 外界的 ast 修改触发函数
      */
-    constructor(initAst: string, astSetter: (ast: string) => void) {
+    constructor(
+        initAst: string, 
+        astSetter: (ast: string) => void,
+        listener?: (func: any) => void
+    ) {
         this.ast = initAst;
         this.astSetter = astSetter;
         this.safeParser();
+        if (listener) {
+            this.listener = listener;
+        }
     }
 
     /**
@@ -309,6 +318,7 @@ class AstParser {
     }
 
     private ast: string = '';
+    private listener: any;
 
     // 历史记录
     private history: HistoryType[] = [];
@@ -345,6 +355,9 @@ class AstParser {
         const formattedAst = JSON.stringify(this.astTree);
         this.ast = formattedAst;
         this.astSetter(formattedAst);
+        if (this.listener) {
+            this.listener(this);
+        }
     }
 
     /**
@@ -488,6 +501,7 @@ class AstParser {
                 return false;
             }
             this.astTree.methods.splice(idx, 1);
+            this.save('删除了某个方法');
             return true;
         }
         return false;
@@ -496,6 +510,50 @@ class AstParser {
     public getMethodsList(): MethodType[] {
         const methods = _.get(this.astTree, 'methods', []);
         return methods;
+    }
+
+    // 联通多个方法，在渲染引擎中使用闭包完成
+    public chainTwoMethod(firstMethodId: string, secondMethodId: string) {
+        const firstMethod = this.getMethodById(firstMethodId);
+        const secondMethod = this.getMethodById(secondMethodId);
+        if (
+            firstMethod &&
+            secondMethod
+        ) {
+            // 如果两个方法都存在，才进行下一步操作
+            if (!firstMethod.emit) {
+                firstMethod.emit = [];
+            }
+            if (!secondMethod.listen) {
+                secondMethod.listen = [];
+            }
+            firstMethod.emit.push(secondMethodId);
+            secondMethod.listen.push(firstMethodId);
+            this.save('增加方法关联');
+            return true;
+        }
+        return false;
+    }
+
+    public removeChainBtTwoMethod (firstMethodId: string, secondMethodId: string) {
+        const firstMethod = this.getMethodById(firstMethodId);
+        const secondMethod = this.getMethodById(secondMethodId);
+        if (
+            firstMethod &&
+            secondMethod
+        ) {
+            if (firstMethod.emit) {
+                const idx = firstMethod.emit.findIndex(id => id === secondMethodId)
+                firstMethod.emit.splice(idx, 1);
+            }
+            if (secondMethod.listen) {
+                const idx = secondMethod.listen.findIndex(id => id === firstMethodId)
+                secondMethod.listen.splice(idx, 1);
+            }
+            this.save('删除方法关联');
+            return true;
+        }
+        return false;
     }
 
     public getStateById(id: string) {
@@ -541,6 +599,7 @@ class AstParser {
     public deleteStateById(id: string) {
         if (!this.astTree.states) {
             this.astTree.states = [];
+            this.save('初始化 state 数组');
             return false;
         }
         const state = this.getStateById(id);
@@ -557,6 +616,7 @@ class AstParser {
                 return false;
             }
             this.astTree.states.splice(stateIdx, 1);
+            this.save('删除了某个state');
             return true;
             // this.save(`删除state，state的id为${id}`);
         }
@@ -643,6 +703,7 @@ class AstParser {
         } else {
             node.methods.splice(methodIdIdx, 1);
         }
+        this.save('删除 method 和 node 的关联');
 
         return true;
     }
@@ -676,6 +737,8 @@ class AstParser {
             node.methods.splice(stateIdIdx, 1);
         }
 
+        this.save('删除 state 和 node 的关联');
+
         return true;
     }
 
@@ -704,6 +767,7 @@ class AstParser {
                     }
                 });
             })
+            this.save('清空了某个 node 的所有关联');
             return true;
         }
         return false;
@@ -879,6 +943,7 @@ class AstParser {
                     // 如果 idx 存在
                     this.clearAllComponentsRelation(node);
                     parentPage.components.splice(idx, 1);
+                    this.save('删除了一个 node');
                     return true;
                 }
                 GGErrorLogger('请检查你的 parentPage 中是否有当前节点');
@@ -898,6 +963,7 @@ class AstParser {
                     this.clearAllComponentsRelation(node);
                     parentNode.layoutCapacity += node.nodeDemandCapacity;
                     parentNode.children.splice(idx, 1);
+                    this.save('删除了一个 node');
                     return true;
                 }
                 GGErrorLogger('请检查你的 parentNode 中是否有当前节点');

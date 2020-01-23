@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, Provider } from 'react-redux';
 import _ from 'lodash';
+import PropTypes from 'prop-types'
 import store from './store/renderStore';
 import Materials from '../materials/index';
-import { ConfigType, StateConfigValue, StaticConfigValue, MethodConfigValue } from '../common/utils/ast';
+import AstParser, { ConfigType, StateConfigValue, StaticConfigValue, MethodConfigValue } from '../common/utils/ast';
 import { setStateById } from './store/renderAction';
+import { isProd } from '../common/utils/prod';
+import "./mhoc.scss";
+import { BEM } from '../common/utils/bem';
+import { injectMethod } from './helper';
+import { GlobalContext } from '../context/global';
 
 type stateType = ReturnType<typeof store.getState>
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -16,27 +22,27 @@ const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
 }
 
 const mapStoreMethodToMaterial = (state: stateType, methodId: string) => {
-    const noop = () => {};
+    const noop = () => { };
     if (!state.methodReducer.methods) {
         return noop;
     }
     const filterdMethod = state.methodReducer.methods.find(method => method.id === methodId);
-    const compiledMethod = eval(filterdMethod?.method) || noop;
+    const compiledMethod = injectMethod(filterdMethod?.method) || noop;
     return compiledMethod;
 }
 
 const mapConfigToMaterial = (state: stateType, config: ConfigType) => {
     let obj = {} as any;
     Object.keys(config).map(key => {
-        switch(config[key].type) {
+        switch (config[key].type) {
             case 'static':
-                obj[key] = (config[key] as StaticConfigValue).value;
+                obj[key] = (config[key] as StaticConfigValue).value
                 break;
             case 'state':
                 obj[key] = mapStoreStateToMaterial(state, (config[key] as StateConfigValue).stateId);
                 break;
             case 'method':
-                obj[key] = mapStoreMethodToMaterial(state, (config[key] as MethodConfigValue).methodId);
+                obj[key] = mapStoreMethodToMaterial(state, (config[key] as MethodConfigValue).methodId)
                 break;
         }
     })
@@ -44,22 +50,64 @@ const mapConfigToMaterial = (state: stateType, config: ConfigType) => {
 }
 
 class MaterialHOC extends Component<
-    { 
+    {
         config: ConfigType,
+        astTool: AstParser,
         materialType: string,
         children?: any
+    },
+    {
+        isProd: boolean,
+        isLayout: boolean
     }
-> {
-    constructor (props: any) {
+    > {
+
+    static contextType = GlobalContext;
+
+    constructor(props: any) {
         super(props);
+        this.state = {
+            isProd: isProd(),
+            isLayout: this.isLayout()
+        }
+    }
+
+    componentDidMount() {
+        console.log(this.context.astTool)
+        console.log(this.context.astTool.getHistorys())
+        console.log(this.props.astTool === this.context.astTool);
+    }
+
+    isLayout() {
+        const layoutArray = new Set();
+        layoutArray.add('Row');
+        layoutArray.add('Col');
+        return layoutArray.has(this.props.materialType)
+    }
+
+    getRelatedState() {
+
+    }
+
+    getRelatedMethod() {
+        
     }
 
     render() {
-        return React.createElement(
-            _.get(Materials, this.props.materialType),
-            {
-                ...this.props
-            }
+        return (
+            <div
+                className={
+                    this.state.isProd ? '' : BEM('render', 'hoc')
+                }>
+                {
+                    React.createElement(
+                        _.get(Materials, this.props.materialType),
+                        {
+                            ...this.props,
+                        }
+                    )
+                }
+            </div>
         )
     }
 }
@@ -76,7 +124,7 @@ const mapDispatchToProps = (
     ownProps: { config: ConfigType }
 ) => {
     return {
-        changeState: (id:string, value:any) => {
+        changeState: (id: string, value: any) => {
             dispatch(
                 setStateById({
                     id,

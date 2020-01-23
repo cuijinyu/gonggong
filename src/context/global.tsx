@@ -4,14 +4,23 @@ import AstParser, { AstNodeType } from '../common/utils/ast';
 type GlobalContextType = {
     ast: string,
     astTool: AstParser,
-    setAst: (ast: string) => string
+    setAst: (ast: string) => void
 }
 
-const GlobalContext = React.createContext({});
+const GlobalContext = React.createContext<
+    GlobalContextType
+>({} as any);
 
 const GlobalContextProvider: FC = ({ children }) => {
     const [ast, setAst] = useState<string>('{}');
-    const astTool = new AstParser(ast, setAst);
+    const [astTool, setAstTool] = useState<AstParser>(
+        new AstParser(
+            ast, 
+            setAst,
+            (at) => setAstTool(at)
+        )    
+    ); 
+    
     return (
         <GlobalContext.Provider value={{
             ast,

@@ -69,7 +69,7 @@ const Render: React.FC = function () {
             )
 
             astTool.appendNode(
-                col, 
+                col,
                 input
             )
 
@@ -91,11 +91,9 @@ const Render: React.FC = function () {
             const value2 = astTool.makeStateConfig(state2.id);
             const method = astTool.appendMethod(
                 `
-                (() => {
-                    return function abc(getState, changeState, ajax) {
-                        console.log('compiled')
-                    }
-                })()
+                function abc() {
+                    console.log(state, method, setState, ajax);
+                }
                 `,
                 'test',
                 input
@@ -104,13 +102,13 @@ const Render: React.FC = function () {
 
             astTool.setNodeKeyConfig(
                 input,
-                'value',
+                'value2',
                 value
             )
 
             astTool.setNodeKeyConfig(
                 input,
-                'value2',
+                'value',
                 value2
             )
 
@@ -165,27 +163,31 @@ const Render: React.FC = function () {
         }
 
         return cmps.map(cmp => {
-            return <MaterialHOC config={cmp.config}
-                                materialType={cmp.type}
-                   >
-                       {
-                           renderComponent(cmp)
-                       }
-                   </MaterialHOC>
+            return <MaterialHOC 
+                astTool={astTool}
+                config={cmp.config}
+                materialType={cmp.type}
+            >
+                {
+                    renderComponent(cmp)
+                }
+            </MaterialHOC>
         })
     }
 
-    const renderComponent = (father: AstNodeType):any => {
+    const renderComponent = (father: AstNodeType): any => {
         if (father.children) {
             return father.children.map(cmp => {
                 let child = null;
                 if (astTool.hasChildren(cmp)) {
                     child = renderComponent(cmp);
                 }
-                return <MaterialHOC config={cmp.config}
-                                    materialType={cmp.type}>
-                        {child}
-                       </MaterialHOC>
+                return <MaterialHOC
+                    astTool={astTool}
+                    config={cmp.config}
+                    materialType={cmp.type}>
+                    {child}
+                </MaterialHOC>
             });
         }
         return null;
@@ -203,5 +205,10 @@ const Render: React.FC = function () {
         </Provider>
     )
 }
+
+injectMethod(`function abc() {
+    console.log('!!!!!!!!!!!!!')
+    console.log(state, method, setState, ajax)
+}`);
 
 export default Render;
