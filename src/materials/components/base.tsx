@@ -8,4 +8,12 @@ export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
     getMethodById() {
 
     }
+
+    getRouterInfo() {
+
+    }
+
+    getAuthInfo() {
+        
+    }
 }

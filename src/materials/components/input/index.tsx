@@ -8,6 +8,9 @@ import { Input } from 'antd';
 @Reflect.metadata('isLayoutNode', false)
 @Reflect.metadata('nodeDemandCapacity', '1')
 @Reflect.metadata('type', 'Input')
+@Reflect.metadata('config', {
+    
+})
 export default class InputMaterial extends BaseMaterial<
     { 
         value: string,
