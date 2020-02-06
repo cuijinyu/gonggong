@@ -7,18 +7,15 @@ const namespace = 'gg';
  * @param M Modify
  * @constructor
  */
-const BEM = (B?:string, E?:string, M?:string):string => {
-    let className = namespace;
-    if (B) {
-        className += `-${B}`;
-    }
-    if (E) {
-        className += `__${E}`;
-    }
-    if (M) {
-        className += `--${M}`;
-    }
-    return className;
+const BEM = (B?: string, E?: string, M?: string): string => {
+  let className = namespace;
+  if (B) className += `-${B}`;
+
+  if (E) className += `__${E}`;
+
+  if (M) className += `--${M}`;
+
+  return className;
 };
 
 /**
@@ -26,11 +23,8 @@ const BEM = (B?:string, E?:string, M?:string):string => {
  * @param state
  * @constructor
  */
-const S = (state:string):string => {
+const S = (state: string): string => {
   return `is-${state}`;
 };
 
-export {
-    BEM,
-    S
-}
+export { BEM, S };

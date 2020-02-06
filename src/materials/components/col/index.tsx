@@ -9,27 +9,27 @@ import { Col } from 'antd';
 @Reflect.metadata('nodeDemandCapacity', '1')
 @Reflect.metadata('type', 'Col')
 @Reflect.metadata('config', {
-    span: {
-        name: '列宽度',
-        type: 'select',
-        min: 1,
-        max: 24,
-        default: 1,
-        unit: null
-    },
-    gutter: {
-        name: '间隙',
-        type: 'select'
-    }
+  span: {
+    name: '列宽度',
+    type: 'select',
+    min: 1,
+    max: 24,
+    default: 1,
+    unit: null,
+  },
+  gutter: {
+    name: '间隙',
+    type: 'select',
+  },
 })
 class ColMaterial extends BaseMaterial {
-    constructor(props: any) {
-        super(props);
-    }
+  constructor(props: any) {
+    super(props);
+  }
 
-    render() {
-        return <Col>{this.props.children}</Col>
-    }
+  render() {
+    return <Col>{this.props.children}</Col>;
+  }
 }
 
 export default ColMaterial;

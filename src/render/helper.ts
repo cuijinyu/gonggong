@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import _ from 'lodash';
 import Axios from 'axios';
@@ -7,22 +9,20 @@ import eventBus from 'eventbus';
 import { isProd } from '../common/utils/prod';
 
 type ListenEvent = {
-    id: string,
-    trigger: any
-}
-
-const listenEventsArray:ListenEvent[] = [];
-
-const createMaterial = <GP extends Object>(name: string, group: GP, props: any) => {
-    return React.createElement(_.get(group, name), props);
+  id: string;
+  trigger: any;
 };
 
-const ajaxAdapter = () => {
+const listenEventsArray: ListenEvent[] = [];
 
-}
+const createMaterial = <GP extends Record<string, any>>(name: string, group: GP, props: any) => {
+  return React.createElement(_.get(group, name), props);
+};
+
+const ajaxAdapter = () => {};
 
 const wrapMethod = (method: string) => {
-    return `
+  return `
         (() => function temp(
             state,
             method,
@@ -31,73 +31,56 @@ const wrapMethod = (method: string) => {
         ) {
             (${method})()
         })()
-    `
+    `;
 };
 
 const Ajax = {
-    client: Axios,
-    isProd: isProd()
-}
+  client: Axios,
+  isProd: isProd(),
+};
 
 export const injectMethod = (method: string) => {
-    const _method = wrapMethod(method);
-    const compiledMethod = compileMethod(_method);
-    const getState = store.getState;
-    return compiledMethod.bind(
-        null, 
-        getState,
-        () => {},
-        store.dispatch,
-        Ajax
-    );
-}
+  const _method = wrapMethod(method);
+  const compiledMethod = compileMethod(_method);
+  const getState = store.getState;
+  return compiledMethod.bind(null, getState, () => {}, store.dispatch, Ajax);
+};
 
-export const chainMethod = (method:string, chainMethodArray: string[]) => {
-    const listen = (id: any) => {
-        
-    }
+export const chainMethod = (method: string, chainMethodArray: string[]) => {
+  const listen = (id: any) => {};
 
-    const emit = (id: string) => {
-        const filterdEvent = listenEventsArray.find(ev => ev.id === id);
-        if (filterdEvent) {
-            filterdEvent.trigger()
-        }
-    }
+  const emit = (id: string) => {
+    const filterdEvent = listenEventsArray.find(ev => ev.id === id);
+    if (filterdEvent) filterdEvent.trigger();
+  };
 
-    const wrapMethodChain = (method: string, method1: string, method2: string) => {
-        return `
+  const wrapMethodChain = (method: string, method1: string, method2: string) => {
+    return `
             (
-                ${
-                    method
-                }()
+                ${method}()
             )()
-        `
-    }
+        `;
+  };
+};
 
-}
+export const injectState = () => {};
 
-export const injectState = () => {
-
-}
-
-export const pageJump = () => {
-
-}
+export const pageJump = () => {};
 
 export const injectStyleClass = (styleClass: string) => {
-    const body = document.getElementsByTagName('body')[0];
-    const style = document.createElement('style');
-    style.innerHTML = styleClass;
-    body.appendChild(style);
-}
+  const body = document.getElementsByTagName('body')[0];
+  const style = document.createElement('style');
+  style.innerHTML = styleClass;
+  body.appendChild(style);
+};
 
 export const compileMethod = (method: string) => {
-    return eval(method);
-}
+  return eval(method);
+};
 
 export default {
-    createMaterial,
-    injectMethod
-}
+  createMaterial,
+  injectMethod,
+};
 
-console.log(eventBus)
+console.log(eventBus);

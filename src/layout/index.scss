@@ -1,24 +1,23 @@
-@import "../common/style/mixin.scss";
+@import '../common/style/mixin.scss';
 
 body {
-    @include b(layout) {
-
-        @include e(wrapper) {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @include e(middle) {
-            display: flex;
-            flex-wrap: wrap;
-            flex: 1;
-        }
-
-        @include e(middleContent) {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+  @include b(layout) {
+    @include e(wrapper) {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
+
+    @include e(middle) {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    @include e(middleContent) {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }

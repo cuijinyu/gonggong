@@ -9,18 +9,16 @@ import Login from './pages/login';
 
 setProd(false);
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <GlobalContextProvider>
-        <BrowserRouter>
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/login" component={Login}/>
-          <Route exact path="/layout" component={Layout}/>
-        </BrowserRouter>
-      </GlobalContextProvider>
-    </div>
-  );
-}
+const App: React.FC = () => (
+  <div className="App">
+    <GlobalContextProvider>
+      <BrowserRouter>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/layout" component={Layout} />
+      </BrowserRouter>
+    </GlobalContextProvider>
+  </div>
+);
 
 export default App;

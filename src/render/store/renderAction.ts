@@ -1,116 +1,116 @@
 export const setStateById = ({
-    id = '',
-    value = ''
+  id = '',
+  value = '',
 }): {
-    type: typeof SET_STATE,
-    payload: {
-        id: string,
-        value: any
-    }
+  type: typeof SET_STATE;
+  payload: {
+    id: string;
+    value: any;
+  };
 } => {
-    return {
-        type: SET_STATE,
-        payload: {
-            id,
-            value
-        }
-    }
-}
+  return {
+    type: SET_STATE,
+    payload: {
+      id,
+      value,
+    },
+  };
+};
 
 export const setMethodById = ({
-    id = '',
-    value = ''
+  id = '',
+  value = '',
 }): {
-    type: typeof SET_METHOD,
-    payload: {
-        id: string,
-        value: any
-    }
+  type: typeof SET_METHOD;
+  payload: {
+    id: string;
+    value: any;
+  };
 } => {
-    return {
-        type: SET_METHOD,
-        payload: {
-            id,
-            value
-        }
-    }
-}
+  return {
+    type: SET_METHOD,
+    payload: {
+      id,
+      value,
+    },
+  };
+};
 
 export const addState = ({
-    id = '',
-    name = '',
-    initValue = ''
+  id = '',
+  name = '',
+  initValue = '',
 }): {
-    type: typeof ADD_STATE,
-    payload: {
-        id: string,
-        name: string,
-        initValue: any
-    }
+  type: typeof ADD_STATE;
+  payload: {
+    id: string;
+    name: string;
+    initValue: any;
+  };
 } => {
-    return {
-        type: ADD_STATE,
-        payload: {
-            id,
-            name,
-            initValue
-        }
-    }
-}
+  return {
+    type: ADD_STATE,
+    payload: {
+      id,
+      name,
+      initValue,
+    },
+  };
+};
 
 export const addMethod = ({
-    id = '',
-    name = '',
-    method = () => {}
+  id = '',
+  name = '',
+  method = () => {},
 }): {
-    type: typeof ADD_METHOD,
-    payload: {
-        id: string,
-        name: string,
-        method: any
-    }
+  type: typeof ADD_METHOD;
+  payload: {
+    id: string;
+    name: string;
+    method: any;
+  };
 } => {
-    return {
-        type: ADD_METHOD,
-        payload: {
-            id,
-            name,
-            method
-        }
-    }
-}
+  return {
+    type: ADD_METHOD,
+    payload: {
+      id,
+      name,
+      method,
+    },
+  };
+};
 
 export const deleteState = ({
-    id = ''
-}) : {
-    type: typeof DELETE_STATE,
-    payload: {
-        id: string
-    }
+  id = '',
+}): {
+  type: typeof DELETE_STATE;
+  payload: {
+    id: string;
+  };
 } => {
-    return {
-        type: DELETE_STATE,
-        payload: {
-            id
-        }
-    }
-}
+  return {
+    type: DELETE_STATE,
+    payload: {
+      id,
+    },
+  };
+};
 
 export const deleteMethod = ({
-    id = ''
+  id = '',
 }): {
-    type: typeof DELETE_METHOD,
-    payload: {
-        id: string
-    }
+  type: typeof DELETE_METHOD;
+  payload: {
+    id: string;
+  };
 } => {
-    return {
-        type: DELETE_METHOD,
-        payload: {
-            id
-        }
-    }
-}
+  return {
+    type: DELETE_METHOD,
+    payload: {
+      id,
+    },
+  };
+};
 
 export const SET_STATE = 'setState';
 export const SET_METHOD = 'setMethod';

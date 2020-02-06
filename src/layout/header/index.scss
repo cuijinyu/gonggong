@@ -1,17 +1,17 @@
-@import "../../common/style/mixin.scss";
+@import '../../common/style/mixin.scss';
 
 body {
-    @include b(header) {
-        @include e(wrapper) {
-            background: #2C2C2C;
-            color: white;
-            padding-left: 10px;
-            padding-right: 10px;
-            box-sizing: border-box;
+  @include b(header) {
+    @include e(wrapper) {
+      background: #2c2c2c;
+      color: white;
+      padding-left: 10px;
+      padding-right: 10px;
+      box-sizing: border-box;
 
-            @include size(100%, 33px);
-            line-height: 33px;
-            font-size: 10px;
-        }
+      @include size(100%, 33px);
+      line-height: 33px;
+      font-size: 10px;
     }
+  }
 }

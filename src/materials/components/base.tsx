@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 
 export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
-    getStateById() {
+  getStateById() {}
 
-    }
+  getMethodById() {}
 
-    getMethodById() {
+  getRouterInfo() {}
 
-    }
-
-    getRouterInfo() {
-
-    }
-
-    getAuthInfo() {
-        
-    }
+  getAuthInfo() {}
 }
