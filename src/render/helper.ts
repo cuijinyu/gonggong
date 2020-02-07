@@ -7,6 +7,7 @@ import store from './store/renderStore';
 //@ts-ignore
 import eventBus from 'eventbus';
 import { isProd } from '../common/utils/prod';
+import { setStateById } from './store/renderAction';
 
 type ListenEvent = {
   id: string;
@@ -39,11 +40,13 @@ const Ajax = {
   isProd: isProd(),
 };
 
-export const injectMethod = (method: string) => {
+export const injectMethod = (method: string, id: string, changeState: (id: string, value: any) => any) => {
   const _method = wrapMethod(method);
   const compiledMethod = compileMethod(_method);
-  const getState = store.getState;
-  return compiledMethod.bind(null, getState, () => {}, store.dispatch, Ajax);
+
+  const { getState, dispatch } = store;
+
+  return compiledMethod.bind(null, getState, () => {}, changeState.bind(null, id), Ajax);
 };
 
 export const chainMethod = (method: string, chainMethodArray: string[]) => {

@@ -11,6 +11,7 @@ import './mhoc.scss';
 import { BEM } from '../common/utils/bem';
 import { injectMethod } from './helper';
 import { GlobalContext } from '../context/global';
+import { render } from '@testing-library/react';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -25,8 +26,8 @@ const mapStoreMethodToMaterial = (state: stateType, methodId: string) => {
   if (!state.methodReducer.methods) return noop;
 
   const filterdMethod = state.methodReducer.methods.find(method => method.id === methodId);
-  const compiledMethod = injectMethod(filterdMethod?.method) || noop;
-  return compiledMethod;
+  // const compiledMethod = injectMethod(filterdMethod?.method) || noop;
+  return filterdMethod;
 };
 
 const mapConfigToMaterial = (state: stateType, config: ConfigType) => {
@@ -37,26 +38,46 @@ const mapConfigToMaterial = (state: stateType, config: ConfigType) => {
         obj[key] = (config[key] as StaticConfigValue).value;
         break;
       case 'state':
-        obj[key] = mapStoreStateToMaterial(state, (config[key] as StateConfigValue).stateId);
+        const storeState = mapStoreStateToMaterial(state, (config[key] as StateConfigValue).stateId);
+        if (_.has(storeState, 'value')) {
+          obj[key] = (storeState as typeof state.stateReducer.states[0]).value;
+        } else {
+          obj[key] = storeState;
+        }
         break;
       case 'method':
-        obj[key] = mapStoreMethodToMaterial(state, (config[key] as MethodConfigValue).methodId);
+        if (!obj.method) {
+          obj.method = {};
+        }
+        obj.method[key] = mapStoreMethodToMaterial(state, (config[key] as MethodConfigValue).methodId);
         break;
     }
   });
   return obj;
 };
 
+interface MHOCPropsType {
+  config: ConfigType;
+  astTool: AstParser;
+  materialType: string;
+  children?: any;
+  id: string;
+  method?: {
+    [key: string]: {
+      method: string;
+    };
+  };
+  changeState?: any;
+}
+
 class MaterialHOC extends Component<
-  {
-    config: ConfigType;
-    astTool: AstParser;
-    materialType: string;
-    children?: any;
-  },
+  MHOCPropsType,
   {
     isProd: boolean;
     isLayout: boolean;
+    renderProps: {
+      [key: string]: any;
+    };
   }
 > {
   static contextType = GlobalContext;
@@ -66,14 +87,53 @@ class MaterialHOC extends Component<
     this.state = {
       isProd: isProd(),
       isLayout: this.isLayout(),
+      renderProps: {
+        ...this.props,
+      },
+    };
+    if (this.props.method) {
+      let stateId: string;
+      Object.keys(this.props.config).map(cf => {
+        if (this.props.config[cf].type === 'state') {
+          stateId = (this.props.config[cf] as StateConfigValue).stateId;
+        }
+      });
+      Object.keys(this.props.method).forEach(k => {
+        this.state.renderProps[k] = injectMethod(
+          this.props.method ? this.props.method[k].method : '',
+          stateId,
+          this.props.changeState,
+        );
+      });
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {
+    const renderProps: any = {};
+    let stateId: string;
+    Object.keys(nextProps.config).forEach(cf => {
+      if (nextProps.config[cf].type === 'state') {
+        stateId = (nextProps.config[cf] as StateConfigValue).stateId;
+      }
+    });
+    if (nextProps.method) {
+      Object.keys(nextProps.method).forEach(k => {
+        renderProps[k] = injectMethod(
+          nextProps.method ? nextProps.method[k].method : '',
+          stateId,
+          nextProps.changeState,
+        );
+      });
+    }
+    return {
+      renderProps: {
+        ..._.cloneDeep(nextProps),
+        ..._.cloneDeep(renderProps),
+      },
     };
   }
 
-  componentDidMount() {
-    console.log(this.context.astTool);
-    console.log(this.context.astTool.getHistorys());
-    console.log(this.props.astTool === this.context.astTool);
-  }
+  componentDidMount() {}
 
   isLayout() {
     const layoutArray = new Set();
@@ -87,10 +147,12 @@ class MaterialHOC extends Component<
   getRelatedMethod() {}
 
   render() {
+    console.log(this.state);
+    console.log(this.state.renderProps);
     return (
       <div className={this.state.isProd ? '' : BEM('render', 'hoc')}>
         {React.createElement(_.get(Materials, this.props.materialType), {
-          ...this.props,
+          ...this.state.renderProps,
         })}
       </div>
     );

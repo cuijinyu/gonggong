@@ -25,14 +25,6 @@ const { injectMethod } = Util;
 const Render: React.FC = function() {
   const { dispatch } = store;
   const [updater, setUpdater] = useState(0);
-  const tst = React.createElement(Materials.Input, {
-    onClick: injectMethod(`
-            () => {
-                listen('123');
-                emit('234');
-            }
-        `),
-  });
   const { ast, astTool } = useGlobalContext();
   const RenderByAstTree = useCallback(() => {
     const page = astTool.createNewPage({
@@ -71,7 +63,10 @@ const Render: React.FC = function() {
       const method = astTool.appendMethod(
         `
                 function abc() {
-                    console.log(state, method, setState, ajax);
+                    // console.log(state, method, setState, ajax);
+                    console.log('${input.id}')
+                    setState(1)
+                    console.log(state())
                 }
                 `,
         'test',
@@ -97,8 +92,6 @@ const Render: React.FC = function() {
             method: method.methodCode as any,
           }),
         );
-
-      console.log(astTool);
     }
   }, [astTool, ast]);
 
@@ -110,10 +103,12 @@ const Render: React.FC = function() {
     if (father.children)
       return father.children.map(cmp => {
         let child = null;
-        if (astTool.hasChildren(cmp)) child = renderComponent(cmp);
+        if (astTool.hasChildren(cmp)) {
+          child = renderComponent(cmp);
+        }
 
         return (
-          <MaterialHOC astTool={astTool} config={cmp.config} materialType={cmp.type}>
+          <MaterialHOC id={cmp.id} astTool={astTool} config={cmp.config} materialType={cmp.type}>
             {child}
           </MaterialHOC>
         );
@@ -135,7 +130,7 @@ const Render: React.FC = function() {
 
     return cmps.map(cmp => {
       return (
-        <MaterialHOC astTool={astTool} config={cmp.config} materialType={cmp.type}>
+        <MaterialHOC id={cmp.id} astTool={astTool} config={cmp.config} materialType={cmp.type}>
           {renderComponent(cmp)}
         </MaterialHOC>
       );
@@ -152,10 +147,5 @@ const Render: React.FC = function() {
     </Provider>
   );
 };
-
-injectMethod(`function abc() {
-    console.log('!!!!!!!!!!!!!')
-    console.log(state, method, setState, ajax)
-}`);
 
 export default Render;
