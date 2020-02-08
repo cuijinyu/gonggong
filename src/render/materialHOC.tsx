@@ -91,44 +91,19 @@ class MaterialHOC extends Component<
         ...this.props,
       },
     };
-    if (this.props.method) {
-      let stateId: string;
-      Object.keys(this.props.config).map(cf => {
-        if (this.props.config[cf].type === 'state') {
-          stateId = (this.props.config[cf] as StateConfigValue).stateId;
-        }
-      });
-      Object.keys(this.props.method).forEach(k => {
-        this.state.renderProps[k] = injectMethod(
-          this.props.method ? this.props.method[k].method : '',
-          stateId,
-          this.props.changeState,
-        );
-      });
-    }
   }
 
   static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {
     const renderProps: any = {};
-    let stateId: string;
-    Object.keys(nextProps.config).forEach(cf => {
-      if (nextProps.config[cf].type === 'state') {
-        stateId = (nextProps.config[cf] as StateConfigValue).stateId;
-      }
-    });
     if (nextProps.method) {
       Object.keys(nextProps.method).forEach(k => {
-        renderProps[k] = injectMethod(
-          nextProps.method ? nextProps.method[k].method : '',
-          stateId,
-          nextProps.changeState,
-        );
+        renderProps[k] = injectMethod(nextProps.method ? nextProps.method[k].method : '', nextProps.changeState);
       });
     }
     return {
       renderProps: {
-        ..._.cloneDeep(nextProps),
-        ..._.cloneDeep(renderProps),
+        ...nextProps,
+        ...renderProps,
       },
     };
   }

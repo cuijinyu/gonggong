@@ -40,13 +40,13 @@ const Ajax = {
   isProd: isProd(),
 };
 
-export const injectMethod = (method: string, id: string, changeState: (id: string, value: any) => any) => {
+export const injectMethod = (method: string, changeState: (id: string, value: any) => any) => {
   const _method = wrapMethod(method);
   const compiledMethod = compileMethod(_method);
 
   const { getState, dispatch } = store;
 
-  return compiledMethod.bind(null, getState, () => {}, changeState.bind(null, id), Ajax);
+  return compiledMethod.bind(null, getState, () => {}, changeState, Ajax);
 };
 
 export const chainMethod = (method: string, chainMethodArray: string[]) => {
