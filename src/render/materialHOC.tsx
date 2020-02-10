@@ -11,7 +11,6 @@ import './mhoc.scss';
 import { BEM } from '../common/utils/bem';
 import { injectMethod } from './helper';
 import { GlobalContext } from '../context/global';
-import { render } from '@testing-library/react';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -122,8 +121,6 @@ class MaterialHOC extends Component<
   getRelatedMethod() {}
 
   render() {
-    console.log(this.state);
-    console.log(this.state.renderProps);
     return (
       <div className={this.state.isProd ? '' : BEM('render', 'hoc')}>
         {React.createElement(_.get(Materials, this.props.materialType), {

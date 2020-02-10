@@ -12,7 +12,7 @@ type MaterialInfoType = {
   type: string;
 };
 
-const getMetaInfo = (material: any) => {
+export const getMetaInfo = (material: any) => {
   const metadata = {} as { [key: string]: any };
   const keys = Reflect.getMetadataKeys(material);
   keys.forEach(key => {
@@ -25,5 +25,4 @@ export default {
   Input,
   Row,
   Col,
-  getMetaInfo,
 };

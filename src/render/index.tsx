@@ -4,7 +4,7 @@ import ErrorBoundary from '../components/errorBoundary/errorBoundary';
 import 'reflect-metadata';
 import { BEM } from '../common/utils/bem';
 import Util from './helper';
-import Materials from '../materials/index';
+import Materials, { getMetaInfo } from '../materials/index';
 import 'antd/dist/antd.css';
 import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
@@ -19,6 +19,7 @@ import AstParser, {
 import { addState, setStateById, addMethod } from './store/renderAction';
 import MaterialHOC from './materialHOC';
 import { configConsumerProps } from 'antd/lib/config-provider';
+import { notification, Icon } from 'antd';
 
 const { injectMethod } = Util;
 
@@ -34,13 +35,13 @@ const Render: React.FC = function() {
     });
     astTool.changePage(page.id);
     if (page) {
-      const row = astTool.makeLayoutNode(Materials.getMetaInfo(Materials.Row) as any);
+      const row = astTool.makeLayoutNode(getMetaInfo(Materials.Row) as any);
 
-      const col = astTool.makeLayoutNode(Materials.getMetaInfo(Materials.Col) as any);
+      const col = astTool.makeLayoutNode(getMetaInfo(Materials.Col) as any);
 
-      const input = astTool.makeFunctionNode(Materials.getMetaInfo(Materials.Input));
+      const input = astTool.makeFunctionNode(getMetaInfo(Materials.Input));
 
-      const input2 = astTool.makeFunctionNode(Materials.getMetaInfo(Materials.Input));
+      const input2 = astTool.makeFunctionNode(getMetaInfo(Materials.Input));
 
       astTool.appendNodeToPage(row);
 
@@ -97,6 +98,11 @@ const Render: React.FC = function() {
 
   useEffect(() => {
     RenderByAstTree();
+    notification.open({
+      message: '渲染引擎加载完成',
+      duration: 2,
+      icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
+    });
   }, []);
 
   const renderComponent = (father: AstNodeType): any => {

@@ -1,0 +1,44 @@
+@import '../../common/style/mixin.scss';
+
+@include b(materialTools) {
+  min-height: 320px;
+  @include e(wrapper) {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  @include e(title) {
+    display: flex;
+    height: 32px;
+    background: white;
+    align-items: center;
+    padding-left: 10px;
+  }
+
+  @include e(item) {
+    flex: 1;
+    width: 33%;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+    transition: transform 0.2s;
+    background: white;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  @include e(item-icon) {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @include e(item-type) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
