@@ -1,0 +1,7 @@
+@import '../common/style/mixin.scss';
+
+@include b(render) {
+  @include e(wrapper) {
+    height: 100%;
+  }
+}

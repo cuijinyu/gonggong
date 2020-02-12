@@ -3,8 +3,8 @@ import _ from 'lodash';
 import ErrorBoundary from '../components/errorBoundary/errorBoundary';
 import 'reflect-metadata';
 import { BEM } from '../common/utils/bem';
-import Util from './helper';
-import Materials, { getMetaInfo } from '../materials/index';
+import dndTypes from '../constant/drag';
+import { useDrop } from 'react-dnd';
 import 'antd/dist/antd.css';
 import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
@@ -12,6 +12,7 @@ import store from './store/renderStore';
 import { AstNodeType } from '../core/ast';
 import MaterialHOC from './materialHOC';
 import { notification, Icon } from 'antd';
+import './index.scss';
 
 const Render: React.FC = function() {
   const { dispatch } = store;
@@ -21,6 +22,21 @@ const Render: React.FC = function() {
   const RenderByAstTree = useCallback(() => {
     setHasSelectPage(astTool.hasSelectPage());
   }, [astTool, ast]);
+
+  const [{ canDrop, isOver }, drop] = useDrop({
+    accept: [dndTypes.MATERIAL, dndTypes.ELEMENT],
+    drop: item => {
+      if (!hasSelectPage) {
+        notification.error({
+          message: '还没有选择一个添加页面哦',
+        });
+      }
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
 
   useEffect(() => {
     RenderByAstTree();
@@ -71,7 +87,7 @@ const Render: React.FC = function() {
 
   return (
     <Provider store={store}>
-      <div className={BEM('render', 'wrapper')}>
+      <div ref={drop} className={BEM('render', 'wrapper')}>
         <ErrorBoundary>
           {!hasSelectPage && <div>还没有选择页面哦</div>}
           <div>{renderPage()}</div>
