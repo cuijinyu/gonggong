@@ -1,5 +1,5 @@
 import React, { useContext, FC, useState } from 'react';
-import AstParser, { AstNodeType } from '../common/utils/ast';
+import AstParser, { AstNodeType } from '../core/ast';
 
 type GlobalContextType = {
   ast: string;

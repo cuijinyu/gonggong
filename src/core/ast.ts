@@ -18,7 +18,7 @@
  * @date 2020.1.11
  */
 import _ from 'lodash';
-import Utils from './utils';
+import Utils from '../common/utils/utils';
 const { GGErrorLogger, uuid } = Utils;
 
 /**

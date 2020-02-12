@@ -4,13 +4,15 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import store from './store/renderStore';
 import Materials from '../materials/index';
-import AstParser, { ConfigType, StateConfigValue, StaticConfigValue, MethodConfigValue } from '../common/utils/ast';
+import AstParser, { ConfigType, StateConfigValue, StaticConfigValue, MethodConfigValue } from '../core/ast';
 import { setStateById } from './store/renderAction';
 import { isProd } from '../common/utils/prod';
 import './mhoc.scss';
 import { BEM } from '../common/utils/bem';
 import { injectMethod } from './helper';
 import { GlobalContext } from '../context/global';
+import { DragSource } from 'react-dnd';
+import dndTypes from '../constant/drag';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -69,6 +71,31 @@ interface MHOCPropsType {
   changeState?: any;
 }
 
+const elementSource = {
+  canDrag(props: any) {
+    return true;
+  },
+
+  beginDrag(props: any, monitor: any, component: any) {
+    return { ...props };
+  },
+
+  isDragging(props: any, monitor: any, component: any) {
+    return monitor.getItem().id === props.id;
+  },
+
+  endDrag(props: any, monitor: any, component: any) {
+    return true;
+  },
+};
+
+const collect = (connect: any, monitor: any) => {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+  };
+};
+
 class MaterialHOC extends Component<
   MHOCPropsType,
   {
@@ -121,12 +148,13 @@ class MaterialHOC extends Component<
   getRelatedMethod() {}
 
   render() {
-    return (
+    const { connectDragSource } = this.props as any;
+    return connectDragSource(
       <div className={this.state.isProd ? '' : BEM('render', 'hoc')}>
         {React.createElement(_.get(Materials, this.props.materialType), {
           ...this.state.renderProps,
         })}
-      </div>
+      </div>,
     );
   }
 }
@@ -148,4 +176,8 @@ const mapDispatchToProps = (dispatch: typeof store.dispatch, ownProps: { config:
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MaterialHOC);
+export default DragSource(
+  dndTypes.ELEMENT,
+  elementSource as any,
+  collect,
+)(connect(mapStateToProps, mapDispatchToProps)(MaterialHOC));

@@ -4,8 +4,6 @@ import React from 'react';
 import _ from 'lodash';
 import Axios from 'axios';
 import store from './store/renderStore';
-//@ts-ignore
-import eventBus from 'eventbus';
 import { isProd } from '../common/utils/prod';
 import { setStateById } from './store/renderAction';
 
@@ -85,5 +83,3 @@ export default {
   createMaterial,
   injectMethod,
 };
-
-console.log(eventBus);

@@ -9,91 +9,17 @@ import 'antd/dist/antd.css';
 import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
 import store from './store/renderStore';
-import AstParser, {
-  AstNodeType,
-  ConfigType,
-  StaticConfigValue,
-  StateConfigValue,
-  MethodConfigValue,
-} from '../common/utils/ast';
-import { addState, setStateById, addMethod } from './store/renderAction';
+import { AstNodeType } from '../core/ast';
 import MaterialHOC from './materialHOC';
-import { configConsumerProps } from 'antd/lib/config-provider';
 import { notification, Icon } from 'antd';
-
-const { injectMethod } = Util;
 
 const Render: React.FC = function() {
   const { dispatch } = store;
   const [updater, setUpdater] = useState(0);
+  const [hasSelectPage, setHasSelectPage] = useState<boolean>(false);
   const { ast, astTool } = useGlobalContext();
   const RenderByAstTree = useCallback(() => {
-    const page = astTool.createNewPage({
-      name: 'index',
-      isIndex: true,
-      path: '/index',
-    });
-    astTool.changePage(page.id);
-    if (page) {
-      const row = astTool.makeLayoutNode(getMetaInfo(Materials.Row) as any);
-
-      const col = astTool.makeLayoutNode(getMetaInfo(Materials.Col) as any);
-
-      const input = astTool.makeFunctionNode(getMetaInfo(Materials.Input));
-
-      const input2 = astTool.makeFunctionNode(getMetaInfo(Materials.Input));
-
-      astTool.appendNodeToPage(row);
-
-      astTool.appendNode(row, col);
-
-      astTool.appendNode(col, input);
-
-      astTool.appendNodeAfter(input, input2);
-
-      const state = astTool.appendState({
-        name: 'test',
-        initValue: 1,
-      });
-      const state2 = astTool.appendState({
-        name: 'test2',
-        initValue: 2,
-      });
-      const value = astTool.makeValueConfig(2);
-      const value2 = astTool.makeStateConfig(state2.id);
-      const method = astTool.appendMethod(
-        `
-                function abc() {
-                    // console.log(state, method, setState, ajax);
-                    console.log('${input.id}')
-                    setState(1)
-                    console.log(state())
-                }
-                `,
-        'test',
-        input,
-      );
-      const md = astTool.makeMethodConfig(method?.id || '');
-
-      astTool.setNodeKeyConfig(input, 'value2', value);
-
-      astTool.setNodeKeyConfig(input, 'value', value2);
-
-      astTool.setNodeKeyConfig(input, 'onChange', md);
-
-      astTool.relateStateToNode(state as any, input);
-
-      dispatch(addState(state));
-      dispatch(addState(state2));
-      if (method)
-        dispatch(
-          addMethod({
-            id: method.id,
-            name: method.name,
-            method: method.methodCode as any,
-          }),
-        );
-    }
+    setHasSelectPage(astTool.hasSelectPage());
   }, [astTool, ast]);
 
   useEffect(() => {
@@ -103,7 +29,7 @@ const Render: React.FC = function() {
       duration: 2,
       icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
     });
-  }, []);
+  }, [ast]);
 
   const renderComponent = (father: AstNodeType): any => {
     if (father.children)
@@ -147,6 +73,7 @@ const Render: React.FC = function() {
     <Provider store={store}>
       <div className={BEM('render', 'wrapper')}>
         <ErrorBoundary>
+          {!hasSelectPage && <div>还没有选择页面哦</div>}
           <div>{renderPage()}</div>
         </ErrorBoundary>
       </div>
