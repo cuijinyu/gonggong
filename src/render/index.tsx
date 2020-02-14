@@ -10,7 +10,7 @@ import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
 import store from './store/renderStore';
 import { AstNodeType } from '../core/ast';
-import MaterialHOC from './materialHOC';
+import Material from './material';
 import { notification, Icon } from 'antd';
 import './index.scss';
 
@@ -40,12 +40,15 @@ const Render: React.FC = function() {
 
   useEffect(() => {
     RenderByAstTree();
+  }, [ast]);
+
+  useEffect(() => {
     notification.open({
       message: '渲染引擎加载完成',
       duration: 2,
       icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
     });
-  }, [ast]);
+  }, []);
 
   const renderComponent = (father: AstNodeType): any => {
     if (father.children)
@@ -56,9 +59,9 @@ const Render: React.FC = function() {
         }
 
         return (
-          <MaterialHOC id={cmp.id} astTool={astTool} config={cmp.config} materialType={cmp.type}>
+          <Material id={cmp.id} astTool={astTool} config={cmp.config} materialType={cmp.type}>
             {child}
-          </MaterialHOC>
+          </Material>
         );
       });
 
@@ -78,9 +81,9 @@ const Render: React.FC = function() {
 
     return cmps.map(cmp => {
       return (
-        <MaterialHOC id={cmp.id} astTool={astTool} config={cmp.config} materialType={cmp.type}>
+        <Material id={cmp.id} astTool={astTool} config={cmp.config} materialType={cmp.type}>
           {renderComponent(cmp)}
-        </MaterialHOC>
+        </Material>
       );
     });
   };

@@ -17,7 +17,7 @@
     "no-dupe-args": "error",
     "no-dupe-keys": "error",
     "no-unreachable": "warn",
-    "curly": ["error", "multi"],
+    "curly": ["warn", "multi"],
     "eqeqeq": ["warn", "always"],
     "no-unused-labels": "error",
     "no-multi-str": "error",

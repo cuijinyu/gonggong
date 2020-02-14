@@ -13,8 +13,6 @@ import ProjectPage from './pages/project';
 
 setProd(false);
 
-new EventManager();
-
 const App: React.FC = () => (
   <DndProvider backend={Backend}>
     <div className="App">

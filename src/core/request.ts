@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { notification } from 'antd';
 import Util from '../common/utils/utils';
+import { isProd } from '../common/utils/prod';
 
 const { uuid } = Util;
 
@@ -10,6 +11,7 @@ type repInter = Parameters<typeof Axios.interceptors.response.use>[0];
 
 class Ajax {
   private client: clientType;
+  private isProdMode: boolean = false;
   private reqInters: reqInter[] = [];
   private repInters: repInter[] = [];
 
@@ -17,6 +19,16 @@ class Ajax {
     this.client = Axios.create({
       timeout: 10000,
     });
+    this.isProdMode = isProd();
+
+    this.repInters.push(rep => {
+      return rep;
+    });
+
+    this.reqInters.push(req => {
+      return req;
+    });
+
     notification.open({
       message: '请求引擎加载成功',
     });

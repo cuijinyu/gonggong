@@ -5,20 +5,7 @@ import _ from 'lodash';
 import Axios from 'axios';
 import store from './store/renderStore';
 import { isProd } from '../common/utils/prod';
-import { setStateById } from './store/renderAction';
-
-type ListenEvent = {
-  id: string;
-  trigger: any;
-};
-
-const listenEventsArray: ListenEvent[] = [];
-
-const createMaterial = <GP extends Record<string, any>>(name: string, group: GP, props: any) => {
-  return React.createElement(_.get(group, name), props);
-};
-
-const ajaxAdapter = () => {};
+import AjaxClient from '../core/request';
 
 const wrapMethod = (method: string) => {
   return `
@@ -34,7 +21,7 @@ const wrapMethod = (method: string) => {
 };
 
 const Ajax = {
-  client: Axios,
+  client: AjaxClient,
   isProd: isProd(),
 };
 
@@ -48,13 +35,6 @@ export const injectMethod = (method: string, changeState: (id: string, value: an
 };
 
 export const chainMethod = (method: string, chainMethodArray: string[]) => {
-  const listen = (id: any) => {};
-
-  const emit = (id: string) => {
-    const filterdEvent = listenEventsArray.find(ev => ev.id === id);
-    if (filterdEvent) filterdEvent.trigger();
-  };
-
   const wrapMethodChain = (method: string, method1: string, method2: string) => {
     return `
             (
@@ -63,8 +43,6 @@ export const chainMethod = (method: string, chainMethodArray: string[]) => {
         `;
   };
 };
-
-export const injectState = () => {};
 
 export const pageJump = () => {};
 
@@ -77,9 +55,4 @@ export const injectStyleClass = (styleClass: string) => {
 
 export const compileMethod = (method: string) => {
   return eval(method);
-};
-
-export default {
-  createMaterial,
-  injectMethod,
 };
