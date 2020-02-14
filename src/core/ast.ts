@@ -1123,6 +1123,7 @@ class AstParser {
   // 切换页面
   public changePage(id: string) {
     this.selectPage = id;
+    this.save('切换页面');
     return true;
   }
 

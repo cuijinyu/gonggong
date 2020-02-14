@@ -67,7 +67,7 @@ const PageConfigModal: React.FC<{
 };
 
 const PageView: React.FC = () => {
-  const { ast, astTool } = useGlobalContext();
+  const { ast, astTool, eBus } = useGlobalContext();
   const [pageList, setPageList] = useState<ReturnType<typeof astTool.getPageList>>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedPage, setSelectedPage] = useState<string>(astTool.getSelectPage() || '');
@@ -83,12 +83,13 @@ const PageView: React.FC = () => {
   const onSave = useCallback(config => {
     const page = astTool.createNewPage(config);
     setModalVisible(false);
-    setSelectedPage(page.id);
+    selectPageFromPageView(page.id);
   }, []);
 
   const selectPageFromPageView = useCallback((id: string) => {
     astTool.changePage(id);
     setSelectedPage(id);
+    eBus.emit('pageChange', id);
   }, []);
 
   useEffect(() => {

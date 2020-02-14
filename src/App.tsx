@@ -13,6 +13,11 @@ import ProjectPage from './pages/project';
 
 setProd(false);
 
+document.oncontextmenu = function(e) {
+  console.log(e);
+  return false;
+};
+
 const App: React.FC = () => (
   <DndProvider backend={Backend}>
     <div className="App">

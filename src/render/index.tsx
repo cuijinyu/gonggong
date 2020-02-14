@@ -14,22 +14,60 @@ import Material from './material';
 import { notification, Icon } from 'antd';
 import './index.scss';
 
+type MaterialDropItem = {
+  type: string;
+  materialType: string;
+  config: {
+    name: string;
+  }[];
+  nodeDemandCapacity: number;
+  layoutCapacity: number;
+  isLayoutNode: boolean;
+  desc: string;
+  icon: string;
+};
+
 const Render: React.FC = function() {
   const { dispatch } = store;
   const [updater, setUpdater] = useState(0);
   const [hasSelectPage, setHasSelectPage] = useState<boolean>(false);
-  const { ast, astTool } = useGlobalContext();
+  const { ast, astTool, eBus } = useGlobalContext();
   const RenderByAstTree = useCallback(() => {
     setHasSelectPage(astTool.hasSelectPage());
   }, [astTool, ast]);
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: [dndTypes.MATERIAL, dndTypes.ELEMENT],
-    drop: item => {
+    drop: (item: MaterialDropItem) => {
       if (!hasSelectPage) {
         notification.error({
           message: '还没有选择一个添加页面哦',
         });
+      } else {
+        const selectedPageId = astTool.getSelectPage();
+        if (selectedPageId) {
+          const selectedPage = astTool.getPageById(selectedPageId);
+          if (selectedPage) {
+            if (item.isLayoutNode) {
+              astTool.appendNodeToPage(
+                astTool.makeLayoutNode({
+                  name: '',
+                  layoutCapacity: item.layoutCapacity,
+                  nodeDemandCapacity: item.nodeDemandCapacity,
+                  type: item.materialType,
+                }),
+              );
+            } else {
+              astTool.appendNodeToPage(
+                astTool.makeFunctionNode({
+                  name: '',
+                  nodeDemandCapacity: item.nodeDemandCapacity,
+                  type: item.materialType,
+                }),
+              );
+            }
+          }
+        }
       }
     },
     collect: monitor => ({
@@ -47,6 +85,9 @@ const Render: React.FC = function() {
       message: '渲染引擎加载完成',
       duration: 2,
       icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
+    });
+    eBus.listen('pageChange', page => {
+      console.log(page);
     });
   }, []);
 
@@ -92,7 +133,12 @@ const Render: React.FC = function() {
     <Provider store={store}>
       <div ref={drop} className={BEM('render', 'wrapper')}>
         <ErrorBoundary>
-          {!hasSelectPage && <div>还没有选择页面哦</div>}
+          {!hasSelectPage && (
+            <div className={BEM('render', 'info')}>
+              <div>还没有选择页面哦</div>
+              <div>如果还没有添加页面，试着添加一个页面</div>
+            </div>
+          )}
           <div>{renderPage()}</div>
         </ErrorBoundary>
       </div>
