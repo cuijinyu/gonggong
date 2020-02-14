@@ -58,9 +58,22 @@ const MaterialTools: FC = () => {
         <div className={BEM('materialTools', 'title')}>物料集合</div>
       </Popover>
       <div className={BEM('materialTools', 'wrapper')}>
-        {materials.map(material => {
-          return <MaterialItem material={material} />;
-        })}
+        <div>
+          <div className={BEM('materialTools', 'wrapper-container-title')}>布局物料</div>
+          <div className={BEM('materialTools', 'wrapper-container')}>
+            {materials.map(material => {
+              return material.isLayoutNode && <MaterialItem material={material} />;
+            })}
+          </div>
+        </div>
+        <div>
+          <div className={BEM('materialTools', 'wrapper-container-title')}>功能物料</div>
+          <div className={BEM('materialTools', 'wrapper-container')}>
+            {materials.map(material => {
+              return !material.isLayoutNode && <MaterialItem material={material} />;
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

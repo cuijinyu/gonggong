@@ -14,6 +14,19 @@ import Material from './material';
 import { notification, Icon } from 'antd';
 import './index.scss';
 
+type MaterialDropItem = {
+  type: string;
+  materialType: string;
+  config: {
+    name: string;
+  }[];
+  nodeDemandCapacity: number;
+  layoutCapacity: number;
+  isLayoutNode: boolean;
+  desc: string;
+  icon: string;
+};
+
 const Render: React.FC = function() {
   const { dispatch } = store;
   const [updater, setUpdater] = useState(0);
@@ -25,16 +38,7 @@ const Render: React.FC = function() {
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: [dndTypes.MATERIAL, dndTypes.ELEMENT],
-    drop: (item: {
-      type: string;
-      materialType: string;
-      config: {
-        name: string;
-      }[];
-      nodeDemandCapacity: number;
-      layoutCapacity: number;
-      isLayoutNode: boolean;
-    }) => {
+    drop: (item: MaterialDropItem) => {
       if (!hasSelectPage) {
         notification.error({
           message: '还没有选择一个添加页面哦',
@@ -53,15 +57,15 @@ const Render: React.FC = function() {
                   type: item.materialType,
                 }),
               );
+            } else {
+              astTool.appendNodeToPage(
+                astTool.makeFunctionNode({
+                  name: '',
+                  nodeDemandCapacity: item.nodeDemandCapacity,
+                  type: item.materialType,
+                }),
+              );
             }
-            // astTool.appendNodeToPage(
-            //   astTool.makeLayoutNode(
-            //     {
-            //       name: '',
-            //       layoutCapacity
-            //     }
-            //   )
-            // )
           }
         }
       }
@@ -129,7 +133,12 @@ const Render: React.FC = function() {
     <Provider store={store}>
       <div ref={drop} className={BEM('render', 'wrapper')}>
         <ErrorBoundary>
-          {!hasSelectPage && <div>还没有选择页面哦</div>}
+          {!hasSelectPage && (
+            <div className={BEM('render', 'info')}>
+              <div>还没有选择页面哦</div>
+              <div>如果还没有添加页面，试着添加一个页面</div>
+            </div>
+          )}
           <div>{renderPage()}</div>
         </ErrorBoundary>
       </div>
