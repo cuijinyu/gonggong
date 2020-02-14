@@ -2,9 +2,9 @@ import React from 'react';
 import 'reflect-metadata';
 import { Input } from 'antd';
 import { BaseMaterial } from '../base';
-import { Icon, Desc, IsLayout, Material, NodeDC } from '../../decorators';
+import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('input')
+@Icon('edit')
 @Desc('这个是input物料')
 @IsLayout(false)
 @Material()
@@ -16,20 +16,13 @@ export default class InputMaterial extends BaseMaterial<{
 }> {
   constructor(props: any) {
     super(props);
-    console.log(this.props);
   }
 
-  onChange(value: Event) {
-    console.log(this);
-    console.log(value);
-    // if (!this.props.onChange) {
-    //     if (value.target) {
-    //         console.log((value.target as any).value);
-    //     }
-    //     return;
-    // }
-    // this.props.onChange()
-  }
+  @Config()
+  private value = '';
+
+  @Config()
+  private onChange = () => {};
 
   render() {
     return <Input value={this.props.value} onClick={this.props.onClick} onChange={this.props.onChange as any} />;

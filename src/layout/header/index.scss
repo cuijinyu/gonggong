@@ -13,5 +13,13 @@ body {
       line-height: 33px;
       font-size: 10px;
     }
+
+    @include e(left) {
+      a {
+        color: white;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
   }
 }

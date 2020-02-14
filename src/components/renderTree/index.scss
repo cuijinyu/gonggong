@@ -1,0 +1,11 @@
+@import '../../common/style/mixin.scss';
+
+@include b(renderTree) {
+  @include e(title) {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    background: white;
+    padding-left: 10px;
+  }
+}

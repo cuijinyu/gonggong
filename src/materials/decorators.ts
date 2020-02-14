@@ -10,8 +10,13 @@ export function Desc(desc: string) {
   };
 }
 
-export function IsLayout(isLayoutNode: boolean) {
+export function IsLayout(isLayoutNode: boolean): any;
+export function IsLayout(isLayoutNode: boolean, layoutCapacity: number): any;
+export function IsLayout(isLayoutNode: boolean, layoutCapacity?: number) {
   return function(constructor: Function) {
+    if (isLayoutNode && layoutCapacity) {
+      Reflect.defineMetadata('layoutCapacity', layoutCapacity, constructor);
+    }
     Reflect.defineMetadata('isLayoutNode', isLayoutNode, constructor);
   };
 }
@@ -29,6 +34,16 @@ export function NodeDC(dc: number) {
   };
 }
 
-export function Config<T>(type: string) {
-  return function(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<T>) {};
+// TODO: config装饰器的设计
+export function Config() {
+  return function(target: any, propertyName: string) {
+    const prevConfig = Reflect.getMetadata('config', target) || [];
+    const nextConfig = [
+      ...prevConfig,
+      {
+        name: propertyName,
+      },
+    ];
+    Reflect.defineMetadata('config', nextConfig, target.constructor);
+  };
 }

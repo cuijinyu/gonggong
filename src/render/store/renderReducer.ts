@@ -77,7 +77,6 @@ const stateReducer = function(
           name,
           value: initValue,
         };
-        console.log(state);
         draft.states.push(option);
         return draft;
       });

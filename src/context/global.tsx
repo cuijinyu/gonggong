@@ -1,10 +1,12 @@
 import React, { useContext, FC, useState } from 'react';
-import AstParser, { AstNodeType } from '../common/utils/ast';
+import AstParser, { AstNodeType } from '../core/ast';
+import EventManager from '../eventManager';
 
 type GlobalContextType = {
   ast: string;
   astTool: AstParser;
   setAst: (ast: string) => void;
+  eBus: typeof EventManager;
 };
 
 const GlobalContext = React.createContext<GlobalContextType>({} as any);
@@ -12,13 +14,14 @@ const GlobalContext = React.createContext<GlobalContextType>({} as any);
 const GlobalContextProvider: FC = ({ children }) => {
   const [ast, setAst] = useState<string>('{}');
   const [astTool, setAstTool] = useState<AstParser>(new AstParser(ast, setAst, at => setAstTool(at)));
-
+  const [eBus, setEBus] = useState<typeof EventManager>(EventManager);
   return (
     <GlobalContext.Provider
       value={{
         ast,
         astTool,
         setAst,
+        eBus,
       }}>
       {children}
     </GlobalContext.Provider>
