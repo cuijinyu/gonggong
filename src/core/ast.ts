@@ -725,6 +725,10 @@ class AstParser {
     return this.getPageComponents(page);
   }
 
+  public getSelectPage() {
+    return this.selectPage;
+  }
+
   public getComponentNodeList(node: AstNodeType) {
     const resultArray: AstNodeType[] = [];
     if (this.isUsefulNodeType(node)) {
@@ -1035,7 +1039,12 @@ class AstParser {
    */
   public createNewPage({ name = '', isIndex = false, path = '' }) {
     if (!this.astTree.pages) this.astTree.pages = [];
-
+    if (isIndex) {
+      const hasIndexPage = this.getIndexPage();
+      if (hasIndexPage) {
+        throw new Error('已经有了首页');
+      }
+    }
     const page = {
       id: uuid(),
       name,
