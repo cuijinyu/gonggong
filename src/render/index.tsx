@@ -13,6 +13,7 @@ import { AstNodeType } from '../core/ast';
 import Material from './material';
 import { notification, Icon } from 'antd';
 import './index.scss';
+import eventManager from '../eventManager';
 
 type MaterialDropItem = {
   type: string;
@@ -28,16 +29,17 @@ type MaterialDropItem = {
 };
 
 const Render: React.FC = function() {
-  const { dispatch } = store;
-  const [updater, setUpdater] = useState(0);
+  const [, setUpdater] = useState(0);
   const [hasSelectPage, setHasSelectPage] = useState<boolean>(false);
   const { ast, astTool, eBus } = useGlobalContext();
   const RenderByAstTree = useCallback(() => {
     setHasSelectPage(astTool.hasSelectPage());
   }, [astTool, ast]);
 
+  const forceUpdate = useCallback(() => setUpdater(updater => updater + 1), []);
+
   const [{ canDrop, isOver }, drop] = useDrop({
-    accept: [dndTypes.MATERIAL, dndTypes.ELEMENT],
+    accept: [dndTypes.MATERIAL],
     drop: (item: MaterialDropItem) => {
       if (!hasSelectPage) {
         notification.error({
@@ -58,13 +60,14 @@ const Render: React.FC = function() {
                 }),
               );
             } else {
-              astTool.appendNodeToPage(
-                astTool.makeFunctionNode({
-                  name: '',
-                  nodeDemandCapacity: item.nodeDemandCapacity,
-                  type: item.materialType,
-                }),
-              );
+              eventManager.error('功能物料必须位于布局物料中');
+              // astTool.appendNodeToPage(
+              //   astTool.makeFunctionNode({
+              //     name: '',
+              //     nodeDemandCapacity: item.nodeDemandCapacity,
+              //     type: item.materialType,
+              //   }),
+              // );
             }
           }
         }
@@ -87,7 +90,7 @@ const Render: React.FC = function() {
       icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
     });
     eBus.listen('pageChange', page => {
-      console.log(page);
+      forceUpdate();
     });
   }, []);
 

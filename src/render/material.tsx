@@ -11,7 +11,7 @@ import './mhoc.scss';
 import { BEM } from '../common/utils/bem';
 import { injectMethod } from './helper';
 import { GlobalContext } from '../context/global';
-import { DragSource } from 'react-dnd';
+import { DragSource, DropTarget } from 'react-dnd';
 import dndTypes from '../constant/drag';
 
 type stateType = ReturnType<typeof store.getState>;
@@ -27,7 +27,6 @@ const mapStoreMethodToMaterial = (state: stateType, methodId: string) => {
   if (!state.methodReducer.methods) return noop;
 
   const filterdMethod = state.methodReducer.methods.find(method => method.id === methodId);
-  // const compiledMethod = injectMethod(filterdMethod?.method) || noop;
   return filterdMethod;
 };
 
@@ -89,10 +88,31 @@ const elementSource = {
   },
 };
 
+const materialTarget = {
+  canDrop(props: any, monitor: any) {
+    return true;
+  },
+
+  hover(props: any, monitor: any, component: any) {},
+
+  drop(props: any, monitor: any, component: any) {
+    console.log(monitor.getItem());
+  },
+};
+
 const collect = (connect: any, monitor: any) => {
   return {
     connectDragSource: connect.dragSource(),
     isDragging: monitor.isDragging(),
+  };
+};
+
+const dropCollect = (connect: any, monitor: any) => {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop(),
+    itemType: monitor.getItemType(),
   };
 };
 
@@ -117,6 +137,7 @@ class MaterialHOC extends Component<
         ...this.props,
       },
     };
+    this.materialContextMenu.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {
@@ -134,8 +155,6 @@ class MaterialHOC extends Component<
     };
   }
 
-  componentDidMount() {}
-
   isLayout() {
     const layoutArray = new Set();
     layoutArray.add('Row');
@@ -143,18 +162,29 @@ class MaterialHOC extends Component<
     return layoutArray.has(this.props.materialType);
   }
 
-  getRelatedState() {}
-
-  getRelatedMethod() {}
+  materialContextMenu(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    if (e.button !== 2) return;
+    this.context.eBus.emit('render-content-contextMenu', {
+      position: {
+        x: e.pageX,
+        y: e.pageY,
+      },
+      item: {
+        ...this.props,
+      },
+    });
+  }
 
   render() {
-    const { connectDragSource } = this.props as any;
-    return connectDragSource(
-      <div className={this.state.isProd ? '' : BEM('render', 'hoc')}>
-        {React.createElement(_.get(Materials, this.props.materialType), {
-          ...this.state.renderProps,
-        })}
-      </div>,
+    const { connectDragSource, connectDropTarget } = this.props as any;
+    return connectDropTarget(
+      connectDragSource(
+        <div onMouseDown={e => this.materialContextMenu(e)} className={this.state.isProd ? '' : BEM('render', 'hoc')}>
+          {React.createElement(_.get(Materials, this.props.materialType), {
+            ...this.state.renderProps,
+          })}
+        </div>,
+      ),
     );
   }
 }
@@ -176,8 +206,14 @@ const mapDispatchToProps = (dispatch: typeof store.dispatch, ownProps: { config:
   };
 };
 
-export default DragSource(
-  dndTypes.ELEMENT,
-  elementSource as any,
-  collect,
-)(connect(mapStateToProps, mapDispatchToProps)(MaterialHOC));
+export default DropTarget(
+  dndTypes.MATERIAL,
+  materialTarget as any,
+  dropCollect,
+)(
+  DragSource(
+    dndTypes.ELEMENT,
+    elementSource as any,
+    collect,
+  )(connect(mapStateToProps, mapDispatchToProps)(MaterialHOC)),
+);

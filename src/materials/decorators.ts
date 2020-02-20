@@ -1,6 +1,11 @@
-export function Icon(iconName: string) {
+export function Icon(iconName: string): (constructor: Function) => any;
+export function Icon(iconName: string, iconMode: 'src'): (constructor: Function) => any;
+export function Icon(iconName: string, iconMode?: 'src') {
   return function(constructor: Function) {
     Reflect.defineMetadata('icon', iconName, constructor);
+    if (iconMode === 'src') {
+      Reflect.defineMetadata('iconMode', 'src', constructor);
+    }
   };
 }
 

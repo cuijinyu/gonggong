@@ -10,6 +10,7 @@ type MaterialInfoType = {
   layoutCapacity?: number;
   nodeDemandCapacity: number;
   type: string;
+  iconMode?: 'src';
 };
 
 export const getMetaInfo = (material: any) => {
