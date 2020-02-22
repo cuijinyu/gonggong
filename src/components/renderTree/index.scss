@@ -18,6 +18,10 @@
     flex-direction: row;
     align-items: center;
     height: 23px;
+
+    &:hover {
+      background-color: rgba(20, 160, 253, 0.2);
+    }
     // background-color: rgba(20, 160, 253, 0.3);
     color: #2196f3;
   }
@@ -31,5 +35,9 @@
     flex-direction: row;
     align-items: center;
     height: 23px;
+
+    &:hover {
+      background-color: rgba(20, 160, 253, 0.2);
+    }
   }
 }

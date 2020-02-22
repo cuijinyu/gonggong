@@ -40,7 +40,10 @@ const Render: React.FC = function() {
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: [dndTypes.MATERIAL],
-    drop: (item: MaterialDropItem) => {
+    drop: (item: MaterialDropItem, monitor) => {
+      if (monitor.didDrop()) {
+        return;
+      }
       if (!hasSelectPage) {
         notification.error({
           message: '还没有选择一个添加页面哦',
@@ -61,13 +64,6 @@ const Render: React.FC = function() {
               );
             } else {
               eventManager.error('功能物料必须位于布局物料中');
-              // astTool.appendNodeToPage(
-              //   astTool.makeFunctionNode({
-              //     name: '',
-              //     nodeDemandCapacity: item.nodeDemandCapacity,
-              //     type: item.materialType,
-              //   }),
-              // );
             }
           }
         }

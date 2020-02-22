@@ -14,7 +14,14 @@ class ColMaterial extends BaseMaterial {
   }
 
   render() {
-    return <Col>{this.props.children}</Col>;
+    return (
+      <Col
+        style={{
+          minHeight: 20,
+        }}>
+        {this.props.children}
+      </Col>
+    );
   }
 }
 
