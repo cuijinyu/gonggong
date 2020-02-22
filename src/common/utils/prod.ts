@@ -8,4 +8,11 @@ const setProd = function(state: boolean): void {
   _.set(window, 'gg.config.isProd', state);
 };
 
-export { isProd, setProd };
+/**
+ * 获取项目ID，存储在localstorage里
+ */
+const getProjectId = function() {
+  return 'gg-test';
+};
+
+export { isProd, setProd, getProjectId };

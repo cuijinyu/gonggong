@@ -18,10 +18,18 @@
     flex-direction: row;
     align-items: center;
     height: 23px;
-    background-color: rgba(20, 160, 253, 0.3);
+    // background-color: rgba(20, 160, 253, 0.3);
     color: #2196f3;
   }
 
   @include e(children-container) {
+  }
+
+  @include e(fc-container) {
+    padding-left: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 23px;
   }
 }

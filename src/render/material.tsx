@@ -93,7 +93,10 @@ const materialTarget = {
     return true;
   },
 
-  hover(props: any, monitor: any, component: any) {},
+  hover(props: any, monitor: any, component: any) {
+    console.log(monitor.getItem());
+    console.log(props);
+  },
 
   drop(props: any, monitor: any, component: any) {
     console.log(monitor.getItem());
@@ -177,6 +180,7 @@ class MaterialHOC extends Component<
 
   render() {
     const { connectDragSource, connectDropTarget } = this.props as any;
+    const { isOver } = this.props as any;
     return connectDropTarget(
       connectDragSource(
         <div onMouseDown={e => this.materialContextMenu(e)} className={this.state.isProd ? '' : BEM('render', 'hoc')}>

@@ -184,6 +184,8 @@ type PageType = {
   components?: AstNodeType[];
 };
 
+type CustomLayout = {};
+
 /**
  * 根节点类型
  */
@@ -202,6 +204,11 @@ type AstType = {
    * 所有的属性
    */
   states?: StateType[];
+
+  /**
+   * 自定义布局
+   */
+  customLayout?: CustomLayout[];
 };
 
 // TODO: 替换搜索方法
