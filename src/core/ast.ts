@@ -86,6 +86,11 @@ export interface AstNodeType {
   prevNode?: string;
 
   /**
+   * 插槽的数量，用于布局组合器
+   */
+  slot?: number;
+
+  /**
    * node 关联的方法 ids
    **/
   methods: string[];
@@ -179,6 +184,8 @@ type PageType = {
   components?: AstNodeType[];
 };
 
+type CustomLayout = {};
+
 /**
  * 根节点类型
  */
@@ -197,6 +204,11 @@ type AstType = {
    * 所有的属性
    */
   states?: StateType[];
+
+  /**
+   * 自定义布局
+   */
+  customLayout?: CustomLayout[];
 };
 
 // TODO: 替换搜索方法
@@ -347,6 +359,14 @@ class AstParser {
     this.ast = formattedAst;
     this.astSetter(formattedAst);
     if (this.listener) this.listener(this);
+  }
+
+  private hasSlots(nodeId: string) {
+    const aimNode = this.getNodeById(nodeId);
+    if (aimNode) {
+      return aimNode.slot ? true : false;
+    }
+    return false;
   }
 
   /**
@@ -981,6 +1001,20 @@ class AstParser {
       }
     }
     this.save('在节点前新增了节点');
+  }
+
+  moveNodeToAnotherNode(sourceNodeId: string, aimNodeId: string) {
+    const sourceNode = this.getNodeById(sourceNodeId);
+    const aimNode = this.getNodeById(aimNodeId);
+    if (!sourceNode) {
+      throw '';
+    }
+    if (!aimNode) {
+      throw '';
+    }
+    if (aimNode.isLayoutNode) {
+      const clonedSrouceNode = _.cloneDeep(sourceNode);
+    }
   }
 
   // TODO: 增加拷贝方法
