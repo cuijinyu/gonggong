@@ -13,6 +13,7 @@ import { injectMethod } from './helper';
 import { GlobalContext } from '../context/global';
 import { DragSource, DropTarget } from 'react-dnd';
 import dndTypes from '../constant/drag';
+import eventManager from '../eventManager';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -89,17 +90,18 @@ const elementSource = {
 };
 
 const materialTarget = {
-  canDrop(props: any, monitor: any) {
+  canDrop(props: any, monitor: any, isHandled: any) {
     return true;
   },
 
-  hover(props: any, monitor: any, component: any) {
-    console.log(monitor.getItem());
-    console.log(props);
-  },
+  hover(props: any, monitor: any, component: any) {},
 
   drop(props: any, monitor: any, component: any) {
-    console.log(monitor.getItem());
+    if (monitor.didDrop()) {
+      return;
+    }
+    const materialConfig = monitor.getItem();
+    component.insertMaterial(materialConfig);
   },
 };
 
@@ -119,7 +121,7 @@ const dropCollect = (connect: any, monitor: any) => {
   };
 };
 
-class MaterialHOC extends Component<
+class Material extends Component<
   MHOCPropsType,
   {
     isProd: boolean;
@@ -156,6 +158,42 @@ class MaterialHOC extends Component<
         ...renderProps,
       },
     };
+  }
+
+  insertMaterial(materialConfig: any) {
+    const targetNodeId = this.props.id;
+    const astTool: AstParser = this.context.astTool;
+    const targetNode = astTool.getNodeById(targetNodeId);
+    if (targetNode) {
+      if (materialConfig.isLayoutNode) {
+        astTool.appendNode(
+          targetNode,
+          astTool.makeLayoutNode({
+            name: '',
+            layoutCapacity: materialConfig.layoutCapacity,
+            nodeDemandCapacity: materialConfig.nodeDemandCapacity,
+            type: materialConfig.materialType,
+          }),
+        );
+      } else {
+        // eventManager.error('功能物料必须位于布局物料中');
+        astTool.appendNode(
+          targetNode,
+          astTool.makeFunctionNode({
+            name: '',
+            nodeDemandCapacity: materialConfig.nodeDemandCapacity,
+            type: materialConfig.materialType,
+          }),
+        );
+        // astTool.appendNodeToPage(
+        //   astTool.makeFunctionNode({
+        //     name: '',
+        //     nodeDemandCapacity: materialConfig.nodeDemandCapacity,
+        //     type: materialConfig.materialType,
+        //   }),
+        // );
+      }
+    }
   }
 
   isLayout() {
@@ -210,14 +248,8 @@ const mapDispatchToProps = (dispatch: typeof store.dispatch, ownProps: { config:
   };
 };
 
-export default DropTarget(
-  dndTypes.MATERIAL,
-  materialTarget as any,
-  dropCollect,
-)(
-  DragSource(
-    dndTypes.ELEMENT,
-    elementSource as any,
-    collect,
-  )(connect(mapStateToProps, mapDispatchToProps)(MaterialHOC)),
-);
+export default _.flow(
+  DropTarget(dndTypes.MATERIAL, materialTarget as any, dropCollect),
+  DragSource(dndTypes.ELEMENT, elementSource as any, collect),
+  connect(mapStateToProps, mapDispatchToProps),
+)(Material);

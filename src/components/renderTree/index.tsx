@@ -29,7 +29,10 @@ export default () => {
 
   const renderComponentTree = useCallback((component: AstNodeType, depth: number) => {
     return (
-      <div>
+      <div
+        style={{
+          paddingLeft: depth * 20,
+        }}>
         {component.isLayoutNode && (
           <div className={BEM('renderTree', 'layout-container')}>
             <svg width="21" height="24" viewBox="0 0 21 24" fill="none" xmlns="http://www.w3.org/2000/svg">
