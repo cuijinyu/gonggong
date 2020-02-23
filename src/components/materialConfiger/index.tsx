@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BEM } from '../../common/utils/bem';
 import _ from 'lodash';
 import './index.scss';
@@ -11,10 +11,16 @@ import { getMetaInfo } from '../../materials';
 
 const MaterialConfiger = () => {
   const { astTool } = useGlobalContext();
+  const [selectedElement, setSelectedElement] = useState<AstNodeType | null>(null);
+  const [metaConfig, setMetaConfig] = useState<{ config: { name: string }[] } | null>(null);
 
   useEffect(() => {
     eventManager.listen('elementSelect', ({ component }: { component: AstNodeType }) => {
-      console.log(getMetaInfo(_.get(Material, component.type)));
+      setSelectedElement(component);
+      const componentMetaInfo = getMetaInfo(_.get(Material, component.type)).config;
+      if (componentMetaInfo) {
+        setMetaConfig({ config: componentMetaInfo });
+      }
     });
   }, []);
 
@@ -26,7 +32,22 @@ const MaterialConfiger = () => {
           <Icon type="info-circle" style={{ marginLeft: 5, marginRight: 5 }} />
         </Popover>
       </div>
-      <div></div>
+      <div>
+        <div>
+          <div>基础信息</div>
+          <div>id: {selectedElement?.id}</div>
+        </div>
+        <div>
+          <div>基础配置</div>
+          <div>id: {selectedElement?.id}</div>
+        </div>
+        <div>
+          <div>物料配置项</div>
+          {metaConfig?.config.map(cfg => {
+            return cfg.name;
+          })}
+        </div>
+      </div>
     </div>
   );
 };

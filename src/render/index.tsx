@@ -36,6 +36,10 @@ const Render: React.FC = function() {
     setHasSelectPage(astTool.hasSelectPage());
   }, [astTool, ast]);
 
+  const convertComposeLayoutToNestedNodes = () => {
+    // 转译组合布局到真实的node列表
+  };
+
   const forceUpdate = useCallback(() => setUpdater(updater => updater + 1), []);
 
   const [{ canDrop, isOver }, drop] = useDrop({

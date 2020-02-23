@@ -147,6 +147,7 @@ class Material extends Component<
 
   static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {
     const renderProps: any = {};
+    console.log(nextProps.astTool);
     if (nextProps.method) {
       Object.keys(nextProps.method).forEach(k => {
         renderProps[k] = injectMethod(nextProps.method ? nextProps.method[k].method : '', nextProps.changeState);
@@ -211,20 +212,21 @@ class Material extends Component<
   render() {
     const { connectDragSource, connectDropTarget } = this.props as any;
     const { isOver } = this.props as any;
-    return connectDropTarget(
-      connectDragSource(
-        <div
-          style={{
-            border: isOver ? '1px solid green' : '',
-          }}
-          onMouseDown={e => this.materialContextMenu(e)}
-          className={this.state.isProd ? '' : BEM('render', 'hoc')}>
-          {React.createElement(_.get(Materials, this.props.materialType), {
-            ...this.state.renderProps,
-          })}
-        </div>,
-      ),
-    );
+    return _.flow(
+      connectDropTarget,
+      connectDragSource,
+    )(
+      <div
+        style={{
+          border: isOver ? '1px solid green' : '',
+        }}
+        onMouseDown={e => this.materialContextMenu(e)}
+        className={this.state.isProd ? '' : BEM('render', 'hoc')}>
+        {React.createElement(_.get(Materials, this.props.materialType), {
+          ...this.state.renderProps,
+        })}
+      </div>,
+    ) as any;
   }
 }
 

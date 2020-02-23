@@ -1,8 +1,5 @@
 /** @format */
-
-import React from 'react';
 import _ from 'lodash';
-import Axios from 'axios';
 import store from './store/renderStore';
 import { isProd } from '../common/utils/prod';
 import AjaxClient from '../core/request';
