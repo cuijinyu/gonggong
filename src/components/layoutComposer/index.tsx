@@ -36,6 +36,10 @@ const LayoutComposer = () => {
   const [selectedLayoutMode, setSelectedLayoutMode] = useState<string>('row');
   const [composedGroup, setComposetGroup] = useState<ComposedGroupType[] | null>(null);
 
+  useEffect(() => {
+    eventManager.listen('createCustomLayout', () => {});
+  }, []);
+
   const pushToComposedGroup = ({ start, end, type }: Omit<ComposedGroupType, 'id'>) => {
     if (_.isFinite(start) && _.isFinite(end)) {
       setComposetGroup(composedGroup => {
@@ -55,16 +59,17 @@ const LayoutComposer = () => {
   };
 
   const removeFromComposedGroup = (id: string) => {
-    const cpItemIdx = composedGroup?.findIndex(cp => cp.id === id);
-    if (composedGroup && !_.isUndefined(cpItemIdx)) {
-      const cpItem = composedGroup[cpItemIdx];
+    const clonedComposedGroup = _.cloneDeep(composedGroup);
+    const cpItemIdx = clonedComposedGroup?.findIndex(cp => cp.id === id);
+    if (clonedComposedGroup && !_.isUndefined(cpItemIdx)) {
+      const cpItem = clonedComposedGroup[cpItemIdx];
       const group = _.cloneDeep(layoutGroup);
       for (let i = cpItem.start; i <= cpItem.end; i++) {
         group[i].isUsed = false;
-        setLayoutGroup(group);
       }
-      composedGroup?.splice(cpItemIdx, 1);
-      setComposetGroup(Array.from(composedGroup));
+      setLayoutGroup(group);
+      clonedComposedGroup?.splice(cpItemIdx, 1);
+      setComposetGroup(Array.from(clonedComposedGroup));
     }
   };
 
@@ -145,6 +150,7 @@ const LayoutComposer = () => {
         {layoutGroup.map((layoutConfig, index) => {
           return (
             <div
+              key={uuid()}
               data-index={index}
               style={{
                 border: '1px solid black',
@@ -161,6 +167,7 @@ const LayoutComposer = () => {
         {composedGroup?.map(cp => {
           return (
             <div
+              key={uuid()}
               style={{
                 marginTop: '10px',
                 marginBottom: '10px',

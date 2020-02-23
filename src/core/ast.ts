@@ -332,6 +332,13 @@ class AstParser {
   private selectPage: string | null = null;
 
   /**
+   * 注册所有的ast相关事件
+   */
+  public registerAllParserEvents(eventManager: { listen: (fc: string, cb: any) => any }) {
+    eventManager.listen('ast:createComposeLayout', (layoutData: any) => {});
+  }
+
+  /**
    * 安全的ast解析
    */
   private safeParser() {

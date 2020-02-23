@@ -176,7 +176,6 @@ class Material extends Component<
           }),
         );
       } else {
-        // eventManager.error('功能物料必须位于布局物料中');
         astTool.appendNode(
           targetNode,
           astTool.makeFunctionNode({
@@ -185,13 +184,6 @@ class Material extends Component<
             type: materialConfig.materialType,
           }),
         );
-        // astTool.appendNodeToPage(
-        //   astTool.makeFunctionNode({
-        //     name: '',
-        //     nodeDemandCapacity: materialConfig.nodeDemandCapacity,
-        //     type: materialConfig.materialType,
-        //   }),
-        // );
       }
     }
   }
@@ -221,7 +213,12 @@ class Material extends Component<
     const { isOver } = this.props as any;
     return connectDropTarget(
       connectDragSource(
-        <div onMouseDown={e => this.materialContextMenu(e)} className={this.state.isProd ? '' : BEM('render', 'hoc')}>
+        <div
+          style={{
+            border: isOver ? '1px solid green' : '',
+          }}
+          onMouseDown={e => this.materialContextMenu(e)}
+          className={this.state.isProd ? '' : BEM('render', 'hoc')}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,
           })}
