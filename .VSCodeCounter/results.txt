@@ -1,0 +1,168 @@
+Date : 2020-02-23 17:28:17
+Directory : /Users/cuijinyu/Documents/website-builder/website-builder-client
+Total : 92 files,  14383 codes, 805 comments, 2173 blanks, all 17361 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| Log              |          1 |      9,446 |          0 |      1,400 |     10,846 |
+| TypeScript       |         22 |      1,488 |        292 |        296 |      2,076 |
+| TypeScript React |         33 |      1,257 |          4 |        169 |      1,430 |
+| JavaScript       |         12 |      1,055 |        404 |        138 |      1,597 |
+| SCSS             |         16 |        835 |        104 |        156 |      1,095 |
+| JSON             |          3 |        243 |          0 |          3 |        246 |
+| Nunjucks         |          1 |         40 |          0 |          4 |         44 |
+| XML              |          1 |          7 |          0 |          1 |          8 |
+| Properties       |          1 |          6 |          0 |          1 |          7 |
+| Markdown         |          1 |          5 |          0 |          5 |         10 |
+| Shell Script     |          1 |          1 |          1 |          0 |          2 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                            | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                               |         92 |     14,383 |        805 |      2,173 |     17,361 |
+| config                                                                                                          |          8 |        725 |        354 |         89 |      1,168 |
+| config/jest                                                                                                     |          2 |         40 |          7 |          9 |         56 |
+| public                                                                                                          |          2 |         65 |          0 |          5 |         70 |
+| scripts                                                                                                         |          3 |        318 |         49 |         47 |        414 |
+| src                                                                                                             |         72 |      3,587 |        400 |        622 |      4,609 |
+| src/common                                                                                                      |          5 |        604 |        118 |        120 |        842 |
+| src/common/style                                                                                                |          2 |        566 |        103 |        103 |        772 |
+| src/common/utils                                                                                                |          3 |         38 |         15 |         17 |         70 |
+| src/components                                                                                                  |         13 |        708 |          1 |         84 |        793 |
+| src/components/errorBoundary                                                                                    |          1 |         24 |          0 |          7 |         31 |
+| src/components/layoutComposer                                                                                   |          2 |        188 |          0 |         17 |        205 |
+| src/components/materialConfiger                                                                                 |          2 |         61 |          0 |          7 |         68 |
+| src/components/materialTools                                                                                    |          2 |        147 |          0 |         18 |        165 |
+| src/components/pageView                                                                                         |          2 |        176 |          0 |         20 |        196 |
+| src/components/renderTree                                                                                       |          2 |        110 |          1 |         15 |        126 |
+| src/components/routerEditor                                                                                     |          1 |          1 |          0 |          0 |          1 |
+| src/components/styleEditor                                                                                      |          1 |          1 |          0 |          0 |          1 |
+| src/constant                                                                                                    |          2 |          5 |          0 |          2 |          7 |
+| src/context                                                                                                     |          1 |         31 |          0 |          6 |         37 |
+| src/core                                                                                                        |          7 |        896 |        237 |        201 |      1,334 |
+| src/layout                                                                                                      |         12 |        177 |          0 |         33 |        210 |
+| src/layout/content                                                                                              |          2 |         26 |          0 |          5 |         31 |
+| src/layout/footer                                                                                               |          2 |         18 |          0 |          4 |         22 |
+| src/layout/header                                                                                               |          2 |         38 |          0 |          7 |         45 |
+| src/layout/leftBar                                                                                              |          2 |         25 |          0 |          5 |         30 |
+| src/layout/rightBar                                                                                             |          2 |         23 |          0 |          5 |         28 |
+| src/materials                                                                                                   |         10 |        185 |          1 |         33 |        219 |
+| src/materials/components                                                                                        |          8 |        107 |          0 |         24 |        131 |
+| src/materials/components/button                                                                                 |          1 |          0 |          0 |          1 |          1 |
+| src/materials/components/col                                                                                    |          1 |         25 |          0 |          4 |         29 |
+| src/materials/components/form                                                                                   |          1 |          9 |          0 |          2 |         11 |
+| src/materials/components/input                                                                                  |          1 |         26 |          0 |          5 |         31 |
+| src/materials/components/list                                                                                   |          1 |          0 |          0 |          1 |          1 |
+| src/materials/components/menu                                                                                   |          1 |          0 |          0 |          1 |          1 |
+| src/materials/components/row                                                                                    |          1 |         30 |          0 |          6 |         36 |
+| src/pages                                                                                                       |          3 |         14 |          0 |          8 |         22 |
+| src/pages/home                                                                                                  |          1 |          4 |          0 |          2 |          6 |
+| src/pages/login                                                                                                 |          1 |          5 |          0 |          3 |          8 |
+| src/pages/project                                                                                               |          1 |          5 |          0 |          3 |          8 |
+| src/render                                                                                                      |         10 |        691 |          2 |         77 |        770 |
+| src/render/hocs                                                                                                 |          2 |          0 |          0 |          2 |          2 |
+| src/render/store                                                                                                |          3 |        256 |          0 |         18 |        274 |
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                                        | language         | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/.editorconfig                                  | Properties       |          6 |          0 |          1 |          7 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/.prettierrc.js                                 | JavaScript       |         12 |          1 |          2 |         15 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/README.md                                      | Markdown         |          5 |          0 |          5 |         10 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/env.js                                  | JavaScript       |         55 |         28 |         11 |         94 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/jest/cssTransform.js                    | JavaScript       |          9 |          3 |          3 |         15 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/jest/fileTransform.js                   | JavaScript       |         31 |          4 |          6 |         41 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/modules.js                              | JavaScript       |         81 |         35 |         26 |        142 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/paths.js                                | JavaScript       |         66 |         10 |         15 |         91 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/pnpTs.js                                | JavaScript       |         32 |          0 |          4 |         36 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/webpack.config.js                       | JavaScript       |        408 |        212 |         18 |        638 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/config/webpackDevServer.config.js              | JavaScript       |         43 |         62 |          6 |        111 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/deploy.sh                                      | Shell Script     |          1 |          1 |          0 |          2 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/package.json                                   | JSON             |        191 |          0 |          1 |        192 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/public/index.html                              | Nunjucks         |         40 |          0 |          4 |         44 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/public/manifest.json                           | JSON             |         25 |          0 |          1 |         26 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/build.js                               | JavaScript       |        167 |         23 |         22 |        212 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/start.js                               | JavaScript       |        115 |         19 |         14 |        148 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/test.js                                | JavaScript       |         36 |          7 |         11 |         54 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/App.test.tsx                               | TypeScript React |          8 |          0 |          2 |         10 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/App.tsx                                    | TypeScript React |         71 |          0 |          8 |         79 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/style/mixin.scss                    | SCSS             |        282 |          3 |         40 |        325 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/style/reset.scss                    | SCSS             |        284 |        100 |         63 |        447 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/utils/bem.ts                        | TypeScript       |         12 |         12 |          7 |         31 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/utils/prod.ts                       | TypeScript       |         11 |          3 |          5 |         19 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/utils/utils.ts                      | TypeScript       |         15 |          0 |          5 |         20 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/errorBoundary/errorBoundary.tsx | TypeScript React |         24 |          0 |          7 |         31 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/layoutComposer/index.scss       | SCSS             |         11 |          0 |          3 |         14 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/layoutComposer/index.tsx        | TypeScript React |        177 |          0 |         14 |        191 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/index.scss     | SCSS             |         10 |          0 |          2 |         12 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/index.tsx      | TypeScript React |         51 |          0 |          5 |         56 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialTools/index.scss        | SCSS             |         44 |          0 |          9 |         53 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialTools/index.tsx         | TypeScript React |        103 |          0 |          9 |        112 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/pageView/index.scss             | SCSS             |         47 |          0 |          7 |         54 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/pageView/index.tsx              | TypeScript React |        129 |          0 |         13 |        142 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/renderTree/index.scss           | SCSS             |         37 |          1 |          7 |         45 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/renderTree/index.tsx            | TypeScript React |         73 |          0 |          8 |         81 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/routerEditor/index.tsx          | TypeScript React |          1 |          0 |          0 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/styleEditor/index.tsx           | TypeScript React |          1 |          0 |          0 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/constant/drag.ts                           | TypeScript       |          4 |          0 |          1 |          5 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/constant/errorCode.ts                      | TypeScript       |          1 |          0 |          1 |          2 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/context/global.tsx                         | TypeScript React |         31 |          0 |          6 |         37 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/adapterEngine.ts                      | TypeScript       |          1 |          0 |          1 |          2 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/ast.ts                                | TypeScript       |        838 |        237 |        183 |      1,258 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/error.ts                              | TypeScript       |          0 |          0 |          1 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/errorEngine.ts                        | TypeScript       |          1 |          0 |          1 |          2 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/filterEngine.ts                       | TypeScript       |          1 |          0 |          1 |          2 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/formEngine.ts                         | TypeScript       |          1 |          0 |          1 |          2 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/request.ts                            | TypeScript       |         54 |          0 |         13 |         67 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/eventManager.ts                            | TypeScript       |         42 |          0 |          9 |         51 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/index.scss                                 | SCSS             |         14 |          0 |          5 |         19 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/index.tsx                                  | TypeScript React |          6 |          3 |          3 |         12 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/content/content.tsx                 | TypeScript React |         17 |          0 |          3 |         20 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/content/index.scss                  | SCSS             |          9 |          0 |          2 |         11 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/footer/index.scss                   | SCSS             |         11 |          0 |          1 |         12 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/footer/index.tsx                    | TypeScript React |          7 |          0 |          3 |         10 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/header/index.scss                   | SCSS             |         22 |          0 |          4 |         26 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/header/index.tsx                    | TypeScript React |         16 |          0 |          3 |         19 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/index.scss                          | SCSS             |         20 |          0 |          4 |         24 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/index.tsx                           | TypeScript React |         27 |          0 |          3 |         30 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/leftBar/index.scss                  | SCSS             |         10 |          0 |          2 |         12 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/leftBar/index.tsx                   | TypeScript React |         15 |          0 |          3 |         18 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/rightBar/index.scss                 | SCSS             |          9 |          0 |          2 |         11 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/rightBar/index.tsx                  | TypeScript React |         14 |          0 |          3 |         17 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/logo.svg                                   | XML              |          7 |          0 |          1 |          8 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/base.tsx              | TypeScript React |         17 |          0 |          4 |         21 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/button/index.tsx      | TypeScript React |          0 |          0 |          1 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/col/index.tsx         | TypeScript React |         25 |          0 |          4 |         29 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/form/form.tsx         | TypeScript React |          9 |          0 |          2 |         11 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/input/index.tsx       | TypeScript React |         26 |          0 |          5 |         31 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/list/index.tsx        | TypeScript React |          0 |          0 |          1 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/menu/index.tsx        | TypeScript React |          0 |          0 |          1 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/row/index.tsx         | TypeScript React |         30 |          0 |          6 |         36 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/decorators.ts                    | TypeScript       |         48 |          1 |          6 |         55 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/index.ts                         | TypeScript       |         30 |          0 |          3 |         33 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/pages/home/index.tsx                       | TypeScript React |          4 |          0 |          2 |          6 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/pages/login/index.tsx                      | TypeScript React |          5 |          0 |          3 |          8 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/pages/project/index.tsx                    | TypeScript React |          5 |          0 |          3 |          8 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/react-app-env.d.ts                         | TypeScript       |         48 |          3 |         14 |         65 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/helper.ts                           | TypeScript       |         45 |          1 |         10 |         56 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/hocs/positionHOC.tsx                | TypeScript React |          0 |          0 |          1 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/hocs/resizeHOC.tsx                  | TypeScript React |          0 |          0 |          1 |          1 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/index.scss                          | SCSS             |         15 |          0 |          3 |         18 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/index.tsx                           | TypeScript React |        136 |          1 |         16 |        153 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/material.tsx                        | TypeScript React |        229 |          0 |         26 |        255 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/mhoc.scss                           | SCSS             |         10 |          0 |          2 |         12 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/store/renderAction.ts               | TypeScript       |        114 |          0 |          7 |        121 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/store/renderReducer.ts              | TypeScript       |        135 |          0 |          8 |        143 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/store/renderStore.ts                | TypeScript       |          7 |          0 |          3 |         10 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/serviceWorker.ts                           | TypeScript       |         79 |         31 |         15 |        125 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/src/setupTests.ts                              | TypeScript       |          1 |          4 |          1 |          6 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/tsconfig.json                                  | JSON             |         27 |          0 |          1 |         28 |
+| /Users/cuijinyu/Documents/website-builder/website-builder-client/yarn-error.log                                 | Log              |      9,446 |          0 |      1,400 |     10,846 |
+| Total                                                                                                           |                  |     14,383 |        805 |      2,173 |     17,361 |
++-----------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

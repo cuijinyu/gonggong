@@ -184,7 +184,13 @@ type PageType = {
   components?: AstNodeType[];
 };
 
-type CustomLayout = {};
+type CustomLayout = {
+  name: string;
+  layouts: {
+    type: 'row' | 'span';
+    count: number;
+  }[];
+};
 
 /**
  * 根节点类型
@@ -1215,6 +1221,13 @@ class AstParser {
     console.group('AST');
     console.log(this.astTree);
     console.groupEnd();
+  }
+
+  public addCustomLayout(customLayout: CustomLayout) {
+    if (!this.astTree.customLayout) {
+      this.astTree.customLayout = [];
+    }
+    this.astTree.customLayout.push(customLayout);
   }
 
   public makeLayoutNode(config: Omit<ConstructorParameters<typeof AstNode>[0], 'isLayoutNode'>) {
