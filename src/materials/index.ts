@@ -11,6 +11,9 @@ type MaterialInfoType = {
   nodeDemandCapacity: number;
   type: string;
   iconMode?: 'src';
+  config?: {
+    name: string;
+  }[];
 };
 
 export const getMetaInfo = (material: any) => {

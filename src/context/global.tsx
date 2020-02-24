@@ -14,7 +14,8 @@ const GlobalContext = React.createContext<GlobalContextType>({} as any);
 const GlobalContextProvider: FC = ({ children }) => {
   const [ast, setAst] = useState<string>('{}');
   const [astTool, setAstTool] = useState<AstParser>(new AstParser(ast, setAst, at => setAstTool(at)));
-  const [eBus, setEBus] = useState<typeof EventManager>(EventManager);
+  astTool.registerAllParserEvents(EventManager);
+  const [eBus] = useState<typeof EventManager>(EventManager);
   return (
     <GlobalContext.Provider
       value={{

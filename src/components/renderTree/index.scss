@@ -1,6 +1,7 @@
 @import '../../common/style/mixin.scss';
 
 @include b(renderTree) {
+  overflow-x: scroll;
   @include e(title) {
     display: flex;
     align-items: center;

@@ -184,7 +184,13 @@ type PageType = {
   components?: AstNodeType[];
 };
 
-type CustomLayout = {};
+type CustomLayout = {
+  name: string;
+  layouts: {
+    type: 'row' | 'span';
+    count: number;
+  }[];
+};
 
 /**
  * 根节点类型
@@ -330,6 +336,13 @@ class AstParser {
 
   // 当前选中的页面
   private selectPage: string | null = null;
+
+  /**
+   * 注册所有的ast相关事件
+   */
+  public registerAllParserEvents(eventManager: { listen: (fc: string, cb: any) => any }) {
+    eventManager.listen('ast:createComposeLayout', (layoutData: any) => {});
+  }
 
   /**
    * 安全的ast解析
@@ -1208,6 +1221,13 @@ class AstParser {
     console.group('AST');
     console.log(this.astTree);
     console.groupEnd();
+  }
+
+  public addCustomLayout(customLayout: CustomLayout) {
+    if (!this.astTree.customLayout) {
+      this.astTree.customLayout = [];
+    }
+    this.astTree.customLayout.push(customLayout);
   }
 
   public makeLayoutNode(config: Omit<ConstructorParameters<typeof AstNode>[0], 'isLayoutNode'>) {

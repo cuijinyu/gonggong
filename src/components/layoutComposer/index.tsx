@@ -3,8 +3,9 @@ import _ from 'lodash';
 import './index.scss';
 import { BEM } from '../../common/utils/bem';
 import Utils from '../../common/utils/utils';
-import { Button, Radio, Tag } from 'antd';
+import { Button, Radio, Tag, Input } from 'antd';
 import eventManager from '../../eventManager';
+import { useGlobalContext } from '../../context/global';
 
 const { uuid } = Utils;
 
@@ -32,9 +33,36 @@ const initLayoutConfig = () => {
 const LayoutComposer = () => {
   const start = useRef<number | null>(null);
   const end = useRef<number | null>(null);
+  const layoutNameRef = useRef<string>('');
+  const composedGroupRef = useRef<ComposedGroupType[]>([]);
+
   const [layoutGroup, setLayoutGroup] = useState<LayoutConfigType[]>(initLayoutConfig());
   const [selectedLayoutMode, setSelectedLayoutMode] = useState<string>('row');
   const [composedGroup, setComposetGroup] = useState<ComposedGroupType[] | null>(null);
+  const [layoutName, setLayoutName] = useState<string>('');
+
+  const { astTool } = useGlobalContext();
+
+  useEffect(() => {
+    eventManager.listen('createCustomLayout', () => {
+      astTool.addCustomLayout({
+        name: layoutNameRef.current,
+        layouts: composedGroupRef.current.map(layout => {
+          return {
+            type: layout.type as any,
+            count: layout.end - layout.start,
+          };
+        }),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    layoutNameRef.current = layoutName;
+    if (composedGroup) {
+      composedGroupRef.current = composedGroup;
+    }
+  }, [layoutName, composedGroup]);
 
   const pushToComposedGroup = ({ start, end, type }: Omit<ComposedGroupType, 'id'>) => {
     if (_.isFinite(start) && _.isFinite(end)) {
@@ -55,16 +83,17 @@ const LayoutComposer = () => {
   };
 
   const removeFromComposedGroup = (id: string) => {
-    const cpItemIdx = composedGroup?.findIndex(cp => cp.id === id);
-    if (composedGroup && !_.isUndefined(cpItemIdx)) {
-      const cpItem = composedGroup[cpItemIdx];
+    const clonedComposedGroup = _.cloneDeep(composedGroup);
+    const cpItemIdx = clonedComposedGroup?.findIndex(cp => cp.id === id);
+    if (clonedComposedGroup && !_.isUndefined(cpItemIdx)) {
+      const cpItem = clonedComposedGroup[cpItemIdx];
       const group = _.cloneDeep(layoutGroup);
       for (let i = cpItem.start; i <= cpItem.end; i++) {
         group[i].isUsed = false;
-        setLayoutGroup(group);
       }
-      composedGroup?.splice(cpItemIdx, 1);
-      setComposetGroup(Array.from(composedGroup));
+      setLayoutGroup(group);
+      clonedComposedGroup?.splice(cpItemIdx, 1);
+      setComposetGroup(Array.from(clonedComposedGroup));
     }
   };
 
@@ -128,6 +157,18 @@ const LayoutComposer = () => {
         style={{
           marginBottom: '12px',
         }}>
+        <span>布局名称</span>
+        <Input
+          value={layoutName}
+          onChange={e => {
+            setLayoutName(e.target.value);
+          }}
+        />
+      </div>
+      <div
+        style={{
+          marginBottom: '12px',
+        }}>
         <span>选择要组合的项目: </span>
         <Radio.Group
           value={selectedLayoutMode}
@@ -145,6 +186,7 @@ const LayoutComposer = () => {
         {layoutGroup.map((layoutConfig, index) => {
           return (
             <div
+              key={uuid()}
               data-index={index}
               style={{
                 border: '1px solid black',
@@ -161,6 +203,7 @@ const LayoutComposer = () => {
         {composedGroup?.map(cp => {
           return (
             <div
+              key={uuid()}
               style={{
                 marginTop: '10px',
                 marginBottom: '10px',

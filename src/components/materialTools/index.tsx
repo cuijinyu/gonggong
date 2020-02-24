@@ -5,9 +5,13 @@ import './index.scss';
 import { BEM } from '../../common/utils/bem';
 import { Icon, Popover, Button, Modal } from 'antd';
 import { useDrag } from 'react-dnd';
+import Utils from '../../common/utils/utils';
 import dndType from '../../constant/drag';
 import _ from 'lodash';
 import LayoutComposer from '../layoutComposer';
+import eventManager from '../../eventManager';
+
+const { uuid } = Utils;
 
 const MaterialItem: FC<{ material: ReturnType<typeof getMetaInfo> }> = ({ material }) => {
   const [collectedProps, drag] = useDrag({
@@ -56,23 +60,25 @@ const MaterialTools: FC = () => {
   return (
     <>
       <div className={BEM('materialTools')}>
-        <Popover content={'这里是所有可以使用的物料合集，包括布局物料和功能物料'}>
-          <div className={BEM('materialTools', 'title')}>
-            物料集合
-            <Button
-              onClick={() => {
-                setShowComposer(true);
-              }}>
-              布局组合器
-            </Button>
-          </div>
-        </Popover>
+        <div className={BEM('materialTools', 'title')}>
+          物料集合
+          <Popover content={'这里是所有可以使用的物料合集，包括布局物料和功能物料'}>
+            <Icon type="info-circle" style={{ marginLeft: 5, marginRight: 5 }} />
+          </Popover>
+          <Button
+            size="small"
+            onClick={() => {
+              setShowComposer(true);
+            }}>
+            布局组合器
+          </Button>
+        </div>
         <div className={BEM('materialTools', 'wrapper')}>
           <div>
             <div className={BEM('materialTools', 'wrapper-container-title')}>布局物料</div>
             <div className={BEM('materialTools', 'wrapper-container')}>
               {materials.map(material => {
-                return material.isLayoutNode && <MaterialItem material={material} />;
+                return material.isLayoutNode && <MaterialItem key={uuid()} material={material} />;
               })}
             </div>
           </div>
@@ -80,7 +86,7 @@ const MaterialTools: FC = () => {
             <div className={BEM('materialTools', 'wrapper-container-title')}>功能物料</div>
             <div className={BEM('materialTools', 'wrapper-container')}>
               {materials.map(material => {
-                return !material.isLayoutNode && <MaterialItem material={material} />;
+                return !material.isLayoutNode && <MaterialItem key={uuid()} material={material} />;
               })}
             </div>
           </div>
@@ -93,6 +99,7 @@ const MaterialTools: FC = () => {
           setShowComposer(false);
         }}
         onOk={() => {
+          eventManager.emit('createCustomLayout');
           setShowComposer(false);
         }}>
         <LayoutComposer />
