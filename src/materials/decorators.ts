@@ -42,7 +42,7 @@ export function NodeDC(dc: number) {
 // TODO: config装饰器的设计
 export function Config() {
   return function(target: any, propertyName: string) {
-    const prevConfig = Reflect.getMetadata('config', target) || [];
+    const prevConfig = Reflect.getMetadata('config', target.constructor) || [];
     const nextConfig = [
       ...prevConfig,
       {

@@ -58,7 +58,13 @@ const MaterialConfiger = () => {
           </div>
         </div>
       </div>
-      <Drawer title={'属性编辑器'} visible={drawerVisible} placement={'right'}></Drawer>
+      <Drawer
+        onClose={() => {
+          setDrawerVisible(false);
+        }}
+        title={'属性编辑器'}
+        visible={drawerVisible}
+        placement={'right'}></Drawer>
     </>
   );
 };
