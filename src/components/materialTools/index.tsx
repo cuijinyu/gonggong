@@ -10,6 +10,8 @@ import dndType from '../../constant/drag';
 import _ from 'lodash';
 import LayoutComposer from '../layoutComposer';
 import eventManager from '../../eventManager';
+import { useGlobalContext } from '../../context/global';
+import { CustomLayout } from '../../core/ast';
 
 const { uuid } = Utils;
 
@@ -42,9 +44,32 @@ const MaterialItem: FC<{ material: ReturnType<typeof getMetaInfo> }> = ({ materi
   );
 };
 
+const CustomLayoutItem: FC<{ customLayout: CustomLayout }> = ({ customLayout }) => {
+  const [, ref] = useDrag({
+    item: {
+      type: dndType.CUSTOMLAYOUT,
+      ...customLayout,
+    },
+  });
+  return (
+    <div ref={ref} className={BEM('materialTools', 'customLayout-item')}>
+      {customLayout.name}
+    </div>
+  );
+};
+
 const MaterialTools: FC = () => {
   const [materials, setMaterials] = useState<ReturnType<typeof getMetaInfo>[]>([]);
   const [showComposer, setShowComposer] = useState<boolean>(false);
+  const { ast, astTool } = useGlobalContext();
+  const [customLayouts, setCustomLayouts] = useState<CustomLayout[]>([]);
+
+  useEffect(() => {
+    const customLayouts = astTool.getCustomLayouts();
+    if (customLayouts) {
+      setCustomLayouts(customLayouts);
+    }
+  }, [ast]);
 
   useEffect(() => {
     for (const materialKey in Materials) {
@@ -87,6 +112,14 @@ const MaterialTools: FC = () => {
             <div className={BEM('materialTools', 'wrapper-container')}>
               {materials.map(material => {
                 return !material.isLayoutNode && <MaterialItem key={uuid()} material={material} />;
+              })}
+            </div>
+          </div>
+          <div>
+            <div className={BEM('materialTools', 'wrapper-container-title')}>自定义布局</div>
+            <div className={BEM('materialTools', 'wrapper-container')}>
+              {customLayouts.map(customLayout => {
+                return <CustomLayoutItem customLayout={customLayout} />;
               })}
             </div>
           </div>

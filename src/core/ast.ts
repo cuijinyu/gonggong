@@ -184,7 +184,7 @@ type PageType = {
   components?: AstNodeType[];
 };
 
-type CustomLayout = {
+export type CustomLayout = {
   name: string;
   layouts: {
     type: 'row' | 'span';
@@ -1228,6 +1228,11 @@ class AstParser {
       this.astTree.customLayout = [];
     }
     this.astTree.customLayout.push(customLayout);
+    this.save('新增自定义布局');
+  }
+
+  public getCustomLayouts() {
+    return this.astTree.customLayout;
   }
 
   public makeLayoutNode(config: Omit<ConstructorParameters<typeof AstNode>[0], 'isLayoutNode'>) {

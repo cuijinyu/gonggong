@@ -21,14 +21,7 @@ class RowMaterial extends BaseMaterial {
   }
 
   render() {
-    return (
-      <Row
-        style={{
-          minHeight: 20,
-        }}>
-        {this.props.children}
-      </Row>
-    );
+    return <>{this.props.children}</>;
   }
 }
 

@@ -50,7 +50,7 @@ const LayoutComposer = () => {
         layouts: composedGroupRef.current.map(layout => {
           return {
             type: layout.type as any,
-            count: layout.end - layout.start,
+            count: layout.end - layout.start + 1,
           };
         }),
       });
