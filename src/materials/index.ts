@@ -2,7 +2,7 @@ import Input from './components/input';
 import Row from './components/row';
 import Col from './components/col';
 import 'reflect-metadata';
-type MaterialInfoType = {
+export type MaterialInfoType = {
   name: string;
   icon: string;
   desc: string;

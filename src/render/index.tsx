@@ -9,11 +9,12 @@ import 'antd/dist/antd.css';
 import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
 import store from './store/renderStore';
-import { AstNodeType } from '../core/ast';
+import { AstNodeType, CustomLayout } from '../core/ast';
 import Material from './material';
 import { notification, Icon } from 'antd';
 import './index.scss';
 import eventManager from '../eventManager';
+import materials, { getMetaInfo, MaterialInfoType } from '../materials';
 
 type MaterialDropItem = {
   type: string;
@@ -36,41 +37,103 @@ const Render: React.FC = function() {
     setHasSelectPage(astTool.hasSelectPage());
   }, [astTool, ast]);
 
-  const convertComposeLayoutToNestedNodes = () => {
+  const convertComposeLayoutToNestedNodes = (
+    conf: {
+      type: string;
+    } & CustomLayout,
+  ) => {
     // 转译组合布局到真实的node列表
+    const { Row, Col } = materials;
+    const selectedPageId = astTool.getSelectPage();
+    if (selectedPageId) {
+      const selectedPage = astTool.getPageById(selectedPageId);
+      if (selectedPage) {
+        const RowMeta = getMetaInfo(Row);
+        const ColMeta = getMetaInfo(Col);
+        let tempSpan: any = null;
+        const wrapRow = astTool.makeLayoutNode({
+          name: '',
+          layoutCapacity: RowMeta.layoutCapacity as number,
+          nodeDemandCapacity: RowMeta.nodeDemandCapacity as number,
+          type: 'Row',
+        });
+        astTool.appendNodeToPage(wrapRow);
+        conf.layouts.forEach(layout => {
+          if (layout.type === 'span') {
+            tempSpan = layout;
+          } else if (layout.type === 'row') {
+            const innerCol = astTool.makeLayoutNode({
+              name: '',
+              layoutCapacity: ColMeta.layoutCapacity as number,
+              nodeDemandCapacity: ColMeta.nodeDemandCapacity as number,
+              type: 'Col',
+            });
+            if (tempSpan) {
+              const spanConfig = astTool.makeValueConfig(tempSpan.count);
+              astTool.setNodeKeyConfig(innerCol, 'offset', spanConfig);
+            }
+            astTool.setNodeKeyConfig(innerCol, 'span', astTool.makeValueConfig(layout.count));
+            astTool.appendNode(wrapRow, innerCol);
+            tempSpan = null;
+          }
+        });
+      }
+    }
   };
 
   const forceUpdate = useCallback(() => setUpdater(updater => updater + 1), []);
 
   const [{ canDrop, isOver }, drop] = useDrop({
-    accept: [dndTypes.MATERIAL],
+    accept: [dndTypes.MATERIAL, dndTypes.CUSTOMLAYOUT],
     drop: (item: MaterialDropItem, monitor) => {
       if (monitor.didDrop()) {
         return;
       }
-      if (!hasSelectPage) {
-        notification.error({
-          message: '还没有选择一个添加页面哦',
-        });
-      } else {
-        const selectedPageId = astTool.getSelectPage();
-        if (selectedPageId) {
-          const selectedPage = astTool.getPageById(selectedPageId);
-          if (selectedPage) {
-            if (item.isLayoutNode) {
-              astTool.appendNodeToPage(
-                astTool.makeLayoutNode({
-                  name: '',
-                  layoutCapacity: item.layoutCapacity,
-                  nodeDemandCapacity: item.nodeDemandCapacity,
-                  type: item.materialType,
-                }),
-              );
-            } else {
-              eventManager.error('功能物料必须位于布局物料中');
+      const itemType = monitor.getItemType();
+
+      const materialHandler = () => {
+        if (!hasSelectPage) {
+          notification.error({
+            message: '还没有选择一个添加页面哦',
+          });
+        } else {
+          const selectedPageId = astTool.getSelectPage();
+          if (selectedPageId) {
+            const selectedPage = astTool.getPageById(selectedPageId);
+            if (selectedPage) {
+              if (item.isLayoutNode) {
+                astTool.appendNodeToPage(
+                  astTool.makeLayoutNode({
+                    name: '',
+                    layoutCapacity: item.layoutCapacity,
+                    nodeDemandCapacity: item.nodeDemandCapacity,
+                    type: item.materialType,
+                  }),
+                );
+              } else {
+                eventManager.error('功能物料必须位于布局物料中');
+              }
             }
           }
         }
+      };
+
+      const customLayoutHandler = () => {
+        const layoutConf = (item as any) as {
+          type: string;
+        } & CustomLayout;
+        convertComposeLayoutToNestedNodes(layoutConf);
+      };
+
+      switch (itemType) {
+        case dndTypes.CUSTOMLAYOUT:
+          customLayoutHandler();
+          break;
+        case dndTypes.MATERIAL:
+          materialHandler();
+          break;
+        default:
+          break;
       }
     },
     collect: monitor => ({

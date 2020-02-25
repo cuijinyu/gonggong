@@ -147,7 +147,6 @@ class Material extends Component<
 
   static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {
     const renderProps: any = {};
-    console.log(nextProps.astTool);
     if (nextProps.method) {
       Object.keys(nextProps.method).forEach(k => {
         renderProps[k] = injectMethod(nextProps.method ? nextProps.method[k].method : '', nextProps.changeState);
