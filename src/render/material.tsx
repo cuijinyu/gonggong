@@ -3,8 +3,14 @@ import { connect, MapDispatchToProps, Provider } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import store from './store/renderStore';
-import Materials from '../materials/index';
-import AstParser, { ConfigType, StateConfigValue, StaticConfigValue, MethodConfigValue } from '../core/ast';
+import Materials, { getMetaInfo } from '../materials/index';
+import AstParser, {
+  ConfigType,
+  StateConfigValue,
+  StaticConfigValue,
+  MethodConfigValue,
+  CustomLayout,
+} from '../core/ast';
 import { setStateById } from './store/renderAction';
 import { isProd } from '../common/utils/prod';
 import './mhoc.scss';
@@ -14,6 +20,7 @@ import { GlobalContext } from '../context/global';
 import { DragSource, DropTarget } from 'react-dnd';
 import dndTypes from '../constant/drag';
 import eventManager from '../eventManager';
+import materials from '../materials/index';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -101,7 +108,15 @@ const materialTarget = {
       return;
     }
     const materialConfig = monitor.getItem();
-    component.insertMaterial(materialConfig);
+    const itemType = monitor.getItemType();
+    switch (itemType) {
+      case dndTypes.MATERIAL:
+        component.insertMaterial(materialConfig);
+        break;
+      case dndTypes.CUSTOMLAYOUT:
+        component.insertCustomLayoutToLayoutMaterial(materialConfig);
+        break;
+    }
   },
 };
 
@@ -188,10 +203,54 @@ class Material extends Component<
     }
   }
 
+  insertCustomLayoutToLayoutMaterial(
+    conf: {
+      type: string;
+    } & CustomLayout,
+  ) {
+    if (this.isLayout()) {
+      const astTool: AstParser = this.context.astTool;
+      const targetNode = astTool.getNodeById(this.props.id);
+      if (targetNode) {
+        const { Row, Col } = materials;
+        const RowMeta = getMetaInfo(Row);
+        const ColMeta = getMetaInfo(Col);
+        let tempSpan: any = null;
+        const wrapRow = astTool.makeLayoutNode({
+          name: '',
+          layoutCapacity: RowMeta.layoutCapacity as number,
+          nodeDemandCapacity: RowMeta.nodeDemandCapacity as number,
+          type: 'Row',
+        });
+        astTool.appendNode(targetNode, wrapRow);
+        conf.layouts.forEach(layout => {
+          if (layout.type === 'span') {
+            tempSpan = layout;
+          } else if (layout.type === 'row') {
+            const innerCol = astTool.makeLayoutNode({
+              name: '',
+              layoutCapacity: ColMeta.layoutCapacity as number,
+              nodeDemandCapacity: ColMeta.nodeDemandCapacity as number,
+              type: 'Col',
+            });
+            if (tempSpan) {
+              const spanConfig = astTool.makeValueConfig(tempSpan.count);
+              astTool.setNodeKeyConfig(innerCol, 'offset', spanConfig);
+            }
+            astTool.setNodeKeyConfig(innerCol, 'span', astTool.makeValueConfig(layout.count));
+            astTool.appendNode(wrapRow, innerCol);
+            tempSpan = null;
+          }
+        });
+      }
+    }
+  }
+
   isLayout() {
     const layoutArray = new Set();
     layoutArray.add('Row');
     layoutArray.add('Col');
+    layoutArray.add('Card');
     return layoutArray.has(this.props.materialType);
   }
 
@@ -263,7 +322,7 @@ const mapDispatchToProps = (dispatch: typeof store.dispatch, ownProps: { config:
 };
 
 export default _.flow(
-  DropTarget(dndTypes.MATERIAL, materialTarget as any, dropCollect),
+  DropTarget([dndTypes.MATERIAL, dndTypes.CUSTOMLAYOUT], materialTarget as any, dropCollect),
   DragSource(dndTypes.ELEMENT, elementSource as any, collect),
   connect(mapStateToProps, mapDispatchToProps),
 )(Material);

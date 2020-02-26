@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseMaterial } from '../base';
 import { Col } from 'antd';
-import { Material, Icon, Desc, IsLayout, NodeDC } from '../../decorators';
+import { Material, Icon, Desc, IsLayout, NodeDC, Config } from '../../decorators';
 
 @Icon('dash')
 @Desc(`这个是col布局物料`)
@@ -12,6 +12,12 @@ class ColMaterial extends BaseMaterial {
   constructor(props: any) {
     super(props);
   }
+
+  @Config()
+  private col = null;
+
+  @Config()
+  private span = null;
 
   render() {
     return (

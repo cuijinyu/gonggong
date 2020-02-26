@@ -1,6 +1,13 @@
 import Input from './components/input';
 import Row from './components/row';
 import Col from './components/col';
+import Switch from './components/switch';
+import Table from './components/table';
+import Button from './components/button';
+import Card from './components/card';
+import Label from './components/label';
+import Menu from './components/menu';
+import Calendar from './components/calendar';
 import 'reflect-metadata';
 export type MaterialInfoType = {
   name: string;
@@ -29,4 +36,11 @@ export default {
   Input,
   Row,
   Col,
+  Switch,
+  Table,
+  Button,
+  Card,
+  Label,
+  Menu,
+  Calendar,
 };
