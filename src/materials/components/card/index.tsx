@@ -1,26 +1,20 @@
 import React from 'react';
 import 'reflect-metadata';
-import { Menu } from 'antd';
+import { Card } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
 @Icon('edit')
-@Desc('这个是menu物料')
-@IsLayout(false)
+@Desc('这个是card物料')
+@IsLayout(true, 24)
 @Material()
 @NodeDC(1)
-export default class MenuMaterial extends BaseMaterial {
+export default class CardMaterial extends BaseMaterial {
   constructor(props: any) {
     super(props);
   }
 
-  @Config()
-  private value = '';
-
-  @Config()
-  private onChange = () => {};
-
   render() {
-    return <Menu />;
+    return <Card>{this.props.children}</Card>;
   }
 }

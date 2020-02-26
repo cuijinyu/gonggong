@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { BEM } from '../../common/utils/bem';
 import _ from 'lodash';
 import './index.scss';
-import { Popover, Icon, Drawer } from 'antd';
+import { Popover, Icon, Drawer, Button } from 'antd';
 import { useGlobalContext } from '../../context/global';
 import eventManager from '../../eventManager';
 import { AstNodeType } from '../../core/ast';
@@ -25,6 +25,10 @@ const MaterialConfiger = () => {
     });
   }, []);
 
+  const editProperty = useCallback(() => {
+    setDrawerVisible(true);
+  }, []);
+
   return (
     <>
       <div className={BEM('materialConfiger')}>
@@ -41,19 +45,32 @@ const MaterialConfiger = () => {
               <div className={BEM('materialConfiger', 'panel-item-title')}>id:</div>
               <div className={BEM('materialConfiger', 'panel-item-value')}>{selectedElement?.id}</div>
             </div>
-            <div className={BEM('materialConfiger', 'panel-item')}>
-              <div className={BEM('materialConfiger', 'panel-item-title')}>name:</div>
-              <div className={BEM('materialConfiger', 'panel-item-value')}>{selectedElement?.name}</div>
-            </div>
           </div>
           <div className={BEM('materialConfiger', 'panel')}>
             <div className={BEM('materialConfiger', 'panel-title')}>基础配置</div>
-            <div>id: {selectedElement?.id}</div>
+            <div className={BEM('materialConfiger', 'panel-item')}>
+              <div className={BEM('materialConfiger', 'panel-item-title')}>name:</div>
+              <div className={BEM('materialConfiger', 'panel-item-value')}>
+                {selectedElement?.name} <Button>编辑</Button>
+              </div>
+            </div>
           </div>
           <div className={BEM('materialConfiger', 'panel')}>
             <div className={BEM('materialConfiger', 'panel-title')}>物料配置项</div>
             {metaConfig?.config.map(cfg => {
-              return cfg.name;
+              return (
+                <div className={BEM('materialConfiger', 'panel-item')}>
+                  <div className={BEM('materialConfiger', 'panel-item-title')}>{cfg.name}</div>
+                  <div className={BEM('materialConfiger', 'panel-item-value')}>
+                    <Button
+                      onClick={() => {
+                        editProperty();
+                      }}>
+                      编辑
+                    </Button>
+                  </div>
+                </div>
+              );
             })}
           </div>
         </div>

@@ -1,15 +1,15 @@
 import React from 'react';
 import 'reflect-metadata';
-import { Menu } from 'antd';
+import { Input, Switch } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
 @Icon('edit')
-@Desc('这个是menu物料')
+@Desc('这个是switch物料')
 @IsLayout(false)
 @Material()
 @NodeDC(1)
-export default class MenuMaterial extends BaseMaterial {
+export default class SwitchMaterial extends BaseMaterial {
   constructor(props: any) {
     super(props);
   }
@@ -21,6 +21,6 @@ export default class MenuMaterial extends BaseMaterial {
   private onChange = () => {};
 
   render() {
-    return <Menu />;
+    return <Switch />;
   }
 }

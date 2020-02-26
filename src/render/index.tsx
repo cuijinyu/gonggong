@@ -9,7 +9,7 @@ import 'antd/dist/antd.css';
 import { useGlobalContext } from '../context/global';
 import { Provider } from 'react-redux';
 import store from './store/renderStore';
-import { AstNodeType, CustomLayout } from '../core/ast';
+import AstParser, { AstNodeType, CustomLayout } from '../core/ast';
 import Material from './material';
 import { notification, Icon } from 'antd';
 import './index.scss';
@@ -41,6 +41,7 @@ const Render: React.FC = function() {
     conf: {
       type: string;
     } & CustomLayout,
+    astTool: AstParser,
   ) => {
     // 转译组合布局到真实的node列表
     const { Row, Col } = materials;
@@ -122,7 +123,7 @@ const Render: React.FC = function() {
         const layoutConf = (item as any) as {
           type: string;
         } & CustomLayout;
-        convertComposeLayoutToNestedNodes(layoutConf);
+        convertComposeLayoutToNestedNodes(layoutConf, astTool);
       };
 
       switch (itemType) {

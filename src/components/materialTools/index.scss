@@ -26,8 +26,8 @@
 
   @include e(item) {
     flex: 1;
-    width: 33%;
-    max-width: 50%;
+    min-width: 33%;
+    max-width: 33%;
     border: 1px solid rgba(0, 0, 0, 0.35);
     box-sizing: border-box;
     transition: transform 0.2s;
@@ -39,8 +39,8 @@
   }
 
   @include e(customLayout-item) {
-    width: 33%;
-    max-width: 50%;
+    min-width: 33%;
+    max-width: 33%;
     height: 30px;
     background: white;
     display: flex;
