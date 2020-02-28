@@ -4,14 +4,30 @@ import { Menu } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
+const { SubMenu } = Menu;
+
 @Icon('edit')
 @Desc('这个是menu物料')
 @IsLayout(false)
 @Material()
 @NodeDC(1)
-export default class MenuMaterial extends BaseMaterial {
+export default class MenuMaterial extends BaseMaterial<
+  {},
+  {
+    routers: any;
+  }
+> {
   constructor(props: any) {
     super(props);
+    this.state = {
+      routers: [],
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      routers: this.getRouterConfig(),
+    });
   }
 
   @Config()
@@ -21,6 +37,12 @@ export default class MenuMaterial extends BaseMaterial {
   private onChange = () => {};
 
   render() {
-    return <Menu />;
+    return (
+      <Menu>
+        {this.state.routers.map((router: any) => {
+          return <SubMenu title={router.name} />;
+        })}
+      </Menu>
+    );
   }
 }

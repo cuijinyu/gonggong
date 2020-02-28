@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect, MapDispatchToProps, Provider } from 'react-redux';
+import cn from 'classnames';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import store from './store/renderStore';
@@ -10,6 +11,7 @@ import AstParser, {
   StaticConfigValue,
   MethodConfigValue,
   CustomLayout,
+  AstNodeType,
 } from '../core/ast';
 import { setStateById } from './store/renderAction';
 import { isProd } from '../common/utils/prod';
@@ -141,6 +143,7 @@ class Material extends Component<
   {
     isProd: boolean;
     isLayout: boolean;
+    isActive: boolean;
     renderProps: {
       [key: string]: any;
     };
@@ -153,11 +156,25 @@ class Material extends Component<
     this.state = {
       isProd: isProd(),
       isLayout: this.isLayout(),
+      isActive: false,
       renderProps: {
         ...this.props,
       },
     };
     this.materialContextMenu.bind(this);
+    eventManager.listen('elementSelect', ({ component }: { component: AstNodeType }) => {
+      if (component.id === this.props.id) {
+        this.setState({
+          isActive: true,
+        });
+      } else {
+        if (this.state.isActive) {
+          this.setState({
+            isActive: false,
+          });
+        }
+      }
+    });
   }
 
   static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {
@@ -281,8 +298,12 @@ class Material extends Component<
             width: this.props.materialType === 'Row' ? '100%' : ((this.props as any).span * 100) / 24 + '%',
             minHeight: 10,
           }}
+          onClick={this.selectElement()}
           onMouseDown={e => this.materialContextMenu(e)}
-          className={this.state.isProd ? '' : BEM('render', 'hoc')}>
+          className={cn([
+            this.state.isProd ? '' : BEM('render', 'hoc'),
+            this.state.isActive ? BEM('render', 'hoc', 'active') : '',
+          ])}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,
           })}
@@ -292,8 +313,12 @@ class Material extends Component<
           style={{
             border: isOver ? '1px solid green' : '',
           }}
+          onClick={this.selectElement()}
           onMouseDown={e => this.materialContextMenu(e)}
-          className={this.state.isProd ? '' : BEM('render', 'hoc')}>
+          className={cn([
+            this.state.isProd ? '' : BEM('render', 'hoc'),
+            this.state.isActive ? BEM('render', 'hoc', 'active') : '',
+          ])}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,
           })}
@@ -301,6 +326,16 @@ class Material extends Component<
       );
     })();
     return _.flow(connectDropTarget, connectDragSource)(renderMaterial) as any;
+  }
+
+  private selectElement(): ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined {
+    return e => {
+      e?.stopPropagation();
+      const component = (this.context.astTool as AstParser).getNodeById(this.props.id);
+      if (component) {
+        eventManager.emit('elementSelect', { component });
+      }
+    };
   }
 }
 

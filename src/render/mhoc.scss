@@ -6,6 +6,10 @@ body {
       &:hover {
         border: 1px dotted red;
       }
+
+      @include m(active) {
+        border: 1px dotted rgb(83, 127, 248);
+      }
     }
   }
 }
