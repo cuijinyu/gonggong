@@ -161,7 +161,6 @@ class Material extends Component<
         ...this.props,
       },
     };
-    this.materialContextMenu.bind(this);
     eventManager.listen('elementSelect', ({ component }: { component: AstNodeType }) => {
       if (component.id === this.props.id) {
         this.setState({
@@ -271,19 +270,6 @@ class Material extends Component<
     return layoutArray.has(this.props.materialType);
   }
 
-  materialContextMenu(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (e.button !== 2) return;
-    this.context.eBus.emit('render-content-contextMenu', {
-      position: {
-        x: e.pageX,
-        y: e.pageY,
-      },
-      item: {
-        ...this.props,
-      },
-    });
-  }
-
   render() {
     const { connectDragSource, connectDropTarget } = this.props as any;
     const { isOver } = this.props as any;
@@ -299,7 +285,6 @@ class Material extends Component<
             minHeight: 10,
           }}
           onClick={this.selectElement()}
-          onMouseDown={e => this.materialContextMenu(e)}
           className={cn([
             this.state.isProd ? '' : BEM('render', 'hoc'),
             this.state.isActive ? BEM('render', 'hoc', 'active') : '',
@@ -314,7 +299,6 @@ class Material extends Component<
             border: isOver ? '1px solid green' : '',
           }}
           onClick={this.selectElement()}
-          onMouseDown={e => this.materialContextMenu(e)}
           className={cn([
             this.state.isProd ? '' : BEM('render', 'hoc'),
             this.state.isActive ? BEM('render', 'hoc', 'active') : '',

@@ -116,7 +116,11 @@ const MethodDataViewer = () => {
           <div>
             <span>方法生成工具</span>
           </div>
-          <div></div>
+          <div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
         <div>
           <div>
