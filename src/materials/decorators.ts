@@ -39,16 +39,32 @@ export function NodeDC(dc: number) {
   };
 }
 
+type SelectGroupType = {
+  key: string;
+  desc: string;
+};
+
 // TODO: config装饰器的设计
-export function Config() {
+export function Config(): any;
+export function Config(selectGroup: SelectGroupType[]): any;
+export function Config(selectGroup?: SelectGroupType[]) {
   return function(target: any, propertyName: string) {
     const prevConfig = Reflect.getMetadata('config', target.constructor) || [];
-    const nextConfig = [
-      ...prevConfig,
-      {
-        name: propertyName,
-      },
-    ];
+    const option = {
+      name: propertyName,
+    } as {
+      name: string;
+      selectGroup?: SelectGroupType[];
+    };
+    if (selectGroup) {
+      selectGroup.forEach(selectConfig => {
+        if (!option.selectGroup) {
+          option.selectGroup = [];
+        }
+        option.selectGroup.push(selectConfig);
+      });
+    }
+    const nextConfig = [...prevConfig, option];
     Reflect.defineMetadata('config', nextConfig, target.constructor);
   };
 }

@@ -2,12 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { BEM } from '../../common/utils/bem';
 import _ from 'lodash';
 import './index.scss';
-import { Popover, Icon, Drawer, Button } from 'antd';
+import { Popover, Icon, Drawer, Button, Modal } from 'antd';
 import { useGlobalContext } from '../../context/global';
 import eventManager from '../../eventManager';
 import { AstNodeType } from '../../core/ast';
 import Material from '../../materials';
 import { getMetaInfo } from '../../materials';
+import PropertyEditor from './components/propertyEditor';
 
 const MaterialConfiger = () => {
   const [selectedElement, setSelectedElement] = useState<AstNodeType | null>(null);
@@ -81,7 +82,12 @@ const MaterialConfiger = () => {
         }}
         title={'属性编辑器'}
         visible={drawerVisible}
-        placement={'right'}></Drawer>
+        placement={'right'}>
+        <PropertyEditor />
+      </Drawer>
+      {/* <Modal>
+
+      </Modal> */}
     </>
   );
 };

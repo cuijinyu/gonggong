@@ -23,9 +23,15 @@
   }
 
   @include e(panel-item-title) {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
   }
 
   @include e(panel-item-value) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     @include m(state) {
     }
 

@@ -18,30 +18,7 @@ document.oncontextmenu = function(e) {
   return false;
 };
 
-type Position = {
-  x: number;
-  y: number;
-};
-
 const App: React.FC = () => {
-  const [position, setPosition] = useState<Position>({
-    x: 0,
-    y: 0,
-  });
-  const [showRenderContextMenu, setShowRenderContextMenu] = useState<boolean>(false);
-  useEffect(() => {
-    EventManager.listen('render-content-contextMenu', (info: { position: Position; item: any }) => {
-      setPosition({
-        ...info.position,
-      });
-      setShowRenderContextMenu(true);
-    });
-
-    document.addEventListener('click', () => {
-      setShowRenderContextMenu(false);
-    });
-  }, []);
-
   return (
     <DndProvider backend={Backend}>
       <div className="App">
@@ -53,23 +30,6 @@ const App: React.FC = () => {
             <Route exact path="/project" component={ProjectPage} />
           </BrowserRouter>
         </GlobalContextProvider>
-        <Dropdown
-          visible={showRenderContextMenu}
-          overlay={
-            <Menu>
-              <Menu.Item key="1">编辑物料</Menu.Item>
-              <Menu.Item key="2">复制物料</Menu.Item>
-              <Menu.Item key="3">删除物料</Menu.Item>
-            </Menu>
-          }>
-          <div
-            style={{
-              position: 'absolute',
-              top: position.y,
-              left: position.x,
-            }}
-          />
-        </Dropdown>
       </div>
     </DndProvider>
   );
