@@ -5,21 +5,41 @@ import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
+import { useConfigerContext } from '../../context';
 
 const { Option } = Select;
 
-const StaticDataViewer = () => {
+type onOkType = (type: string, value: any) => any;
+
+const StaticDataViewer: React.FC<{
+  onOk: onOkType;
+}> = ({ onOk }) => {
+  const [staticValue, setStaticValue] = useState<string>('');
+  const { setSelectPropertyConfig } = useConfigerContext();
+  const appendStaticConfigToElement = () => {
+    onOk('static', staticValue);
+  };
   return (
     <div>
       <div>静态数据</div>
       <div>
-        <Input />
+        <Input
+          value={staticValue}
+          onChange={e => {
+            setStaticValue(e.target.value);
+          }}
+        />
+      </div>
+      <div>
+        <Button onClick={appendStaticConfigToElement}>确定</Button>
       </div>
     </div>
   );
 };
 
-const StateDataViewer = () => {
+const StateDataViewer: React.FC<{
+  onOk: onOkType;
+}> = () => {
   const { astTool } = useGlobalContext();
   const [stateConfigerVisible, setStateConfigerVisible] = useState<boolean>(false);
   const [states, setStates] = useState(astTool.getStateList());
@@ -90,7 +110,9 @@ const StateDataViewer = () => {
   );
 };
 
-const MethodDataViewer = () => {
+const MethodDataViewer: React.FC<{
+  onOk: onOkType;
+}> = () => {
   const { astTool } = useGlobalContext();
   const [methodConfigerVisible, setMethodConfigerVisible] = useState<boolean>(false);
   const [methods, setMethods] = useState(astTool.getMethodsList());
@@ -133,17 +155,19 @@ const MethodDataViewer = () => {
   );
 };
 
-const PropertyEditor = () => {
+const PropertyEditor: React.FC<{
+  onOk: onOkType;
+}> = ({ onOk }) => {
   const [propertyType, setPropertyType] = useState<string>('static');
 
   const renderEditPanel = () => {
     switch (propertyType) {
       case 'static':
-        return <StaticDataViewer />;
+        return <StaticDataViewer onOk={onOk} />;
       case 'state':
-        return <StateDataViewer />;
+        return <StateDataViewer onOk={onOk} />;
       case 'method':
-        return <MethodDataViewer />;
+        return <MethodDataViewer onOk={onOk} />;
     }
   };
 

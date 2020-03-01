@@ -19,6 +19,10 @@ class ColMaterial extends BaseMaterial {
   @Config()
   private span = null;
 
+  componentDidUpdate() {
+    console.log(this.props);
+  }
+
   render() {
     return (
       <div

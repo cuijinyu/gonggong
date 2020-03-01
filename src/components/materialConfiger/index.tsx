@@ -9,6 +9,7 @@ import { AstNodeType } from '../../core/ast';
 import Material from '../../materials';
 import { getMetaInfo } from '../../materials';
 import PropertyEditor from './components/propertyEditor';
+import ConfigerContext, { SelectPropertyConfigName } from './context';
 
 const MaterialConfiger = () => {
   const [selectedElement, setSelectedElement] = useState<AstNodeType | null>(null);
@@ -16,9 +17,16 @@ const MaterialConfiger = () => {
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [codeEditorVisible, setCodeEditorVisible] = useState<boolean>(false);
 
+  const [selectElementId, setSelectElementId] = useState<string>('');
+  const [selectPropertyName, setSelectPropertyName] = useState<string>('');
+  const [selectPropertyConfig, setSelectPropertyConfig] = useState<SelectPropertyConfigName>();
+
+  const { ast, astTool } = useGlobalContext();
+
   useEffect(() => {
     eventManager.listen('elementSelect', ({ component }: { component: AstNodeType }) => {
       setSelectedElement(component);
+      setSelectElementId(component.id);
       const componentMetaInfo = getMetaInfo(_.get(Material, component.type)).config;
       if (componentMetaInfo) {
         setMetaConfig({ config: componentMetaInfo });
@@ -26,7 +34,12 @@ const MaterialConfiger = () => {
     });
   }, []);
 
-  const editProperty = useCallback(() => {
+  useEffect(() => {
+    console.log(astTool.getNodeConfigById(selectElementId));
+  }, [ast, astTool, selectElementId]);
+
+  const editProperty = useCallback((propertyName: string) => {
+    setSelectPropertyName(propertyName);
     setDrawerVisible(true);
   }, []);
 
@@ -61,11 +74,14 @@ const MaterialConfiger = () => {
             {metaConfig?.config.map(cfg => {
               return (
                 <div className={BEM('materialConfiger', 'panel-item')}>
-                  <div className={BEM('materialConfiger', 'panel-item-title')}>{cfg.name}</div>
+                  <div className={BEM('materialConfiger', 'panel-item-title')}>
+                    {cfg.name}
+                    {(cfg as any).type}
+                  </div>
                   <div className={BEM('materialConfiger', 'panel-item-value')}>
                     <Button
                       onClick={() => {
-                        editProperty();
+                        editProperty(cfg.name);
                       }}>
                       编辑
                     </Button>
@@ -76,18 +92,43 @@ const MaterialConfiger = () => {
           </div>
         </div>
       </div>
-      <Drawer
-        onClose={() => {
-          setDrawerVisible(false);
-        }}
-        title={'属性编辑器'}
-        visible={drawerVisible}
-        placement={'right'}>
-        <PropertyEditor />
-      </Drawer>
-      {/* <Modal>
-
-      </Modal> */}
+      <ConfigerContext.Provider
+        value={{
+          selectElementId,
+          selectPropertyConfig,
+          selectPropertyName,
+          setSelectElementId,
+          setSelectPropertyConfig,
+          setSelectPropertyName,
+        }}>
+        <Drawer
+          onClose={() => {
+            setDrawerVisible(false);
+          }}
+          title={'属性编辑器'}
+          visible={drawerVisible}
+          placement={'right'}>
+          <PropertyEditor
+            onOk={(type, value) => {
+              setDrawerVisible(false);
+              let typedConfig: any;
+              switch (type) {
+                case 'static':
+                  typedConfig = astTool.makeValueConfig(value);
+                  break;
+                case 'state':
+                  break;
+                case 'method':
+                  break;
+              }
+              const node = astTool.getNodeById(selectElementId);
+              if (node && typedConfig) {
+                astTool.setNodeKeyConfig(node, selectPropertyName, typedConfig);
+              }
+            }}
+          />
+        </Drawer>
+      </ConfigerContext.Provider>
     </>
   );
 };

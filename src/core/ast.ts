@@ -1064,6 +1064,7 @@ class AstParser {
 
   public setNodeKeyConfig(node: AstNodeType, key: string, config: ConfigValueType) {
     node.config[key] = config;
+    this.save(`为节点保存了key为${key}的配置`);
     return true;
   }
 

@@ -40,6 +40,20 @@ const mapStoreMethodToMaterial = (state: stateType, methodId: string) => {
   return filterdMethod;
 };
 
+const mapStaticConfigToMaterial = (config: ConfigType): any => {
+  const obj = {} as any;
+  Object.keys(config).map(key => {
+    switch (config[key].type) {
+      case 'static':
+        obj[key] = (config[key] as StaticConfigValue).value;
+        break;
+      default:
+        break;
+    }
+  });
+  return obj;
+};
+
 const mapConfigToMaterial = (state: stateType, config: ConfigType) => {
   const obj = {} as any;
   Object.keys(config).map(key => {
@@ -185,6 +199,7 @@ class Material extends Component<
     }
     return {
       renderProps: {
+        ...mapStaticConfigToMaterial(nextProps.config),
         ...nextProps,
         ...renderProps,
       },
@@ -279,9 +294,14 @@ class Material extends Component<
           style={{
             border: isOver ? '1px solid green' : '',
             display: 'flex',
-            flexDirection: this.props.materialType === 'Row' ? 'row' : 'column',
-            marginLeft: (this.props as any).offset ? ((this.props as any).offset * 100) / 24 + '%' : 0,
-            width: this.props.materialType === 'Row' ? '100%' : ((this.props as any).span * 100) / 24 + '%',
+            flexDirection: this.state.renderProps.materialType === 'Row' ? 'row' : 'column',
+            marginLeft: (this.state.renderProps as any).offset
+              ? ((this.state.renderProps as any).offset * 100) / 24 + '%'
+              : 0,
+            width:
+              this.state.renderProps.materialType === 'Row'
+                ? '100%'
+                : ((this.state.renderProps as any).span * 100) / 24 + '%',
             minHeight: 10,
           }}
           onClick={this.selectElement()}
