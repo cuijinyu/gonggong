@@ -199,8 +199,8 @@ class Material extends Component<
     }
     return {
       renderProps: {
-        ...mapStaticConfigToMaterial(nextProps.config),
         ...nextProps,
+        ...mapStaticConfigToMaterial(nextProps.config),
         ...renderProps,
       },
     };
