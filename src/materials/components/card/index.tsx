@@ -14,7 +14,10 @@ export default class CardMaterial extends BaseMaterial {
     super(props);
   }
 
+  @Config()
+  private title = null;
+
   render() {
-    return <Card>{this.props.children}</Card>;
+    return <Card {...this.props}>{this.props.children}</Card>;
   }
 }

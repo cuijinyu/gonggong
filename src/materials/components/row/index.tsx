@@ -20,7 +20,7 @@ class RowMaterial extends BaseMaterial {
     console.log(this.mapConfigToTarget());
   }
 
-  render() {
+  instantiate() {
     return <>{this.props.children}</>;
   }
 }

@@ -24,7 +24,20 @@ export default class InputMaterial extends BaseMaterial<{
   @Config()
   private onChange = () => {};
 
-  render() {
+  static async beforeInstantiate() {
+    return {
+      a: 1,
+      b: 2,
+    };
+  }
+
+  static async afterInstantiate() {
+    console.log('123');
+    return;
+  }
+
+  instantiate(createProps?: any) {
+    console.log(createProps);
     return <Input value={this.props.value} onClick={this.props.onClick} onChange={this.props.onChange as any} />;
   }
 }
