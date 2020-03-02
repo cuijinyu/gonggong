@@ -20,7 +20,7 @@ export default class SwitchMaterial extends BaseMaterial {
   @Config()
   private onChange = () => {};
 
-  render() {
+  instantiate() {
     return <Switch />;
   }
 }

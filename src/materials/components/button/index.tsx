@@ -20,7 +20,7 @@ export default class ButtonMaterial extends BaseMaterial {
   @Config()
   private onChange = () => {};
 
-  render() {
+  instantiate() {
     return <Button />;
   }
 }

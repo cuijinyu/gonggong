@@ -36,7 +36,7 @@ export default class MenuMaterial extends BaseMaterial<
   @Config()
   private onChange = () => {};
 
-  render() {
+  instantiate() {
     return (
       <Menu>
         {this.state.routers.map((router: any) => {

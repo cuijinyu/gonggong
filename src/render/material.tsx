@@ -199,37 +199,37 @@ class Material extends Component<
     }
     return {
       renderProps: {
-        ...mapStaticConfigToMaterial(nextProps.config),
         ...nextProps,
+        ...mapStaticConfigToMaterial(nextProps.config),
         ...renderProps,
       },
     };
   }
 
-  insertMaterial(materialConfig: any) {
+  async insertMaterial(materialConfig: any) {
     const targetNodeId = this.props.id;
     const astTool: AstParser = this.context.astTool;
     const targetNode = astTool.getNodeById(targetNodeId);
+    const createProps = (await _.get(Materials, materialConfig.materialType).beforeInstantiate()) as any;
+    const createPropsConfig = astTool.makeValueConfig(JSON.stringify(createProps));
     if (targetNode) {
       if (materialConfig.isLayoutNode) {
-        astTool.appendNode(
-          targetNode,
-          astTool.makeLayoutNode({
-            name: '',
-            layoutCapacity: materialConfig.layoutCapacity,
-            nodeDemandCapacity: materialConfig.nodeDemandCapacity,
-            type: materialConfig.materialType,
-          }),
-        );
+        const layoutNode = astTool.makeLayoutNode({
+          name: '',
+          layoutCapacity: materialConfig.layoutCapacity,
+          nodeDemandCapacity: materialConfig.nodeDemandCapacity,
+          type: materialConfig.materialType,
+        });
+        astTool.setNodeKeyConfig(layoutNode, 'createProps', createPropsConfig);
+        astTool.appendNode(targetNode, layoutNode);
       } else {
-        astTool.appendNode(
-          targetNode,
-          astTool.makeFunctionNode({
-            name: '',
-            nodeDemandCapacity: materialConfig.nodeDemandCapacity,
-            type: materialConfig.materialType,
-          }),
-        );
+        const functionNode = astTool.makeFunctionNode({
+          name: '',
+          nodeDemandCapacity: materialConfig.nodeDemandCapacity,
+          type: materialConfig.materialType,
+        });
+        astTool.setNodeKeyConfig(functionNode, 'createProps', createPropsConfig);
+        astTool.appendNode(targetNode, functionNode);
       }
     }
   }

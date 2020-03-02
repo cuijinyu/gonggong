@@ -68,3 +68,5 @@ export function Config(selectGroup?: SelectGroupType[]) {
     Reflect.defineMetadata('config', nextConfig, target.constructor);
   };
 }
+
+export function LifeCircle() {}

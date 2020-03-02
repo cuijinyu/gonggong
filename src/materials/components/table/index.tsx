@@ -20,7 +20,7 @@ export default class TableMaterial extends BaseMaterial {
   @Config()
   private onChange = () => {};
 
-  render() {
+  instantiate() {
     return <Table />;
   }
 }
