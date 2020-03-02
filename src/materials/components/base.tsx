@@ -9,6 +9,11 @@ export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
     super(props);
     this.render = () => this.instantiate(this.safeParse((this.props as any).createProps));
   }
+
+  componentDidMount() {
+    (this.constructor as any).afterInstantiate();
+  }
+
   getRouterConfig() {
     const astTool: AstParser = this.context.astTool;
     return astTool.getPageList();

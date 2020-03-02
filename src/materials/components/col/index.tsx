@@ -23,7 +23,7 @@ class ColMaterial extends BaseMaterial {
     console.log(this.props);
   }
 
-  render() {
+  instantiate() {
     return (
       <div
         style={{

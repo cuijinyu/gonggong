@@ -19,7 +19,7 @@ export default class LabelMaterial extends BaseMaterial {
   @Config()
   private onChange = () => {};
 
-  render() {
+  instantiate() {
     return <span>label</span>;
   }
 }

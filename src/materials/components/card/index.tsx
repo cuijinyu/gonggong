@@ -17,7 +17,7 @@ export default class CardMaterial extends BaseMaterial {
   @Config()
   private title = null;
 
-  render() {
+  instantiate() {
     return <Card {...this.props}>{this.props.children}</Card>;
   }
 }

@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
+import { BaseMaterial } from '../base';
 
-class Form {
-    render() {
-        return (
-            <div>
-                
-            </div>
-        )
-    }
+class Form extends BaseMaterial {
+  instantiate() {
+    return <div></div>;
+  }
 }

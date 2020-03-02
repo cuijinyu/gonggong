@@ -20,7 +20,7 @@ export default class CalendarMaterial extends BaseMaterial {
   @Config()
   private onChange = () => {};
 
-  render() {
+  instantiate() {
     return <Calendar />;
   }
 }

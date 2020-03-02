@@ -32,12 +32,10 @@ export default class InputMaterial extends BaseMaterial<{
   }
 
   static async afterInstantiate() {
-    console.log('123');
     return;
   }
 
   instantiate(createProps?: any) {
-    console.log(createProps);
     return <Input value={this.props.value} onClick={this.props.onClick} onChange={this.props.onChange as any} />;
   }
 }
