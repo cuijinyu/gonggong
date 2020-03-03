@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { BEM } from '../../common/utils/bem';
 import _ from 'lodash';
 import './index.scss';
-import { Popover, Icon, Drawer, Button, Modal } from 'antd';
+import { Popover, Icon, Drawer, Button, Modal, Tag } from 'antd';
 import { useGlobalContext } from '../../context/global';
 import eventManager from '../../eventManager';
 import { AstNodeType } from '../../core/ast';
@@ -10,6 +10,7 @@ import Material from '../../materials';
 import { getMetaInfo } from '../../materials';
 import PropertyEditor from './components/propertyEditor';
 import ConfigerContext, { SelectPropertyConfigName } from './context';
+import StyleEditor from './components/styleEditor';
 
 const MaterialConfiger = () => {
   const [selectedElement, setSelectedElement] = useState<AstNodeType | null>(null);
@@ -20,6 +21,7 @@ const MaterialConfiger = () => {
   const [selectElementId, setSelectElementId] = useState<string>('');
   const [selectPropertyName, setSelectPropertyName] = useState<string>('');
   const [selectPropertyConfig, setSelectPropertyConfig] = useState<SelectPropertyConfigName>();
+  const [nodeConfig, setNodeConfig] = useState<any>({});
 
   const { ast, astTool } = useGlobalContext();
 
@@ -35,13 +37,28 @@ const MaterialConfiger = () => {
   }, []);
 
   useEffect(() => {
-    console.log(astTool.getNodeConfigById(selectElementId));
+    setNodeConfig(astTool.getNodeConfigById(selectElementId));
   }, [ast, astTool, selectElementId]);
 
   const editProperty = useCallback((propertyName: string) => {
     setSelectPropertyName(propertyName);
     setDrawerVisible(true);
   }, []);
+
+  const renderValueLabel = (nodeConfig: any, cfg: any) => {
+    if (nodeConfig[cfg.name]) {
+      switch (nodeConfig[cfg.name].type) {
+        case 'static':
+          return <Tag>{nodeConfig[cfg.name]?.value}</Tag>;
+        case 'state':
+          return <Tag color={'red'}></Tag>;
+        case 'method':
+          return <Tag color={'green'}></Tag>;
+        default:
+          return null;
+      }
+    }
+  };
 
   return (
     <>
@@ -68,6 +85,9 @@ const MaterialConfiger = () => {
                 {selectedElement?.name} <Button>编辑</Button>
               </div>
             </div>
+            <div className={BEM('materialConfiger', 'style-editor')}>
+              <StyleEditor />
+            </div>
           </div>
           <div className={BEM('materialConfiger', 'panel')}>
             <div className={BEM('materialConfiger', 'panel-title')}>物料配置项</div>
@@ -76,7 +96,7 @@ const MaterialConfiger = () => {
                 <div className={BEM('materialConfiger', 'panel-item')}>
                   <div className={BEM('materialConfiger', 'panel-item-title')}>
                     {cfg.name}
-                    {(cfg as any).type}
+                    {nodeConfig && renderValueLabel(nodeConfig, cfg)}
                   </div>
                   <div className={BEM('materialConfiger', 'panel-item-value')}>
                     <Button
