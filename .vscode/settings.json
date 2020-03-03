@@ -1,5 +1,5 @@
 {
-  "editor.tabSize": 4,
+  "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.tsdk": "/node_modules/typescript/lib",
   "editor.codeActionsOnSave": {

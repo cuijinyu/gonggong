@@ -61,7 +61,7 @@ export const addState = ({
 export const addMethod = ({
   id = '',
   name = '',
-  method = () => {},
+  method = '',
 }): {
   type: typeof ADD_METHOD;
   payload: {

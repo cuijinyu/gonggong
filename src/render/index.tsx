@@ -15,6 +15,7 @@ import { notification, Icon } from 'antd';
 import './index.scss';
 import eventManager from '../eventManager';
 import materials, { getMetaInfo, MaterialInfoType } from '../materials';
+import { addMethod, addState } from './store/renderAction';
 
 type MaterialDropItem = {
   type: string;
@@ -188,8 +189,26 @@ const Render: React.FC = function() {
       const methodsList = astTool.getMethodsList();
       const statesList = astTool.getStateList();
       if (methodsList) {
+        methodsList.forEach(method => {
+          store.dispatch(
+            addMethod({
+              id: method.id,
+              name: method.name,
+              method: method.methodCode,
+            }),
+          );
+        });
       }
       if (statesList) {
+        statesList.forEach(state => {
+          store.dispatch(
+            addState({
+              id: state.id,
+              name: state.name,
+              initValue: state.initValue,
+            }),
+          );
+        });
       }
     }
 
