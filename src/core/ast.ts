@@ -1238,6 +1238,7 @@ class AstParser {
 
   public changeNodeStyle(node: AstNodeType, style: astNodeStyleType) {
     node.style = style;
+    this.save('修改样式');
   }
 
   public getNodeStyle(node: AstNodeType): astNodeStyleType | {} {

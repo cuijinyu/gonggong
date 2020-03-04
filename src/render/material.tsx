@@ -160,6 +160,7 @@ class Material extends Component<
     isProd: boolean;
     isLayout: boolean;
     isActive: boolean;
+    animateClassesGroup: string[];
     renderProps: {
       [key: string]: any;
     };
@@ -173,6 +174,7 @@ class Material extends Component<
       isProd: isProd(),
       isLayout: this.isLayout(),
       isActive: false,
+      animateClassesGroup: [],
       renderProps: {
         ...this.props,
       },
@@ -189,6 +191,7 @@ class Material extends Component<
           });
         }
       }
+      this.animationRunner();
     });
   }
 
@@ -287,11 +290,25 @@ class Material extends Component<
     return layoutArray.has(this.props.materialType);
   }
 
-  animationRunner() {
+  async animationRunner() {
     const { astTool, id } = this.props;
     const node = astTool.getNodeById(id);
     if (node) {
-      astTool.getNodeConfig(node);
+      const style = astTool.getNodeStyle(node);
+      if (!_.isEmpty(style)) {
+        (style as astNodeStyleType).animations.animates.forEach((animate, idx) => {
+          setTimeout(() => {
+            this.setState({
+              animateClassesGroup: ['animated', animate.name],
+            });
+          }, idx * 1000);
+        });
+        setTimeout(() => {
+          this.setState({
+            animateClassesGroup: [],
+          });
+        }, ((style as astNodeStyleType).animations.animates.length + 1) * 1000);
+      }
     }
   }
 
@@ -323,6 +340,10 @@ class Material extends Component<
     return {};
   }
 
+  componentDidMount() {
+    this.animationRunner();
+  }
+
   render() {
     const { connectDragSource, connectDropTarget } = this.props as any;
     const { isOver } = this.props as any;
@@ -347,6 +368,7 @@ class Material extends Component<
           className={cn([
             this.state.isProd ? '' : BEM('render', 'hoc'),
             this.state.isActive ? BEM('render', 'hoc', 'active') : '',
+            ...this.state.animateClassesGroup,
           ])}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,
@@ -362,6 +384,7 @@ class Material extends Component<
           className={cn([
             this.state.isProd ? '' : BEM('render', 'hoc'),
             this.state.isActive ? BEM('render', 'hoc', 'active') : '',
+            ...this.state.animateClassesGroup,
           ])}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,
