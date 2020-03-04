@@ -12,6 +12,7 @@ import AstParser, {
   MethodConfigValue,
   CustomLayout,
   AstNodeType,
+  astNodeStyleType,
 } from '../core/ast';
 import { setStateById } from './store/renderAction';
 import { isProd } from '../common/utils/prod';
@@ -294,6 +295,34 @@ class Material extends Component<
     }
   }
 
+  renderStyle() {
+    const { astTool, id } = this.props;
+    const node = astTool.getNodeById(id);
+    if (node) {
+      const nodeStyle = astTool.getNodeStyle(node);
+      if (nodeStyle && !_.isEmpty(nodeStyle)) {
+        const origin = nodeStyle as astNodeStyleType;
+        const option = {
+          marginTop: origin.margin.top,
+          marginBottom: origin.margin.bottom,
+          marginLeft: origin.margin.left,
+          marginRight: origin.margin.right,
+          paddingTop: origin.padding.top,
+          paddingBottom: origin.padding.bottom,
+          paddingLeft: origin.padding.left,
+          paddingRight: origin.padding.right,
+          width: origin.size.width,
+          height: origin.size.height,
+          fontSize: origin.font.fontSize,
+          fontFamily: origin.font.fontType,
+          background: origin.background.backgroundType === 'color' ? origin.background.rgba : origin.background.url,
+        };
+        return option;
+      }
+    }
+    return {};
+  }
+
   render() {
     const { connectDragSource, connectDropTarget } = this.props as any;
     const { isOver } = this.props as any;
@@ -301,6 +330,7 @@ class Material extends Component<
       return this.isLayout() ? (
         <div
           style={{
+            ...this.renderStyle(),
             border: isOver ? '1px solid green' : '',
             display: 'flex',
             flexDirection: this.state.renderProps.materialType === 'Row' ? 'row' : 'column',
@@ -326,6 +356,7 @@ class Material extends Component<
         <div
           style={{
             border: isOver ? '1px solid green' : '',
+            ...this.renderStyle(),
           }}
           onClick={this.selectElement()}
           className={cn([

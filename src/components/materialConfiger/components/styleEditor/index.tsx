@@ -159,7 +159,8 @@ const sizeReducer = (state: sizeStateType, action: sizeActionType) =>
         draft.height = action.data.height;
         break;
       case 'reset':
-        draft = action.data;
+        draft.height = action.data.height;
+        draft.width = action.data.width;
         break;
       default:
         return state;
@@ -175,7 +176,8 @@ const fontReducer = (state: fontStateType, action: fontActionType) =>
         draft.fontType = action.data.fontType;
         break;
       case 'reset':
-        draft = action.data;
+        draft.fontType = action.data.fontType;
+        draft.fontSize = action.data.fontSize;
         break;
       default:
         return state;
@@ -197,7 +199,10 @@ const directionReducer = (state: directionStateType, action: directionActionType
         draft.top = action.data.top;
         break;
       case 'reset':
-        draft = action.data;
+        draft.bottom = action.data.bottom;
+        draft.top = action.data.top;
+        draft.left = action.data.left;
+        draft.right = action.data.right;
         break;
       default:
         return state;
@@ -220,7 +225,12 @@ const backgroundReducer = (state: backgroundStateType, action: backgroundActionT
         }
         break;
       case 'reset':
-        draft = action.data;
+        draft.backgroundType = action.data.backgroundType;
+        if (draft.backgroundType === 'color') {
+          draft.rgba = action.data.rgba;
+        } else {
+          draft.url = action.data.url;
+        }
         break;
       default:
         return state;
@@ -238,7 +248,7 @@ const animateReducer = (state: animateStateType, action: animateActionType) =>
         draft.animates.splice(action.data.idx, 1);
         break;
       case 'reset':
-        draft = action.data;
+        draft.animates = action.data.animates;
         break;
       default:
         return state;
@@ -249,64 +259,83 @@ const StyleEditor: React.FC = () => {
   const { selectElementId } = useConfigerContext();
   const { astTool } = useGlobalContext();
   const [animationModalVisible, setAnimationModalVisible] = useState<boolean>(false);
-  const [size, dispatchSize] = useReducer<typeof sizeReducer>(sizeReducer, {
+  const initSize = {
     height: '100%',
     width: '100%',
-  });
+  };
+  const [size, dispatchSize] = useReducer<typeof sizeReducer>(sizeReducer, initSize);
 
-  const [margin, dispatchMargin] = useReducer<typeof directionReducer>(directionReducer, {
+  const initDirection = {
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-  });
+  };
 
-  const [padding, dispatchPadding] = useReducer<typeof directionReducer>(directionReducer, {
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  });
-
-  const [font, dispatchFont] = useReducer<typeof fontReducer>(fontReducer, {
+  const initFont = {
     fontType: '',
     fontSize: 14,
-  });
+  };
 
-  const [background, dispatchBackground] = useReducer<typeof backgroundReducer>(backgroundReducer, {
+  const initBackground = {
     backgroundType: 'color',
     rgba: '(255, 255, 255, 0)',
-  });
+  };
 
-  const [animateType, dispatchAnimateType] = useReducer<typeof animateReducer>(animateReducer, {
+  const initAnimateType = {
     animates: [],
-  });
+  };
+
+  const [margin, dispatchMargin] = useReducer<typeof directionReducer>(directionReducer, initDirection);
+
+  const [padding, dispatchPadding] = useReducer<typeof directionReducer>(directionReducer, initDirection);
+
+  const [font, dispatchFont] = useReducer<typeof fontReducer>(fontReducer, initFont);
+
+  const [background, dispatchBackground] = useReducer<typeof backgroundReducer>(
+    backgroundReducer,
+    initBackground as any,
+  );
+
+  const [animateType, dispatchAnimateType] = useReducer<typeof animateReducer>(animateReducer, initAnimateType);
 
   const composeAllStyle = useCallback(() => {
     return {
       size,
       margin,
       padding,
+      font,
       background,
       animations: animateType,
     };
   }, [size, margin, padding, font, background, animateType]);
 
-  useEffect(() => {
-    if (selectElementId) {
-      const node = astTool.getNodeById(selectElementId);
-      if (node) {
-        astTool.changeNodeStyle(node, {
-          background,
-          size,
-          margin,
-          font,
-          padding,
-          animations: animateType,
-        });
-      }
-    }
-  }, [size, margin, padding, font, background, animateType]);
+  const reset = () => {
+    dispatchAnimateType({
+      type: 'reset',
+      data: _.cloneDeep(initAnimateType),
+    });
+    dispatchBackground({
+      type: 'reset',
+      data: _.cloneDeep(initBackground),
+    });
+    dispatchSize({
+      type: 'reset',
+      data: _.cloneDeep(initSize),
+    });
+    dispatchMargin({
+      type: 'reset',
+      data: _.cloneDeep(initDirection),
+    });
+    dispatchPadding({
+      type: 'reset',
+      data: _.cloneDeep(initDirection),
+    });
+    dispatchFont({
+      type: 'reset',
+      data: _.cloneDeep(initFont),
+    });
+  };
 
   useEffect(() => {
     if (selectElementId) {
@@ -342,7 +371,19 @@ const StyleEditor: React.FC = () => {
         }
       }
     }
+    return () => {
+      reset();
+    };
   }, [selectElementId]);
+
+  useEffect(() => {
+    if (selectElementId) {
+      const node = astTool.getNodeById(selectElementId);
+      if (node) {
+        astTool.changeNodeStyle(node, composeAllStyle());
+      }
+    }
+  }, [size, margin, padding, font, background, animateType, composeAllStyle, selectElementId]);
 
   const renderFontSizeOptions = (() => {
     const optionArray: any = [];
@@ -390,7 +431,6 @@ const StyleEditor: React.FC = () => {
           </Row>
         </Panel>
         <Panel header="外边距" key="2">
-          {/* 外边距 */}
           <Row>
             <Row>
               <Col span={8}>左边距</Col>
@@ -447,9 +487,9 @@ const StyleEditor: React.FC = () => {
                   value={margin.bottom}
                   onChange={e => {
                     dispatchMargin({
-                      type: 'changeRight',
+                      type: 'changeBottom',
                       data: {
-                        right: e.target.value as any,
+                        bottom: e.target.value as any,
                       },
                     });
                   }}
