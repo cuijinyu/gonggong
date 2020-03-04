@@ -1,17 +1,23 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback, useState, useEffect } from 'react';
 import produce from 'immer';
-import { Collapse, Row, Col, Input } from 'antd';
-
+import { Collapse, Row, Col, Input, Select, Button, Card, Modal } from 'antd';
+import { SketchPicker } from 'react-color';
+import animations from '../../../../constant/animates.json';
+import { useConfigerContext } from '../../context';
+import { useGlobalContext } from '../../../../context/global';
+import { astNodeStyleType } from '../../../../core/ast';
+import _ from 'lodash';
 const { Panel } = Collapse;
+const { Option } = Select;
 
-type directionStateType = {
+export type directionStateType = {
   top: number;
   bottom: number;
   left: number;
   right: number;
 };
 
-type directionActionType =
+export type directionActionType =
   | {
       type: 'changeTop';
       data: {
@@ -35,8 +41,12 @@ type directionActionType =
       data: {
         right: number;
       };
+    }
+  | {
+      type: 'reset';
+      data: directionStateType;
     };
-type fontActionType =
+export type fontActionType =
   | {
       type: 'changeFontType';
       data: {
@@ -48,14 +58,18 @@ type fontActionType =
       data: {
         fontSize: number;
       };
+    }
+  | {
+      type: 'reset';
+      data: fontStateType;
     };
 
-type fontStateType = {
+export type fontStateType = {
   fontType: string;
   fontSize: number;
 };
 
-type backgroundStateType =
+export type backgroundStateType =
   | {
       backgroundType: 'image';
       url: string;
@@ -65,7 +79,7 @@ type backgroundStateType =
       rgba: string;
     };
 
-type backgroundActionType =
+export type backgroundActionType =
   | {
       type: 'changeBackgroundType';
       data: {
@@ -83,9 +97,13 @@ type backgroundActionType =
       data: {
         rgba: string;
       };
+    }
+  | {
+      type: 'reset';
+      data: any;
     };
 
-type animateStateType = {
+export type animateStateType = {
   animates: {
     name: string;
   }[];
@@ -103,8 +121,12 @@ type animateActionType =
       data: {
         idx: number;
       };
+    }
+  | {
+      type: 'reset';
+      data: animateStateType;
     };
-type sizeStateType = {
+export type sizeStateType = {
   width: string;
   height: string;
 };
@@ -121,6 +143,10 @@ type sizeActionType =
       data: {
         height: string;
       };
+    }
+  | {
+      type: 'reset';
+      data: sizeStateType;
     };
 
 const sizeReducer = (state: sizeStateType, action: sizeActionType) =>
@@ -131,6 +157,10 @@ const sizeReducer = (state: sizeStateType, action: sizeActionType) =>
         break;
       case 'changeHeight':
         draft.height = action.data.height;
+        break;
+      case 'reset':
+        draft.height = action.data.height;
+        draft.width = action.data.width;
         break;
       default:
         return state;
@@ -144,6 +174,10 @@ const fontReducer = (state: fontStateType, action: fontActionType) =>
         break;
       case 'changeFontType':
         draft.fontType = action.data.fontType;
+        break;
+      case 'reset':
+        draft.fontType = action.data.fontType;
+        draft.fontSize = action.data.fontSize;
         break;
       default:
         return state;
@@ -164,6 +198,12 @@ const directionReducer = (state: directionStateType, action: directionActionType
       case 'changeTop':
         draft.top = action.data.top;
         break;
+      case 'reset':
+        draft.bottom = action.data.bottom;
+        draft.top = action.data.top;
+        draft.left = action.data.left;
+        draft.right = action.data.right;
+        break;
       default:
         return state;
     }
@@ -172,16 +212,24 @@ const backgroundReducer = (state: backgroundStateType, action: backgroundActionT
   produce(state, draft => {
     switch (action.type) {
       case 'changeBackgoundColor':
-        if (state.backgroundType === 'color') {
+        if ((state as any).backgroundType === 'color') {
           (draft as any).rgba = action.data.rgba;
         }
         break;
       case 'changeBackgroundType':
-        draft.backgroundType = action.data.backgroundType;
+        (draft as any).backgroundType = action.data.backgroundType;
         break;
       case 'changeBackgroundUrl':
-        if (state.backgroundType === 'image') {
+        if ((state as any).backgroundType === 'image') {
           (draft as any).url = action.data.url;
+        }
+        break;
+      case 'reset':
+        draft.backgroundType = action.data.backgroundType;
+        if (draft.backgroundType === 'color') {
+          draft.rgba = action.data.rgba;
+        } else {
+          draft.url = action.data.url;
         }
         break;
       default:
@@ -199,109 +247,466 @@ const animateReducer = (state: animateStateType, action: animateActionType) =>
       case 'deleteAnimate':
         draft.animates.splice(action.data.idx, 1);
         break;
+      case 'reset':
+        draft.animates = action.data.animates;
+        break;
       default:
         return state;
     }
   });
 
 const StyleEditor: React.FC = () => {
-  const [size, dispatchSize] = useReducer<typeof sizeReducer>(sizeReducer, {
+  const { selectElementId } = useConfigerContext();
+  const { astTool } = useGlobalContext();
+  const [animationModalVisible, setAnimationModalVisible] = useState<boolean>(false);
+  const initSize = {
     height: '100%',
     width: '100%',
-  });
-  const [margin, dispatchMargin] = useReducer<typeof directionReducer>(directionReducer, {
+  };
+  const [size, dispatchSize] = useReducer<typeof sizeReducer>(sizeReducer, initSize);
+
+  const initDirection = {
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-  });
-  const [padding, setPadding] = useReducer<typeof directionReducer>(directionReducer, {
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  });
-  const [font, setFont] = useReducer<typeof fontReducer>(fontReducer, {
+  };
+
+  const initFont = {
     fontType: '',
     fontSize: 14,
-  });
-  const [background, setBackground] = useReducer<typeof backgroundReducer>(backgroundReducer, {
+  };
+
+  const initBackground = {
     backgroundType: 'color',
     rgba: '(255, 255, 255, 0)',
-  });
-  const [animateType, setAnimateType] = useReducer<typeof animateReducer>(animateReducer, {
+  };
+
+  const initAnimateType = {
     animates: [],
-  });
-  const composeAllStyle = useCallback(() => {}, [size, margin, padding, font, background, animateType]);
+  };
+
+  const [margin, dispatchMargin] = useReducer<typeof directionReducer>(directionReducer, initDirection);
+
+  const [padding, dispatchPadding] = useReducer<typeof directionReducer>(directionReducer, initDirection);
+
+  const [font, dispatchFont] = useReducer<typeof fontReducer>(fontReducer, initFont);
+
+  const [background, dispatchBackground] = useReducer<typeof backgroundReducer>(
+    backgroundReducer,
+    initBackground as any,
+  );
+
+  const [animateType, dispatchAnimateType] = useReducer<typeof animateReducer>(animateReducer, initAnimateType);
+
+  const composeAllStyle = useCallback(() => {
+    return {
+      size,
+      margin,
+      padding,
+      font,
+      background,
+      animations: animateType,
+    };
+  }, [size, margin, padding, font, background, animateType]);
+
+  const reset = () => {
+    dispatchAnimateType({
+      type: 'reset',
+      data: _.cloneDeep(initAnimateType),
+    });
+    dispatchBackground({
+      type: 'reset',
+      data: _.cloneDeep(initBackground),
+    });
+    dispatchSize({
+      type: 'reset',
+      data: _.cloneDeep(initSize),
+    });
+    dispatchMargin({
+      type: 'reset',
+      data: _.cloneDeep(initDirection),
+    });
+    dispatchPadding({
+      type: 'reset',
+      data: _.cloneDeep(initDirection),
+    });
+    dispatchFont({
+      type: 'reset',
+      data: _.cloneDeep(initFont),
+    });
+  };
+
+  useEffect(() => {
+    if (selectElementId) {
+      const node = astTool.getNodeById(selectElementId);
+      if (node) {
+        const nodeStyle = astTool.getNodeStyle(node);
+        if (!_.isEmpty(nodeStyle)) {
+          const { background, size, margin, font, padding, animations } = nodeStyle as astNodeStyleType;
+          dispatchAnimateType({
+            type: 'reset',
+            data: animations,
+          });
+          dispatchBackground({
+            type: 'reset',
+            data: background,
+          });
+          dispatchSize({
+            type: 'reset',
+            data: size,
+          });
+          dispatchMargin({
+            type: 'reset',
+            data: margin,
+          });
+          dispatchPadding({
+            type: 'reset',
+            data: padding,
+          });
+          dispatchFont({
+            type: 'reset',
+            data: font,
+          });
+        }
+      }
+    }
+    return () => {
+      reset();
+    };
+  }, [selectElementId]);
+
+  useEffect(() => {
+    if (selectElementId) {
+      const node = astTool.getNodeById(selectElementId);
+      if (node) {
+        astTool.changeNodeStyle(node, composeAllStyle());
+      }
+    }
+  }, [size, margin, padding, font, background, animateType, composeAllStyle, selectElementId]);
+
+  const renderFontSizeOptions = (() => {
+    const optionArray: any = [];
+    for (let i = 1; i <= 52; i++) {
+      optionArray.push(<Option value={i}>{i}</Option>);
+    }
+    return optionArray;
+  })();
+
   return (
     <>
       <Collapse bordered={false}>
         <Panel header="尺寸" key="1">
-          <div>
-            <Row>
-              <Col span={8}>宽</Col>
-              <Col span={16}>
-                <Input />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>高</Col>
-              <Col span={16}>
-                <Input />
-              </Col>
-            </Row>
-          </div>
+          <Row>
+            <Col span={8}>宽</Col>
+            <Col span={16}>
+              <Input
+                value={size.width}
+                onChange={e => {
+                  dispatchSize({
+                    type: 'changeWidth',
+                    data: {
+                      width: e.target.value,
+                    },
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={8}>高</Col>
+            <Col span={16}>
+              <Input
+                value={size.height}
+                onChange={e => {
+                  dispatchSize({
+                    type: 'changeHeight',
+                    data: {
+                      height: e.target.value,
+                    },
+                  });
+                }}
+              />
+            </Col>
+          </Row>
         </Panel>
         <Panel header="外边距" key="2">
-          <div>
-            {/* 外边距 */}
-            <div>
-              <div>左边距</div>
-              <div>上边距</div>
-              <div>右边距</div>
-              <div>下边距</div>
-            </div>
-          </div>
+          <Row>
+            <Row>
+              <Col span={8}>左边距</Col>
+              <Col span={16}>
+                <Input
+                  value={margin.left}
+                  onChange={e => {
+                    dispatchMargin({
+                      type: 'changeLeft',
+                      data: {
+                        left: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>上边距</Col>
+              <Col span={16}>
+                <Input
+                  value={margin.top}
+                  onChange={e => {
+                    dispatchMargin({
+                      type: 'changeTop',
+                      data: {
+                        top: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>右边距</Col>
+              <Col span={16}>
+                <Input
+                  value={margin.right}
+                  onChange={e => {
+                    dispatchMargin({
+                      type: 'changeRight',
+                      data: {
+                        right: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>下边距</Col>
+              <Col span={16}>
+                <Input
+                  value={margin.bottom}
+                  onChange={e => {
+                    dispatchMargin({
+                      type: 'changeBottom',
+                      data: {
+                        bottom: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+          </Row>
         </Panel>
         <Panel header="内边距" key="3">
-          <div>
-            {/* 内边距 */}
-            <div>
-              <div>左边距</div>
-              <div>上边距</div>
-              <div>右边距</div>
-              <div>下边距</div>
-            </div>
-          </div>
+          <Row>
+            <Row>
+              <Col span={8}>左边距</Col>
+              <Col span={16}>
+                <Input
+                  value={padding.left}
+                  onChange={e => {
+                    dispatchPadding({
+                      type: 'changeLeft',
+                      data: {
+                        left: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>上边距</Col>
+              <Col span={16}>
+                <Input
+                  value={padding.top}
+                  onChange={e => {
+                    dispatchPadding({
+                      type: 'changeTop',
+                      data: {
+                        top: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>右边距</Col>
+              <Col span={16}>
+                <Input
+                  value={padding.right}
+                  onChange={e => {
+                    dispatchPadding({
+                      type: 'changeRight',
+                      data: {
+                        right: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>下边距</Col>
+              <Col span={16}>
+                <Input
+                  value={padding.bottom}
+                  onChange={e => {
+                    dispatchPadding({
+                      type: 'changeBottom',
+                      data: {
+                        bottom: e.target.value as any,
+                      },
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+          </Row>
         </Panel>
 
         <Panel header="字体" key="4">
-          <div>
-            {/* 字体 */}
-            <div>
-              <div>字体类型</div>
-              <div>字体大小</div>
-            </div>
-          </div>
+          <Row>
+            <Row>
+              <Col span={8}>字体类型</Col>
+              <Col span={16}>
+                <Select
+                  defaultValue={'黑体'}
+                  onChange={(value: any) => {
+                    dispatchFont({
+                      type: 'changeFontType',
+                      data: {
+                        fontType: value,
+                      },
+                    });
+                  }}>
+                  <Option value={'黑体'}>黑体</Option>
+                </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>字体大小</Col>
+              <Col span={16}>
+                <Select
+                  defaultValue={14}
+                  onChange={(value: any) => {
+                    dispatchFont({
+                      type: 'changeFontSize',
+                      data: {
+                        fontSize: value,
+                      },
+                    });
+                  }}>
+                  {renderFontSizeOptions}
+                </Select>
+              </Col>
+            </Row>
+          </Row>
         </Panel>
         <Panel header="背景" key="5">
-          <div>
-            {/* 背景 */}
-            <div>
-              <div>背景类型</div>
-              <div>背景图片地址</div>
-              <div>背景颜色</div>
-            </div>
-          </div>
+          <Row>
+            <Row>
+              <Col span={8}>背景类型</Col>
+              <Col span={16}>
+                <Select
+                  defaultValue={'color'}
+                  onChange={(value: any) => {
+                    dispatchBackground({
+                      type: 'changeBackgroundType',
+                      data: {
+                        backgroundType: value as any,
+                      },
+                    });
+                  }}>
+                  <Option value={'image'}>图片</Option>
+                  <Option value={'color'}>颜色</Option>
+                </Select>
+              </Col>
+            </Row>
+            {background.backgroundType === 'image' && (
+              <Row>
+                <Row>背景图片地址</Row>
+                <Row>
+                  <Input
+                    value={background.url}
+                    onChange={e => {
+                      dispatchBackground({
+                        type: 'changeBackgroundUrl',
+                        data: {
+                          url: e.target.value as any,
+                        },
+                      });
+                    }}
+                  />
+                </Row>
+              </Row>
+            )}
+            {background.backgroundType === 'color' && (
+              <Row>
+                <Row>背景颜色</Row>
+                <Row>
+                  <SketchPicker
+                    color={background.rgba}
+                    onChange={color => {
+                      dispatchBackground({
+                        type: 'changeBackgoundColor',
+                        data: {
+                          rgba: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+                        },
+                      });
+                    }}
+                    width={'200px'}
+                  />
+                </Row>
+              </Row>
+            )}
+          </Row>
         </Panel>
         <Panel header="动画" key="6">
-          <div>
-            {/* 动画 */}
-            <div>
-              <div>添加动画</div>
-              <div>已添加的动画列表</div>
-            </div>
-          </div>
+          <Row>
+            <Row>
+              <Row>
+                <Button
+                  onClick={() => {
+                    setAnimationModalVisible(true);
+                  }}>
+                  添加动画
+                </Button>
+              </Row>
+              <Modal visible={animationModalVisible} footer={null}>
+                {animations.animations.map(name => {
+                  return (
+                    <Button
+                      onClick={() => {
+                        dispatchAnimateType({
+                          type: 'addAnimate',
+                          data: {
+                            name: name,
+                          },
+                        });
+                        setAnimationModalVisible(false);
+                      }}>
+                      {name}
+                    </Button>
+                  );
+                })}
+              </Modal>
+            </Row>
+            <Row>
+              <Row>已添加的动画列表</Row>
+              <Row>
+                {animateType.animates.map((animate, idx) => {
+                  return (
+                    <Row>
+                      {idx + 1}: {animate.name}
+                    </Row>
+                  );
+                })}
+              </Row>
+            </Row>
+          </Row>
         </Panel>
       </Collapse>
     </>

@@ -1,43 +1,45 @@
-filename, language, Properties, Markdown, JavaScript, JSON, Shell Script, Log, Nunjucks, TypeScript React, TypeScript, XML, SCSS, comment, blank, total
-/Users/cuijinyu/Documents/website-builder/website-builder-client/.editorconfig, Properties, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
-/Users/cuijinyu/Documents/website-builder/website-builder-client/.prettierrc.js, JavaScript, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 15
-/Users/cuijinyu/Documents/website-builder/website-builder-client/README.md, Markdown, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/env.js, JavaScript, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 28, 11, 94
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/jest/cssTransform.js, JavaScript, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 15
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/jest/fileTransform.js, JavaScript, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 41
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/modules.js, JavaScript, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 35, 26, 142
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/paths.js, JavaScript, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 10, 15, 91
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/pnpTs.js, JavaScript, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 36
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/webpack.config.js, JavaScript, 0, 0, 408, 0, 0, 0, 0, 0, 0, 0, 0, 212, 18, 638
-/Users/cuijinyu/Documents/website-builder/website-builder-client/config/webpackDevServer.config.js, JavaScript, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 62, 6, 111
+filename, language, Markdown, Properties, JSON, JavaScript, Shell Script, Log, Nunjucks, TypeScript React, TypeScript, SCSS, XML, comment, blank, total
+/Users/cuijinyu/Documents/website-builder/website-builder-client/.editorconfig, Properties, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+/Users/cuijinyu/Documents/website-builder/website-builder-client/.prettierrc.js, JavaScript, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 1, 2, 15
+/Users/cuijinyu/Documents/website-builder/website-builder-client/README.md, Markdown, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/env.js, JavaScript, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 28, 11, 94
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/jest/cssTransform.js, JavaScript, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 3, 3, 15
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/jest/fileTransform.js, JavaScript, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 4, 6, 41
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/modules.js, JavaScript, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 35, 26, 142
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/paths.js, JavaScript, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 10, 15, 91
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/pnpTs.js, JavaScript, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 4, 36
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/webpack.config.js, JavaScript, 0, 0, 0, 408, 0, 0, 0, 0, 0, 0, 0, 212, 18, 638
+/Users/cuijinyu/Documents/website-builder/website-builder-client/config/webpackDevServer.config.js, JavaScript, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 62, 6, 111
 /Users/cuijinyu/Documents/website-builder/website-builder-client/deploy.sh, Shell Script, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 2
-/Users/cuijinyu/Documents/website-builder/website-builder-client/package.json, JSON, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 0, 0, 1, 193
+/Users/cuijinyu/Documents/website-builder/website-builder-client/package.json, JSON, 0, 0, 193, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 194
 /Users/cuijinyu/Documents/website-builder/website-builder-client/public/index.html, Nunjucks, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 4, 44
-/Users/cuijinyu/Documents/website-builder/website-builder-client/public/manifest.json, JSON, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 1, 26
-/Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/build.js, JavaScript, 0, 0, 167, 0, 0, 0, 0, 0, 0, 0, 0, 23, 22, 212
-/Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/start.js, JavaScript, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 19, 14, 148
-/Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/test.js, JavaScript, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 7, 11, 54
+/Users/cuijinyu/Documents/website-builder/website-builder-client/public/manifest.json, JSON, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 26
+/Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/build.js, JavaScript, 0, 0, 0, 167, 0, 0, 0, 0, 0, 0, 0, 23, 22, 212
+/Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/start.js, JavaScript, 0, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 19, 14, 148
+/Users/cuijinyu/Documents/website-builder/website-builder-client/scripts/test.js, JavaScript, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 7, 11, 54
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/App.test.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 2, 10
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/App.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 5, 39
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/style/mixin.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 282, 3, 40, 325
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/style/reset.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 284, 100, 63, 447
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/style/mixin.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 282, 0, 3, 40, 325
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/style/reset.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 284, 0, 100, 63, 447
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/utils/bem.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 12, 7, 31
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/utils/prod.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 3, 5, 19
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/common/utils/utils.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 5, 20
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/errorBoundary/errorBoundary.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 7, 31
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/layoutComposer/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 3, 14
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/layoutComposer/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 3, 14
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/layoutComposer/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 210, 0, 0, 0, 0, 17, 227
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/components/codeEditor/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/components/propertyEditor/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/components/propertyEditor/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 2
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/components/propertyEditor/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 181, 0, 0, 0, 0, 13, 194
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/components/styleEditor/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 2
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/components/styleEditor/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 298, 0, 0, 0, 0, 14, 312
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/context.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 5, 23
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 9, 45
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 9, 137
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialTools/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 11, 69
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 9, 45
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialConfiger/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 147, 0, 0, 0, 0, 10, 157
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialTools/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 11, 69
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/materialTools/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 134, 0, 0, 0, 0, 11, 145
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/pageView/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 7, 54
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/pageView/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 7, 54
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/pageView/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 129, 0, 0, 0, 0, 13, 142
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/renderTree/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 10, 60
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/renderTree/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 10, 60
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/renderTree/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 133, 0, 0, 0, 0, 10, 143
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/components/styleEditor/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/constant/drag.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 1, 6
@@ -51,21 +53,21 @@ filename, language, Properties, Markdown, JavaScript, JSON, Shell Script, Log, N
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/formEngine.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 2
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/core/request.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0, 13, 67
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/eventManager.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 0, 9, 51
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 5, 19
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 5, 19
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 3, 3, 12
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/content/content.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 3, 20
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/content/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 2, 11
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/footer/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 1, 12
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/content/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 2, 11
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/footer/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 1, 12
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/footer/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 6, 56
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/header/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 4, 26
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/header/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 4, 26
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/header/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 3, 19
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 4, 26
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 4, 26
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 3, 30
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/leftBar/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 2, 14
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/leftBar/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 2, 14
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/leftBar/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 3, 18
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/rightBar/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 2, 11
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/rightBar/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 2, 11
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/layout/rightBar/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 3, 17
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/logo.svg, XML, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 1, 8
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/logo.svg, XML, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 1, 8
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/base.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 10, 45
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/button/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 5, 27
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/materials/components/calendar/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 5, 27
@@ -88,15 +90,15 @@ filename, language, Properties, Markdown, JavaScript, JSON, Shell Script, Log, N
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/helper.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 1, 11, 57
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/hocs/positionHOC.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/hocs/resizeHOC.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 3, 19
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 203, 0, 0, 0, 1, 19, 223
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/index.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 3, 19
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/index.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 222, 0, 0, 0, 1, 19, 242
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/material.tsx, TypeScript React, 0, 0, 0, 0, 0, 0, 0, 340, 0, 0, 0, 0, 28, 368
-/Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/mhoc.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 3, 16
+/Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/mhoc.scss, SCSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 3, 16
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/store/renderAction.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 114, 0, 0, 0, 7, 121
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/store/renderReducer.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 135, 0, 0, 0, 8, 143
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/render/store/renderStore.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 3, 10
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/serviceWorker.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 0, 31, 15, 125
 /Users/cuijinyu/Documents/website-builder/website-builder-client/src/setupTests.ts, TypeScript, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4, 1, 6
-/Users/cuijinyu/Documents/website-builder/website-builder-client/tsconfig.json, JSON, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 1, 28
+/Users/cuijinyu/Documents/website-builder/website-builder-client/tsconfig.json, JSON, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 28
 /Users/cuijinyu/Documents/website-builder/website-builder-client/yarn-error.log, Log, 0, 0, 0, 0, 0, 9446, 0, 0, 0, 0, 0, 0, 1400, 10846
-Total, -, 6, 5, 1055, 244, 1, 9446, 40, 2036, 1537, 7, 897, 804, 2273, 18351
+Total, -, 5, 6, 245, 1055, 1, 9446, 40, 2372, 1537, 898, 7, 804, 2289, 18705

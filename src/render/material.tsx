@@ -12,6 +12,7 @@ import AstParser, {
   MethodConfigValue,
   CustomLayout,
   AstNodeType,
+  astNodeStyleType,
 } from '../core/ast';
 import { setStateById } from './store/renderAction';
 import { isProd } from '../common/utils/prod';
@@ -23,6 +24,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 import dndTypes from '../constant/drag';
 import eventManager from '../eventManager';
 import materials from '../materials/index';
+import 'animate.css';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -158,6 +160,7 @@ class Material extends Component<
     isProd: boolean;
     isLayout: boolean;
     isActive: boolean;
+    animateClassesGroup: string[];
     renderProps: {
       [key: string]: any;
     };
@@ -171,6 +174,7 @@ class Material extends Component<
       isProd: isProd(),
       isLayout: this.isLayout(),
       isActive: false,
+      animateClassesGroup: [],
       renderProps: {
         ...this.props,
       },
@@ -187,6 +191,7 @@ class Material extends Component<
           });
         }
       }
+      this.animationRunner();
     });
   }
 
@@ -285,6 +290,60 @@ class Material extends Component<
     return layoutArray.has(this.props.materialType);
   }
 
+  async animationRunner() {
+    const { astTool, id } = this.props;
+    const node = astTool.getNodeById(id);
+    if (node) {
+      const style = astTool.getNodeStyle(node);
+      if (!_.isEmpty(style)) {
+        (style as astNodeStyleType).animations.animates.forEach((animate, idx) => {
+          setTimeout(() => {
+            this.setState({
+              animateClassesGroup: ['animated', animate.name],
+            });
+          }, idx * 1000);
+        });
+        setTimeout(() => {
+          this.setState({
+            animateClassesGroup: [],
+          });
+        }, ((style as astNodeStyleType).animations.animates.length + 1) * 1000);
+      }
+    }
+  }
+
+  renderStyle() {
+    const { astTool, id } = this.props;
+    const node = astTool.getNodeById(id);
+    if (node) {
+      const nodeStyle = astTool.getNodeStyle(node);
+      if (nodeStyle && !_.isEmpty(nodeStyle)) {
+        const origin = nodeStyle as astNodeStyleType;
+        const option = {
+          marginTop: origin.margin.top,
+          marginBottom: origin.margin.bottom,
+          marginLeft: origin.margin.left,
+          marginRight: origin.margin.right,
+          paddingTop: origin.padding.top,
+          paddingBottom: origin.padding.bottom,
+          paddingLeft: origin.padding.left,
+          paddingRight: origin.padding.right,
+          width: origin.size.width,
+          height: origin.size.height,
+          fontSize: origin.font.fontSize,
+          fontFamily: origin.font.fontType,
+          background: origin.background.backgroundType === 'color' ? origin.background.rgba : origin.background.url,
+        };
+        return option;
+      }
+    }
+    return {};
+  }
+
+  componentDidMount() {
+    this.animationRunner();
+  }
+
   render() {
     const { connectDragSource, connectDropTarget } = this.props as any;
     const { isOver } = this.props as any;
@@ -292,6 +351,7 @@ class Material extends Component<
       return this.isLayout() ? (
         <div
           style={{
+            ...this.renderStyle(),
             border: isOver ? '1px solid green' : '',
             display: 'flex',
             flexDirection: this.state.renderProps.materialType === 'Row' ? 'row' : 'column',
@@ -308,6 +368,7 @@ class Material extends Component<
           className={cn([
             this.state.isProd ? '' : BEM('render', 'hoc'),
             this.state.isActive ? BEM('render', 'hoc', 'active') : '',
+            ...this.state.animateClassesGroup,
           ])}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,
@@ -317,11 +378,13 @@ class Material extends Component<
         <div
           style={{
             border: isOver ? '1px solid green' : '',
+            ...this.renderStyle(),
           }}
           onClick={this.selectElement()}
           className={cn([
             this.state.isProd ? '' : BEM('render', 'hoc'),
             this.state.isActive ? BEM('render', 'hoc', 'active') : '',
+            ...this.state.animateClassesGroup,
           ])}>
           {React.createElement(_.get(Materials, this.props.materialType), {
             ...this.state.renderProps,

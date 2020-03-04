@@ -1,10 +1,10 @@
 # Details
 
-Date : 2020-03-02 17:18:19
+Date : 2020-03-03 21:17:51
 
 Directory /Users/cuijinyu/Documents/website-builder/website-builder-client
 
-Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
+Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
 
 [summary](results.md)
 
@@ -24,7 +24,7 @@ Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
 | [config/webpack.config.js](/config/webpack.config.js)                                                                                         | JavaScript       |   408 |     212 |    18 |    638 |
 | [config/webpackDevServer.config.js](/config/webpackDevServer.config.js)                                                                       | JavaScript       |    43 |      62 |     6 |    111 |
 | [deploy.sh](/deploy.sh)                                                                                                                       | Shell Script     |     1 |       1 |     0 |      2 |
-| [package.json](/package.json)                                                                                                                 | JSON             |   192 |       0 |     1 |    193 |
+| [package.json](/package.json)                                                                                                                 | JSON             |   193 |       0 |     1 |    194 |
 | [public/index.html](/public/index.html)                                                                                                       | Nunjucks         |    40 |       0 |     4 |     44 |
 | [public/manifest.json](/public/manifest.json)                                                                                                 | JSON             |    25 |       0 |     1 |     26 |
 | [scripts/build.js](/scripts/build.js)                                                                                                         | JavaScript       |   167 |      23 |    22 |    212 |
@@ -43,9 +43,11 @@ Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
 | [src/components/materialConfiger/components/codeEditor/index.tsx](/src/components/materialConfiger/components/codeEditor/index.tsx)           | TypeScript React |     0 |       0 |     1 |      1 |
 | [src/components/materialConfiger/components/propertyEditor/index.scss](/src/components/materialConfiger/components/propertyEditor/index.scss) | SCSS             |     1 |       0 |     1 |      2 |
 | [src/components/materialConfiger/components/propertyEditor/index.tsx](/src/components/materialConfiger/components/propertyEditor/index.tsx)   | TypeScript React |   181 |       0 |    13 |    194 |
+| [src/components/materialConfiger/components/styleEditor/index.scss](/src/components/materialConfiger/components/styleEditor/index.scss)       | SCSS             |     1 |       0 |     1 |      2 |
+| [src/components/materialConfiger/components/styleEditor/index.tsx](/src/components/materialConfiger/components/styleEditor/index.tsx)         | TypeScript React |   298 |       0 |    14 |    312 |
 | [src/components/materialConfiger/context.tsx](/src/components/materialConfiger/context.tsx)                                                   | TypeScript React |    18 |       0 |     5 |     23 |
 | [src/components/materialConfiger/index.scss](/src/components/materialConfiger/index.scss)                                                     | SCSS             |    36 |       0 |     9 |     45 |
-| [src/components/materialConfiger/index.tsx](/src/components/materialConfiger/index.tsx)                                                       | TypeScript React |   128 |       0 |     9 |    137 |
+| [src/components/materialConfiger/index.tsx](/src/components/materialConfiger/index.tsx)                                                       | TypeScript React |   147 |       0 |    10 |    157 |
 | [src/components/materialTools/index.scss](/src/components/materialTools/index.scss)                                                           | SCSS             |    58 |       0 |    11 |     69 |
 | [src/components/materialTools/index.tsx](/src/components/materialTools/index.tsx)                                                             | TypeScript React |   134 |       0 |    11 |    145 |
 | [src/components/pageView/index.scss](/src/components/pageView/index.scss)                                                                     | SCSS             |    47 |       0 |     7 |     54 |
@@ -102,7 +104,7 @@ Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
 | [src/render/hocs/positionHOC.tsx](/src/render/hocs/positionHOC.tsx)                                                                           | TypeScript React |     0 |       0 |     1 |      1 |
 | [src/render/hocs/resizeHOC.tsx](/src/render/hocs/resizeHOC.tsx)                                                                               | TypeScript React |     0 |       0 |     1 |      1 |
 | [src/render/index.scss](/src/render/index.scss)                                                                                               | SCSS             |    16 |       0 |     3 |     19 |
-| [src/render/index.tsx](/src/render/index.tsx)                                                                                                 | TypeScript React |   203 |       1 |    19 |    223 |
+| [src/render/index.tsx](/src/render/index.tsx)                                                                                                 | TypeScript React |   222 |       1 |    19 |    242 |
 | [src/render/material.tsx](/src/render/material.tsx)                                                                                           | TypeScript React |   340 |       0 |    28 |    368 |
 | [src/render/mhoc.scss](/src/render/mhoc.scss)                                                                                                 | SCSS             |    13 |       0 |     3 |     16 |
 | [src/render/store/renderAction.ts](/src/render/store/renderAction.ts)                                                                         | TypeScript       |   114 |       0 |     7 |    121 |

@@ -18,8 +18,24 @@
  * @date 2020.1.11
  */
 import _ from 'lodash';
+import {
+  sizeStateType,
+  directionStateType,
+  animateStateType,
+  backgroundStateType,
+  fontStateType,
+} from '../components/materialConfiger/components/styleEditor';
 import Utils from '../common/utils/utils';
 const { GGErrorLogger, uuid } = Utils;
+
+export type astNodeStyleType = {
+  size: sizeStateType;
+  margin: directionStateType;
+  padding: directionStateType;
+  font: fontStateType;
+  background: backgroundStateType;
+  animations: animateStateType;
+};
 
 /**
  * 每个component的类型
@@ -104,6 +120,11 @@ export interface AstNodeType {
    * 对父页面的引用 这里应该是id
    */
   parentPage?: string;
+
+  /**
+   * 物料包裹的样式
+   */
+  style?: astNodeStyleType;
 }
 
 /**
@@ -1213,6 +1234,18 @@ class AstParser {
       return true;
     }
     return false;
+  }
+
+  public changeNodeStyle(node: AstNodeType, style: astNodeStyleType) {
+    node.style = style;
+    this.save('修改样式');
+  }
+
+  public getNodeStyle(node: AstNodeType): astNodeStyleType | {} {
+    if (node.style) {
+      return node.style;
+    }
+    return {};
   }
 
   /**

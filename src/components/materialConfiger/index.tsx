@@ -86,7 +86,17 @@ const MaterialConfiger = () => {
               </div>
             </div>
             <div className={BEM('materialConfiger', 'style-editor')}>
-              <StyleEditor />
+              <ConfigerContext.Provider
+                value={{
+                  selectElementId,
+                  selectPropertyConfig,
+                  selectPropertyName,
+                  setSelectElementId,
+                  setSelectPropertyConfig,
+                  setSelectPropertyName,
+                }}>
+                <StyleEditor />
+              </ConfigerContext.Provider>
             </div>
           </div>
           <div className={BEM('materialConfiger', 'panel')}>
