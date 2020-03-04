@@ -23,6 +23,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 import dndTypes from '../constant/drag';
 import eventManager from '../eventManager';
 import materials from '../materials/index';
+import 'animate.css';
 
 type stateType = ReturnType<typeof store.getState>;
 const mapStoreStateToMaterial = (state: stateType, stateId: string) => {
@@ -283,6 +284,14 @@ class Material extends Component<
     layoutArray.add('Col');
     layoutArray.add('Card');
     return layoutArray.has(this.props.materialType);
+  }
+
+  animationRunner() {
+    const { astTool, id } = this.props;
+    const node = astTool.getNodeById(id);
+    if (node) {
+      astTool.getNodeConfig(node);
+    }
   }
 
   render() {

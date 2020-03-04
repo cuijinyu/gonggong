@@ -1,10 +1,10 @@
 # Summary
 
-Date : 2020-03-02 17:18:19
+Date : 2020-03-03 21:17:52
 
 Directory /Users/cuijinyu/Documents/website-builder/website-builder-client
 
-Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
+Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
 
 [details](details.md)
 
@@ -13,11 +13,11 @@ Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
 | language         | files |  code | comment | blank |  total |
 | :--------------- | ----: | ----: | ------: | ----: | -----: |
 | Log              |     1 | 9,446 |       0 | 1,400 | 10,846 |
-| TypeScript React |    40 | 2,036 |       4 |   249 |  2,289 |
+| TypeScript React |    41 | 2,372 |       4 |   264 |  2,640 |
 | TypeScript       |    22 | 1,537 |     292 |   302 |  2,131 |
 | JavaScript       |    12 | 1,055 |     404 |   138 |  1,597 |
-| SCSS             |    17 |   897 |     103 |   170 |  1,170 |
-| JSON             |     3 |   244 |       0 |     3 |    247 |
+| SCSS             |    18 |   898 |     103 |   171 |  1,172 |
+| JSON             |     3 |   245 |       0 |     3 |    248 |
 | Nunjucks         |     1 |    40 |       0 |     4 |     44 |
 | XML              |     1 |     7 |       0 |     1 |      8 |
 | Properties       |     1 |     6 |       0 |     1 |      7 |
@@ -28,22 +28,23 @@ Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
 
 | path                                                      | files |   code | comment | blank |  total |
 | :-------------------------------------------------------- | ----: | -----: | ------: | ----: | -----: |
-| .                                                         |   100 | 15,274 |     804 | 2,273 | 18,351 |
+| .                                                         |   102 | 15,612 |     804 | 2,289 | 18,705 |
 | config                                                    |     8 |    725 |     354 |    89 |  1,168 |
 | config/jest                                               |     2 |     40 |       7 |     9 |     56 |
 | public                                                    |     2 |     65 |       0 |     5 |     70 |
 | scripts                                                   |     3 |    318 |      49 |    47 |    414 |
-| src                                                       |    80 |  4,477 |     399 |   722 |  5,598 |
+| src                                                       |    82 |  4,814 |     399 |   738 |  5,951 |
 | src/common                                                |     5 |    604 |     118 |   120 |    842 |
 | src/common/style                                          |     2 |    566 |     103 |   103 |    772 |
 | src/common/utils                                          |     3 |     38 |      15 |    17 |     70 |
-| src/components                                            |    16 |  1,161 |       0 |   127 |  1,288 |
+| src/components                                            |    18 |  1,479 |       0 |   143 |  1,622 |
 | src/components/errorBoundary                              |     1 |     24 |       0 |     7 |     31 |
 | src/components/layoutComposer                             |     2 |    221 |       0 |    20 |    241 |
-| src/components/materialConfiger                           |     6 |    364 |       0 |    38 |    402 |
-| src/components/materialConfiger/components                |     3 |    182 |       0 |    15 |    197 |
+| src/components/materialConfiger                           |     8 |    682 |       0 |    54 |    736 |
+| src/components/materialConfiger/components                |     5 |    481 |       0 |    30 |    511 |
 | src/components/materialConfiger/components/codeEditor     |     1 |      0 |       0 |     1 |      1 |
 | src/components/materialConfiger/components/propertyEditor |     2 |    182 |       0 |    14 |    196 |
+| src/components/materialConfiger/components/styleEditor    |     2 |    299 |       0 |    15 |    314 |
 | src/components/materialTools                              |     2 |    192 |       0 |    22 |    214 |
 | src/components/pageView                                   |     2 |    176 |       0 |    20 |    196 |
 | src/components/renderTree                                 |     2 |    183 |       0 |    20 |    203 |
@@ -75,7 +76,7 @@ Total : 100 files, 15274 codes, 804 comments, 2273 blanks, all 18351 lines
 | src/pages/home                                            |     1 |      4 |       0 |     2 |      6 |
 | src/pages/login                                           |     1 |      5 |       0 |     3 |      8 |
 | src/pages/project                                         |     1 |      5 |       0 |     3 |      8 |
-| src/render                                                |    10 |    873 |       2 |    84 |    959 |
+| src/render                                                |    10 |    892 |       2 |    84 |    978 |
 | src/render/hocs                                           |     2 |      0 |       0 |     2 |      2 |
 | src/render/store                                          |     3 |    256 |       0 |    18 |    274 |
 
