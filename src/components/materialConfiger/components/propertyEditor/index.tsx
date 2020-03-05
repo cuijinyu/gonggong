@@ -39,7 +39,7 @@ const StaticDataViewer: React.FC<{
 
 const StateDataViewer: React.FC<{
   onOk: onOkType;
-}> = () => {
+}> = ({ onOk }) => {
   const { astTool } = useGlobalContext();
   const [stateConfigerVisible, setStateConfigerVisible] = useState<boolean>(false);
   const [states, setStates] = useState(astTool.getStateList());
@@ -68,7 +68,12 @@ const StateDataViewer: React.FC<{
                 <div>属性名: {state.name}</div>
                 <div>属性初始值: {state.initValue}</div>
                 <div>
-                  <Button>选取属性</Button>
+                  <Button
+                    onClick={() => {
+                      onOk('state', state.id);
+                    }}>
+                    选取属性
+                  </Button>
                 </div>
               </Card>
             );

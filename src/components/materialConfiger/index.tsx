@@ -57,7 +57,7 @@ const MaterialConfiger = () => {
         case 'static':
           return <Tag>{nodeConfig[cfg.name]?.value}</Tag>;
         case 'state':
-          return <Tag color={'red'}></Tag>;
+          return <Tag color={'red'}>{nodeConfig[cfg.name]?.id}</Tag>;
         case 'method':
           return <Tag color={'green'}></Tag>;
         default:
@@ -192,6 +192,7 @@ const MaterialConfiger = () => {
                   typedConfig = astTool.makeValueConfig(value);
                   break;
                 case 'state':
+                  typedConfig = astTool.makeStateConfig(value);
                   break;
                 case 'method':
                   break;
