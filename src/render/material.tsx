@@ -193,6 +193,11 @@ class Material extends Component<
       }
       this.animationRunner();
     });
+    eventManager.listen('selectNone', () => {
+      this.setState({
+        isActive: false,
+      });
+    });
   }
 
   static getDerivedStateFromProps(nextProps: MHOCPropsType, prevState: MHOCPropsType) {

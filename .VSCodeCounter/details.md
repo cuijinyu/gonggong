@@ -1,10 +1,10 @@
 # Details
 
-Date : 2020-03-03 21:17:51
+Date : 2020-03-04 21:37:17
 
 Directory /Users/cuijinyu/Documents/website-builder/website-builder-client
 
-Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
+Total : 103 files, 16182 codes, 807 comments, 2311 blanks, all 19300 lines
 
 [summary](results.md)
 
@@ -24,7 +24,7 @@ Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
 | [config/webpack.config.js](/config/webpack.config.js)                                                                                         | JavaScript       |   408 |     212 |    18 |    638 |
 | [config/webpackDevServer.config.js](/config/webpackDevServer.config.js)                                                                       | JavaScript       |    43 |      62 |     6 |    111 |
 | [deploy.sh](/deploy.sh)                                                                                                                       | Shell Script     |     1 |       1 |     0 |      2 |
-| [package.json](/package.json)                                                                                                                 | JSON             |   193 |       0 |     1 |    194 |
+| [package.json](/package.json)                                                                                                                 | JSON             |   195 |       0 |     1 |    196 |
 | [public/index.html](/public/index.html)                                                                                                       | Nunjucks         |    40 |       0 |     4 |     44 |
 | [public/manifest.json](/public/manifest.json)                                                                                                 | JSON             |    25 |       0 |     1 |     26 |
 | [scripts/build.js](/scripts/build.js)                                                                                                         | JavaScript       |   167 |      23 |    22 |    212 |
@@ -44,10 +44,10 @@ Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
 | [src/components/materialConfiger/components/propertyEditor/index.scss](/src/components/materialConfiger/components/propertyEditor/index.scss) | SCSS             |     1 |       0 |     1 |      2 |
 | [src/components/materialConfiger/components/propertyEditor/index.tsx](/src/components/materialConfiger/components/propertyEditor/index.tsx)   | TypeScript React |   181 |       0 |    13 |    194 |
 | [src/components/materialConfiger/components/styleEditor/index.scss](/src/components/materialConfiger/components/styleEditor/index.scss)       | SCSS             |     1 |       0 |     1 |      2 |
-| [src/components/materialConfiger/components/styleEditor/index.tsx](/src/components/materialConfiger/components/styleEditor/index.tsx)         | TypeScript React |   298 |       0 |    14 |    312 |
+| [src/components/materialConfiger/components/styleEditor/index.tsx](/src/components/materialConfiger/components/styleEditor/index.tsx)         | TypeScript React |   689 |       0 |    28 |    717 |
 | [src/components/materialConfiger/context.tsx](/src/components/materialConfiger/context.tsx)                                                   | TypeScript React |    18 |       0 |     5 |     23 |
 | [src/components/materialConfiger/index.scss](/src/components/materialConfiger/index.scss)                                                     | SCSS             |    36 |       0 |     9 |     45 |
-| [src/components/materialConfiger/index.tsx](/src/components/materialConfiger/index.tsx)                                                       | TypeScript React |   147 |       0 |    10 |    157 |
+| [src/components/materialConfiger/index.tsx](/src/components/materialConfiger/index.tsx)                                                       | TypeScript React |   157 |       0 |    10 |    167 |
 | [src/components/materialTools/index.scss](/src/components/materialTools/index.scss)                                                           | SCSS             |    58 |       0 |    11 |     69 |
 | [src/components/materialTools/index.tsx](/src/components/materialTools/index.tsx)                                                             | TypeScript React |   134 |       0 |    11 |    145 |
 | [src/components/pageView/index.scss](/src/components/pageView/index.scss)                                                                     | SCSS             |    47 |       0 |     7 |     54 |
@@ -55,11 +55,12 @@ Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
 | [src/components/renderTree/index.scss](/src/components/renderTree/index.scss)                                                                 | SCSS             |    50 |       0 |    10 |     60 |
 | [src/components/renderTree/index.tsx](/src/components/renderTree/index.tsx)                                                                   | TypeScript React |   133 |       0 |    10 |    143 |
 | [src/components/styleEditor/index.tsx](/src/components/styleEditor/index.tsx)                                                                 | TypeScript React |     1 |       0 |     0 |      1 |
+| [src/constant/animates.json](/src/constant/animates.json)                                                                                     | JSON             |    81 |       0 |     1 |     82 |
 | [src/constant/drag.ts](/src/constant/drag.ts)                                                                                                 | TypeScript       |     5 |       0 |     1 |      6 |
 | [src/constant/errorCode.ts](/src/constant/errorCode.ts)                                                                                       | TypeScript       |     1 |       0 |     1 |      2 |
 | [src/context/global.tsx](/src/context/global.tsx)                                                                                             | TypeScript React |    31 |       0 |     6 |     37 |
 | [src/core/adapterEngine.ts](/src/core/adapterEngine.ts)                                                                                       | TypeScript       |     2 |       0 |     2 |      4 |
-| [src/core/ast.ts](/src/core/ast.ts)                                                                                                           | TypeScript       |   855 |     237 |   185 |  1,277 |
+| [src/core/ast.ts](/src/core/ast.ts)                                                                                                           | TypeScript       |   881 |     240 |   189 |  1,310 |
 | [src/core/error.ts](/src/core/error.ts)                                                                                                       | TypeScript       |     0 |       0 |     1 |      1 |
 | [src/core/errorEngine.ts](/src/core/errorEngine.ts)                                                                                           | TypeScript       |     1 |       0 |     1 |      2 |
 | [src/core/filterEngine.ts](/src/core/filterEngine.ts)                                                                                         | TypeScript       |     1 |       0 |     1 |      2 |
@@ -105,7 +106,7 @@ Total : 102 files, 15612 codes, 804 comments, 2289 blanks, all 18705 lines
 | [src/render/hocs/resizeHOC.tsx](/src/render/hocs/resizeHOC.tsx)                                                                               | TypeScript React |     0 |       0 |     1 |      1 |
 | [src/render/index.scss](/src/render/index.scss)                                                                                               | SCSS             |    16 |       0 |     3 |     19 |
 | [src/render/index.tsx](/src/render/index.tsx)                                                                                                 | TypeScript React |   222 |       1 |    19 |    242 |
-| [src/render/material.tsx](/src/render/material.tsx)                                                                                           | TypeScript React |   340 |       0 |    28 |    368 |
+| [src/render/material.tsx](/src/render/material.tsx)                                                                                           | TypeScript React |   400 |       0 |    31 |    431 |
 | [src/render/mhoc.scss](/src/render/mhoc.scss)                                                                                                 | SCSS             |    13 |       0 |     3 |     16 |
 | [src/render/store/renderAction.ts](/src/render/store/renderAction.ts)                                                                         | TypeScript       |   114 |       0 |     7 |    121 |
 | [src/render/store/renderReducer.ts](/src/render/store/renderReducer.ts)                                                                       | TypeScript       |   135 |       0 |     8 |    143 |

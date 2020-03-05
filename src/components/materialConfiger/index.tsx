@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { BEM } from '../../common/utils/bem';
 import _ from 'lodash';
 import './index.scss';
-import { Popover, Icon, Drawer, Button, Modal, Tag } from 'antd';
+import { Popover, Icon, Drawer, Button, Modal, Tag, Col, Row, Input } from 'antd';
 import { useGlobalContext } from '../../context/global';
 import eventManager from '../../eventManager';
 import { AstNodeType } from '../../core/ast';
@@ -16,6 +16,8 @@ const MaterialConfiger = () => {
   const [selectedElement, setSelectedElement] = useState<AstNodeType | null>(null);
   const [metaConfig, setMetaConfig] = useState<{ config: { name: string }[] } | null>(null);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+  const [nameModalVisible, setNameModalVisible] = useState<boolean>(false);
+  const [editName, setEditName] = useState<string>('');
   const [codeEditorVisible, setCodeEditorVisible] = useState<boolean>(false);
 
   const [selectElementId, setSelectElementId] = useState<string>('');
@@ -33,6 +35,10 @@ const MaterialConfiger = () => {
       if (componentMetaInfo) {
         setMetaConfig({ config: componentMetaInfo });
       }
+    });
+    eventManager.listen('selectNone', () => {
+      setSelectElementId('');
+      setSelectedElement(null);
     });
   }, []);
 
@@ -69,58 +75,97 @@ const MaterialConfiger = () => {
             <Icon type="info-circle" style={{ marginLeft: 5, marginRight: 5 }} />
           </Popover>
         </div>
-        <div>
-          <div className={BEM('materialConfiger', 'panel')}>
-            <div className={BEM('materialConfiger', 'panel-title')}>基础信息</div>
-            <div className={BEM('materialConfiger', 'panel-item')}>
-              <div className={BEM('materialConfiger', 'panel-item-title')}>id:</div>
-              <div className={BEM('materialConfiger', 'panel-item-value')}>{selectedElement?.id}</div>
-            </div>
-          </div>
-          <div className={BEM('materialConfiger', 'panel')}>
-            <div className={BEM('materialConfiger', 'panel-title')}>基础配置</div>
-            <div className={BEM('materialConfiger', 'panel-item')}>
-              <div className={BEM('materialConfiger', 'panel-item-title')}>name:</div>
-              <div className={BEM('materialConfiger', 'panel-item-value')}>
-                {selectedElement?.name} <Button>编辑</Button>
+        {selectedElement && (
+          <div>
+            <div className={BEM('materialConfiger', 'panel')}>
+              <div className={BEM('materialConfiger', 'panel-title')}>基础信息</div>
+              <div className={BEM('materialConfiger', 'panel-item')}>
+                <div className={BEM('materialConfiger', 'panel-item-title')}>id:</div>
+                <div className={BEM('materialConfiger', 'panel-item-value')}>{selectedElement?.id}</div>
               </div>
             </div>
-            <div className={BEM('materialConfiger', 'style-editor')}>
-              <ConfigerContext.Provider
-                value={{
-                  selectElementId,
-                  selectPropertyConfig,
-                  selectPropertyName,
-                  setSelectElementId,
-                  setSelectPropertyConfig,
-                  setSelectPropertyName,
-                }}>
-                <StyleEditor />
-              </ConfigerContext.Provider>
+            <div className={BEM('materialConfiger', 'panel')}>
+              <div className={BEM('materialConfiger', 'panel-title')}>基础配置</div>
+              <div className={BEM('materialConfiger', 'panel-item')}>
+                <div className={BEM('materialConfiger', 'panel-item-title')}>name:</div>
+                <div className={BEM('materialConfiger', 'panel-item-value')}>
+                  {selectedElement?.name}{' '}
+                  <Button
+                    onClick={() => {
+                      if (selectedElement) {
+                        setEditName(selectedElement.name);
+                        setNameModalVisible(true);
+                      }
+                    }}>
+                    编辑
+                  </Button>
+                </div>
+                <Modal
+                  title={'编辑元素名称'}
+                  visible={nameModalVisible}
+                  onOk={() => {
+                    if (selectedElement) {
+                      astTool.setNodeName(selectedElement, editName);
+                      setNameModalVisible(false);
+                    }
+                  }}
+                  onCancel={() => {
+                    setNameModalVisible(false);
+                    if (selectedElement) {
+                      setEditName(selectedElement.name);
+                    }
+                  }}>
+                  <Row>
+                    <Col span={8}>元素的名称</Col>
+                    <Col span={16}>
+                      <Input
+                        value={editName}
+                        onChange={e => {
+                          setEditName(e.target.value);
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </Modal>
+              </div>
+              <div className={BEM('materialConfiger', 'style-editor')}>
+                <ConfigerContext.Provider
+                  value={{
+                    selectElementId,
+                    selectPropertyConfig,
+                    selectPropertyName,
+                    setSelectElementId,
+                    setSelectPropertyConfig,
+                    setSelectPropertyName,
+                  }}>
+                  <StyleEditor />
+                </ConfigerContext.Provider>
+              </div>
+            </div>
+            <div className={BEM('materialConfiger', 'panel')}>
+              <div className={BEM('materialConfiger', 'panel-title')}>物料配置项</div>
+              {metaConfig?.config.map(cfg => {
+                return (
+                  <div className={BEM('materialConfiger', 'panel-item')}>
+                    <div className={BEM('materialConfiger', 'panel-item-title')}>
+                      {cfg.name}
+                      {nodeConfig && renderValueLabel(nodeConfig, cfg)}
+                    </div>
+                    <div className={BEM('materialConfiger', 'panel-item-value')}>
+                      <Button
+                        onClick={() => {
+                          editProperty(cfg.name);
+                        }}>
+                        编辑
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-          <div className={BEM('materialConfiger', 'panel')}>
-            <div className={BEM('materialConfiger', 'panel-title')}>物料配置项</div>
-            {metaConfig?.config.map(cfg => {
-              return (
-                <div className={BEM('materialConfiger', 'panel-item')}>
-                  <div className={BEM('materialConfiger', 'panel-item-title')}>
-                    {cfg.name}
-                    {nodeConfig && renderValueLabel(nodeConfig, cfg)}
-                  </div>
-                  <div className={BEM('materialConfiger', 'panel-item-value')}>
-                    <Button
-                      onClick={() => {
-                        editProperty(cfg.name);
-                      }}>
-                      编辑
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        )}
+        {!selectedElement && <div>选择一个元素</div>}
       </div>
       <ConfigerContext.Provider
         value={{

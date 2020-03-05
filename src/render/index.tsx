@@ -223,7 +223,12 @@ const Render: React.FC = function() {
 
   return (
     <Provider store={store}>
-      <div ref={drop} className={BEM('render', 'wrapper')}>
+      <div
+        ref={drop}
+        className={BEM('render', 'wrapper')}
+        onClick={() => {
+          eBus.emit('selectNone');
+        }}>
         <ErrorBoundary>
           {!hasSelectPage && (
             <div className={BEM('render', 'info')}>
