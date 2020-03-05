@@ -36,6 +36,9 @@ const Footer: React.FC<{}> = function() {
       pathStackRef.current = [component.type];
       walk(component);
     });
+    eventManager.listen('selectNone', () => {
+      setPathStack(['Default']);
+    });
   }, []);
 
   return (

@@ -707,6 +707,9 @@ const StyleEditor: React.FC = () => {
                     <Row>
                       {idx + 1}: {animate.name}
                       <Button
+                        style={{
+                          marginLeft: 5,
+                        }}
                         onClick={() => {
                           dispatchAnimateType({
                             type: 'deleteAnimate',

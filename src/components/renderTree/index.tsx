@@ -48,6 +48,9 @@ export default () => {
     eventManager.listen('elementSelect', ({ component }: { component: AstNodeType }) => {
       setActiveElementId(component.id);
     });
+    eventManager.listen('selectNone', () => {
+      setActiveElementId('');
+    });
   }, []);
 
   const renderComponentTree = useCallback(
@@ -68,6 +71,7 @@ export default () => {
                 <path d="M14 3H4C2.9 3 2.01 3.9 2.01 5L2 21L9 18L16 21V5C16 3.9 15.1 3 14 3Z" fill="#2196F3" />
               </svg>
               {component.type}
+              {component.name && '(' + component.name + ')'}
               <div className={BEM('renderTree', 'layout-delete')}>
                 <span
                   onClick={() => {
@@ -87,6 +91,7 @@ export default () => {
                 activeElementId === component.id ? BEM('renderTree', 'fc-container', 'active') : '',
               ])}>
               {component.type}
+              {component.name && '(' + component.name + ')'}
               <div className={BEM('renderTree', 'layout-delete')}>
                 <span
                   onClick={() => {

@@ -1248,6 +1248,12 @@ class AstParser {
     return {};
   }
 
+  public setNodeName(node: AstNodeType, newName: string) {
+    node.name = newName;
+    this.save('保存节点名称');
+    return;
+  }
+
   /**
    * 打印 AST 树
    */
