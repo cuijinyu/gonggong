@@ -57,7 +57,7 @@ const MaterialConfiger = () => {
         case 'static':
           return <Tag>{nodeConfig[cfg.name]?.value}</Tag>;
         case 'state':
-          return <Tag color={'red'}>{nodeConfig[cfg.name]?.id}</Tag>;
+          return <Tag color={'red'}>{nodeConfig[cfg.name]?.stateId}</Tag>;
         case 'method':
           return <Tag color={'green'}></Tag>;
         default:
