@@ -675,7 +675,12 @@ const StyleEditor: React.FC = () => {
                   添加动画
                 </Button>
               </Row>
-              <Modal visible={animationModalVisible} footer={null}>
+              <Modal
+                visible={animationModalVisible}
+                onCancel={() => {
+                  setAnimationModalVisible(false);
+                }}
+                footer={null}>
                 {animations.animations.map(name => {
                   return (
                     <Button
@@ -696,15 +701,26 @@ const StyleEditor: React.FC = () => {
             </Row>
             <Row>
               <Row>已添加的动画列表</Row>
-              <Row>
+              <Card>
                 {animateType.animates.map((animate, idx) => {
                   return (
                     <Row>
                       {idx + 1}: {animate.name}
+                      <Button
+                        onClick={() => {
+                          dispatchAnimateType({
+                            type: 'deleteAnimate',
+                            data: {
+                              idx,
+                            },
+                          });
+                        }}>
+                        删除
+                      </Button>
                     </Row>
                   );
                 })}
-              </Row>
+              </Card>
             </Row>
           </Row>
         </Panel>
