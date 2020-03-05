@@ -77,7 +77,12 @@ const stateReducer = function(
           name,
           value: initValue,
         };
-        draft.states.push(option);
+        const oldStateIndex = draft.states.findIndex(ele => ele.id === id);
+        if (oldStateIndex === -1) {
+          draft.states.push(option);
+        } else {
+          draft.states.splice(oldStateIndex, 1, option);
+        }
         return draft;
       });
     case 'setState':
@@ -113,7 +118,12 @@ const methodReducer = function(
   switch (action.type) {
     case 'addMethod':
       return produce(state, draft => {
-        draft.methods.push(action.payload);
+        const oldMethodIndex = draft.methods.findIndex(method => method.id === action.payload.id);
+        if (oldMethodIndex === -1) {
+          draft.methods.push(action.payload);
+        } else {
+          draft.methods.splice(1, oldMethodIndex, action.payload);
+        }
       });
     case 'setMethod':
       return produce(state, draft => {
