@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { BEM } from '../../common/utils/bem';
 import _ from 'lodash';
 import './index.scss';
-import { Popover, Icon, Drawer, Button, Modal, Tag, Col, Row, Input } from 'antd';
+import { Popover, Drawer, Button, Modal, Tag, Col, Row, Input } from 'antd';
 import { useGlobalContext } from '../../context/global';
 import eventManager from '../../eventManager';
 import { AstNodeType } from '../../core/ast';
@@ -11,6 +11,7 @@ import { getMetaInfo } from '../../materials';
 import PropertyEditor from './components/propertyEditor';
 import ConfigerContext, { SelectPropertyConfigName } from './context';
 import StyleEditor from './components/styleEditor';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 const MaterialConfiger = () => {
   const [selectedElement, setSelectedElement] = useState<AstNodeType | null>(null);
@@ -72,7 +73,7 @@ const MaterialConfiger = () => {
         <div className={BEM('materialConfiger', 'title')}>
           物料配置器
           <Popover content={'在这里配置物料属性'}>
-            <Icon type="info-circle" style={{ marginLeft: 5, marginRight: 5 }} />
+            <InfoCircleOutlined style={{ marginLeft: 5, marginRight: 5 }} />
           </Popover>
         </div>
         {selectedElement && (

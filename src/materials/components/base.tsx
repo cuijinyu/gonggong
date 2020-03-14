@@ -27,6 +27,12 @@ export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
     return getMetaInfo(this.constructor);
   }
 
+  // 用于动态操纵
+  addItem() {}
+
+  // 同样是用于动态操纵
+  deleteItem() {}
+
   private safeParse(string: string) {
     try {
       const result = JSON.parse(string);

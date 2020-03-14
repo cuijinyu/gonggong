@@ -11,7 +11,8 @@ import { Provider } from 'react-redux';
 import store from './store/renderStore';
 import AstParser, { AstNodeType, CustomLayout } from '../core/ast';
 import Material from './material';
-import { notification, Icon } from 'antd';
+import { notification } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 import './index.scss';
 import eventManager from '../eventManager';
 import materials, { getMetaInfo, MaterialInfoType } from '../materials';
@@ -152,7 +153,7 @@ const Render: React.FC = function() {
     notification.open({
       message: '渲染引擎加载完成',
       duration: 2,
-      icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
+      icon: <SmileOutlined style={{ color: '#108ee9' }} />,
     });
     eBus.listen('pageChange', page => {
       forceUpdate();

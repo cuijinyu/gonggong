@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Radio, Input, Button, Drawer, Card } from 'antd';
+import { Select, Radio, Input, Button, Drawer, Card, Row, Col, Modal } from 'antd';
 import { useGlobalContext } from '../../../../context/global';
 import AceEditor from 'react-ace';
 
@@ -118,43 +118,178 @@ const StateDataViewer: React.FC<{
 const MethodDataViewer: React.FC<{
   onOk: onOkType;
 }> = () => {
-  const { astTool } = useGlobalContext();
+  const { astTool, ast } = useGlobalContext();
   const [methodConfigerVisible, setMethodConfigerVisible] = useState<boolean>(false);
+  const [methodName, setMethodName] = useState<string>('');
+  const [methodCode, setMethodCode] = useState<string>('');
+  const [stateModalVisible, setStateModalVisible] = useState<boolean>(false);
+  const [stateChangerModalVisible, setStateChangerModalVisible] = useState<boolean>(false);
+  const [methodModalVisible, setMethodModalVisible] = useState<boolean>(false);
+  const [ajaxModalVisible, setAjaxModalVisible] = useState<boolean>(false);
+  const [cursorPosition, setCursorPosition] = useState<{
+    doc: string[];
+    column: number;
+    row: number;
+  }>({
+    doc: [],
+    column: 0,
+    row: 0,
+  });
   const [methods, setMethods] = useState(astTool.getMethodsList());
+  const [states, setStates] = useState(astTool.getStateList());
+
+  useEffect(() => {
+    setMethods(astTool.getMethodsList());
+    setStates(astTool.getStateList());
+  }, [ast]);
+
+  const StateModal: React.FC<Partial<{
+    onOk: any;
+    onCancel: any;
+    visible: boolean;
+  }>> = ({ onOk, visible, onCancel }) => {
+    return (
+      <Modal visible={visible} onCancel={onCancel}>
+        {states.map(state => {
+          return (
+            <Card>
+              <div>name: {state.name}</div>
+              <div>initValue: {state.initValue}</div>
+              <div>
+                <Button
+                  onClick={() => {
+                    onOk(state.id);
+                  }}>
+                  确认
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </Modal>
+    );
+  };
+
+  const MethodModal: React.FC<Partial<{
+    onOk: any;
+    onCancel: any;
+    visible: boolean;
+  }>> = ({ onOk, visible }) => {
+    return <Modal visible={visible}></Modal>;
+  };
+
+  const AjaxModal: React.FC<Partial<{
+    onOk: any;
+    onCancel: any;
+    visible: boolean;
+  }>> = ({ onOk, visible }) => {
+    return <Modal visible={visible}></Modal>;
+  };
+
   return (
     <div>
       <div>方法</div>
       <div>
-        <div></div>
+        <div>
+          {methods.map(method => {
+            <Card>
+              <div>方法名: {method.name}</div>
+            </Card>;
+          })}
+        </div>
         <div>
           <Button onClick={() => setMethodConfigerVisible(true)}>添加方法</Button>
         </div>
       </div>
-      <Drawer visible={methodConfigerVisible} onClose={() => setMethodConfigerVisible(false)} title="方法编辑">
+      <Drawer
+        width={400}
+        visible={methodConfigerVisible}
+        onClose={() => setMethodConfigerVisible(false)}
+        title="方法编辑">
         <div>
           <div>
             <span>方法名称</span>
           </div>
           <div>
-            <Input />
+            <Input value={methodName} onChange={e => setMethodName(e.target.value)} />
           </div>
         </div>
         <div>
           <div>
             <span>方法生成工具</span>
           </div>
-          <div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+          <Row>
+            <Col span={6}>
+              <Button
+                onClick={() => {
+                  setStateModalVisible(true);
+                }}>
+                获取状态
+              </Button>
+              <StateModal
+                visible={stateModalVisible}
+                onOk={(id: string) => {
+                  console.log(id);
+                  setStateModalVisible(false);
+                }}
+              />
+            </Col>
+            <Col span={6}>
+              <Button
+                onClick={() => {
+                  setStateChangerModalVisible(true);
+                }}>
+                修改状态
+              </Button>
+              <StateModal visible={stateChangerModalVisible} onOk={() => {}} />
+            </Col>
+            <Col span={6}>
+              <Button
+                onClick={() => {
+                  setAjaxModalVisible(true);
+                }}>
+                ajax请求
+              </Button>
+              <AjaxModal visible={ajaxModalVisible} onOk={() => {}} />
+            </Col>
+            <Col span={6}>
+              <Button
+                onClick={() => {
+                  setMethodModalVisible(true);
+                }}>
+                关联方法
+              </Button>
+              <MethodModal visible={methodModalVisible} onOk={() => {}} />
+            </Col>
+          </Row>
+        </div>
+        <div>方法关联关系</div>
+        <div></div>
+        <div>方法代码</div>
+        <div>
+          <AceEditor
+            value={methodCode}
+            mode={'javascript'}
+            theme={'github'}
+            onChange={value => setMethodCode(value)}
+            enableBasicAutocompletion={['getState', 'ajax', 'changeState', 'method']}
+            onCursorChange={value => {
+              setCursorPosition({
+                doc: value.doc.$lines,
+                row: value.cursor.row,
+                column: value.cursor.column,
+              });
+            }}
+            setOptions={{
+              showLineNumbers: true,
+              tabSize: 4,
+              highlightActiveLine: true,
+            }}
+          />
         </div>
         <div>
-          <div>
-            <span>方法流程列表</span>
-          </div>
+          <Button>确认</Button>
         </div>
-        <div></div>
       </Drawer>
     </div>
   );

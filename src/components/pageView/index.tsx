@@ -44,7 +44,7 @@ const PageConfigModal: React.FC<{
           }}
         />
       </Row>
-      <Row style={{ minHeight: 60 }}>
+      <Row style={{ minHeight: 60, marginTop: '10px' }}>
         <span>页面路径</span>
         <Input
           value={pagePath}
@@ -53,7 +53,7 @@ const PageConfigModal: React.FC<{
           }}
         />
       </Row>
-      <Row style={{ minHeight: 40 }}>
+      <Row style={{ minHeight: 40, marginTop: '18px' }}>
         <span style={{ paddingRight: 10 }}>是否为首页</span>
         <Switch
           checked={isIndex}
