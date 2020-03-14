@@ -4,7 +4,7 @@ import { Calendar } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('edit')
+@Icon(require('../../../imgs/calendar.png'), 'src')
 @Desc('这个是calendar物料')
 @IsLayout(false)
 @Material()

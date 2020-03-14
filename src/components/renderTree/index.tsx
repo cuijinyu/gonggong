@@ -2,7 +2,8 @@ import cn from 'classnames';
 import React, { useEffect, useCallback, useState } from 'react';
 import { BEM } from '../../common/utils/bem';
 import './index.scss';
-import { Popover, Icon, notification, Modal } from 'antd';
+import { Popover, notification, Modal } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { useGlobalContext } from '../../context/global';
 import { AstNodeType } from '../../core/ast';
 import eventManager from '../../eventManager';
@@ -121,7 +122,7 @@ export default () => {
       <div className={BEM('renderTree', 'title')}>
         渲染树
         <Popover content={'渲染树是配置渲染信息的展示区域'}>
-          <Icon type="info-circle" style={{ marginLeft: 5, marginRight: 5 }} />
+          <InfoCircleOutlined style={{ marginLeft: 5, marginRight: 5 }} />
         </Popover>
       </div>
       <div>

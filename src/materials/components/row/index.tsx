@@ -3,7 +3,7 @@ import { BaseMaterial } from '../base';
 import { Row } from 'antd';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('align-left')
+@Icon(require('../../../imgs/row.png'), 'src')
 @Desc(`这个是row布局物料`)
 @IsLayout(true, 24)
 @NodeDC(1)

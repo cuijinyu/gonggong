@@ -4,7 +4,7 @@ import { Table } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('edit')
+@Icon(require('../../../imgs/table.png'), 'src')
 @Desc('这个是table物料')
 @IsLayout(false)
 @Material()

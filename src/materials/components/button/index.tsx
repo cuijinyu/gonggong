@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('edit')
+@Icon(require('../../../imgs/button.png'), 'src')
 @Desc('这个是button物料')
 @IsLayout(false)
 @Material()

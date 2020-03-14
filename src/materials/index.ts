@@ -8,6 +8,7 @@ import Card from './components/card';
 import Label from './components/label';
 import Menu from './components/menu';
 import Calendar from './components/calendar';
+import Form from './components/form';
 import 'reflect-metadata';
 export type MaterialInfoType = {
   name: string;
@@ -43,4 +44,5 @@ export default {
   Label,
   Menu,
   Calendar,
+  Form,
 };

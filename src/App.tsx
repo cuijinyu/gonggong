@@ -30,6 +30,7 @@ const App: React.FC = () => {
             <Route exact path="/project" component={ProjectPage} />
           </BrowserRouter>
         </GlobalContextProvider>
+        <div id="root-append"></div>
       </div>
     </DndProvider>
   );

@@ -3,15 +3,17 @@ import { produce } from 'immer';
 import Materials, { getMetaInfo } from '../../materials/index';
 import './index.scss';
 import { BEM } from '../../common/utils/bem';
-import { Icon, Popover, Button, Modal } from 'antd';
+import { Popover, Button, Modal } from 'antd';
 import { useDrag } from 'react-dnd';
 import Utils from '../../common/utils/utils';
 import dndType from '../../constant/drag';
 import _ from 'lodash';
+import Icon from '@ant-design/icons';
 import LayoutComposer from '../layoutComposer';
 import eventManager from '../../eventManager';
 import { useGlobalContext } from '../../context/global';
 import { CustomLayout } from '../../core/ast';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 const { uuid } = Utils;
 
@@ -29,7 +31,10 @@ const MaterialItem: FC<{ material: ReturnType<typeof getMetaInfo> }> = ({ materi
     if (iconMode === 'src') {
       return <img style={maxStyle} src={iconPath} />;
     }
-    return <Icon style={maxStyle} type={iconPath} />;
+    //TODO: 新的图标
+    return React.createElement('div', {
+      style: maxStyle,
+    });
   }, []);
 
   return (
@@ -88,7 +93,7 @@ const MaterialTools: FC = () => {
         <div className={BEM('materialTools', 'title')}>
           物料集合
           <Popover content={'这里是所有可以使用的物料合集，包括布局物料和功能物料'}>
-            <Icon type="info-circle" style={{ marginLeft: 5, marginRight: 5 }} />
+            <InfoCircleOutlined style={{ marginLeft: 5, marginRight: 5 }} />
           </Popover>
           <Button
             size="small"
