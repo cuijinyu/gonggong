@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('edit')
+@Icon(require('../../../imgs/label.png'), 'src')
 @Desc('这个是label物料')
 @IsLayout(false)
 @Material()

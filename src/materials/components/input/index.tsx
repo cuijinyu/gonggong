@@ -4,7 +4,7 @@ import { Input } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('edit')
+@Icon(require('../../../imgs/input.png'), 'src')
 @Desc('这个是input物料')
 @IsLayout(false)
 @Material()

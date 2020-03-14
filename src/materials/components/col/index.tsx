@@ -3,7 +3,7 @@ import { BaseMaterial } from '../base';
 import { Col } from 'antd';
 import { Material, Icon, Desc, IsLayout, NodeDC, Config } from '../../decorators';
 
-@Icon('dash')
+@Icon(require('../../../imgs/col.png'), 'src')
 @Desc(`这个是col布局物料`)
 @IsLayout(true, 100)
 @NodeDC(1)

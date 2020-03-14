@@ -6,7 +6,7 @@ import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators
 
 const { SubMenu } = Menu;
 
-@Icon('edit')
+@Icon(require('../../../imgs/menu.png'), 'src')
 @Desc('这个是menu物料')
 @IsLayout(false)
 @Material()

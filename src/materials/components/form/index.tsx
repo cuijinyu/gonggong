@@ -13,7 +13,7 @@ interface FormItemType {
   options?: string[];
 }
 
-@Icon('edit')
+@Icon(require('../../../imgs/form.png'), 'src')
 @Desc('这个是input物料')
 @IsLayout(false)
 @Material()
@@ -39,6 +39,7 @@ class FormMaterial extends BaseMaterial {
                 <FormItem name={item.name} label={`表单项${idx}类型`} required>
                   <Radio.Group>
                     <Radio.Button value="input">输入框</Radio.Button>
+                    <Radio.Button value="numberPicker">数字选择器</Radio.Button>
                     <Radio.Button value="select">选择器</Radio.Button>
                     <Radio.Button value="radio">单选</Radio.Button>
                     <Radio.Button value="checkbox">多选</Radio.Button>

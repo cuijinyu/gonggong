@@ -4,7 +4,7 @@ import { Card } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon('edit')
+@Icon(require('../../../imgs/card.png'), 'src')
 @Desc('这个是card物料')
 @IsLayout(true, 24)
 @Material()
