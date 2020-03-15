@@ -4,12 +4,12 @@ import { Table } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 
-@Icon(require('../../../imgs/table.png'), 'src')
-@Desc('这个是table物料')
+@Icon(require('../../../imgs/chart.png'), 'src')
+@Desc('这个是chart物料')
 @IsLayout(false)
 @Material()
 @NodeDC(1)
-export default class TableMaterial extends BaseMaterial {
+export default class ChartMaterial extends BaseMaterial {
   constructor(props: any) {
     super(props);
   }

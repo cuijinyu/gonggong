@@ -1,10 +1,11 @@
 import React, { Component, useState } from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import { Modal, Row, Col, Form, Input, Select, Radio, Button, Switch, Divider } from 'antd';
+import { Modal, Row, Col, Form, Input, Select, Radio, Button, Switch, Divider, InputNumber } from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 import FormItem from 'antd/lib/form/FormItem';
+import TextArea from 'antd/lib/input/TextArea';
 
 interface FormItemType {
   name: string;
@@ -14,7 +15,7 @@ interface FormItemType {
 }
 
 @Icon(require('../../../imgs/form.png'), 'src')
-@Desc('这个是input物料')
+@Desc('这个是form物料')
 @IsLayout(false)
 @Material()
 @NodeDC(1)
@@ -27,18 +28,26 @@ class FormMaterial extends BaseMaterial {
           const [formItem, setFormItem] = useState<FormItemType[]>([]);
           const [form] = Form.useForm();
 
+          const onFill = () => {
+            console.log(form.getFieldsValue());
+          };
+
           const renderFormItems = (item: FormItemType, idx: number) => {
             return (
               <>
                 <FormItem>
                   <Divider type="horizontal" />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}标签`} required>
+                <FormItem name={`item_${idx}_label`} label={`表单项${idx}标签`} required>
                   <Input />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}类型`} required>
+                <FormItem name={`item_${idx}_name`} label={`表单项${idx}字段名`} required>
+                  <Input />
+                </FormItem>
+                <FormItem name={`item_${idx}_type`} label={`表单项${idx}类型`} required>
                   <Radio.Group>
                     <Radio.Button value="input">输入框</Radio.Button>
+                    <Radio.Button value="textarea">大段文本输入框</Radio.Button>
                     <Radio.Button value="numberPicker">数字选择器</Radio.Button>
                     <Radio.Button value="select">选择器</Radio.Button>
                     <Radio.Button value="radio">单选</Radio.Button>
@@ -47,16 +56,16 @@ class FormMaterial extends BaseMaterial {
                     <Radio.Button value="date">日期</Radio.Button>
                   </Radio.Group>
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}校验规则`} required>
+                <FormItem name={`item_${idx}_rule`} label={`表单项${idx}校验规则`} required>
                   <Input />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}是否必选`} required>
+                <FormItem name={`item_${idx}_necessary`} label={`表单项${idx}是否必选`} required>
                   <Switch />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}额外信息`} required>
+                <FormItem name={`item_${idx}_extra`} label={`表单项${idx}额外信息`} required>
                   <Input />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}初始值`} required>
+                <FormItem name={`item_${idx}_init`} label={`表单项${idx}初始值`} required>
                   <Input />
                 </FormItem>
               </>
@@ -72,13 +81,10 @@ class FormMaterial extends BaseMaterial {
               }}
               onOk={() => {
                 setModalVisible(false);
-                resolve({
-                  a: 1,
-                  b: 2,
-                });
+                resolve(form.getFieldsValue());
               }}>
               <Row>
-                <Form form={form}>
+                <Form form={form} onFieldsChange={onFill}>
                   <Form.Item name="name" label="表单名" required>
                     <Input />
                   </Form.Item>
@@ -119,15 +125,70 @@ class FormMaterial extends BaseMaterial {
     };
     return await modal();
   }
+
   @Config()
   private createProps = null;
 
   instantiate(createProps?: any) {
-    console.log(createProps);
+    const form = {
+      name: '',
+      label: 'left',
+      size: 'normal',
+      fields: {},
+    };
+    Object.keys(createProps).forEach(key => {
+      const splitedKey = key.split('_');
+      if (splitedKey.length > 1) {
+        const idx = splitedKey[1];
+        const itemKey = splitedKey[2];
+        if (!(form as any).fields[idx]) {
+          (form as any).fields[idx] = {};
+        }
+        (form as any).fields[idx][itemKey] = createProps[key];
+      } else {
+        (form as any)[key] = createProps[key];
+      }
+    });
+
+    const renderFieldItem = (field: {
+      name: string;
+      label: string;
+      type: string;
+      rule: string;
+      necessary: boolean;
+      extra: string;
+      init: string;
+    }) => {
+      let Item: any = null;
+      switch (field.type) {
+        case 'input':
+          Item = Input;
+          break;
+        case 'textarea':
+          Item = TextArea;
+          break;
+        case 'numberPicker':
+          Item = InputNumber;
+          break;
+        case 'select':
+          Item = Select;
+          break;
+      }
+      return (
+        <FormItem name={field.name} label={field.label}>
+          <Item />
+        </FormItem>
+      );
+    };
+
     return (
       <div>
-        {createProps.a}
-        {createProps.b}
+        <Form title={form.name} size={form.size as any}>
+          {Object.keys(form.fields).map(key => {
+            const field = (form.fields as any)[key];
+            return renderFieldItem(field);
+          })}
+        </Form>
       </div>
     );
   }
