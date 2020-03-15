@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getMetaInfo } from '../index';
 import { GlobalContext } from '../../context/global';
+import Ajax from '../../core/request';
 import AstParser from '../../core/ast';
 
 export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
@@ -25,6 +26,10 @@ export class BaseMaterial<P = {}, S = {}> extends Component<P, S> {
 
   mapConfigToTarget() {
     return getMetaInfo(this.constructor);
+  }
+
+  getAjax() {
+    return Ajax;
   }
 
   // 用于动态操纵
