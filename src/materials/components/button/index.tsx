@@ -18,9 +18,12 @@ export default class ButtonMaterial extends BaseMaterial {
   private value = '';
 
   @Config()
+  private text = '';
+
+  @Config()
   private onChange = () => {};
 
   instantiate() {
-    return <Button />;
+    return <Button>{(this.props as any).text}</Button>;
   }
 }

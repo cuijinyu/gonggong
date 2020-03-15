@@ -1,10 +1,27 @@
 import React, { Component, useState } from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import { Modal, Row, Col, Form, Input, Select, Radio, Button, Switch, Divider } from 'antd';
+import {
+  Modal,
+  Row,
+  Col,
+  Form,
+  Input,
+  Select,
+  Radio,
+  Button,
+  Switch,
+  Divider,
+  InputNumber,
+  Checkbox,
+  TimePicker,
+  DatePicker,
+} from 'antd';
 import { BaseMaterial } from '../base';
 import { Icon, Desc, IsLayout, Material, NodeDC, Config } from '../../decorators';
 import FormItem from 'antd/lib/form/FormItem';
+import TextArea from 'antd/lib/input/TextArea';
+import { useForm } from 'antd/lib/form/util';
 
 interface FormItemType {
   name: string;
@@ -14,11 +31,12 @@ interface FormItemType {
 }
 
 @Icon(require('../../../imgs/form.png'), 'src')
-@Desc('这个是input物料')
+@Desc('这个是form物料')
 @IsLayout(false)
 @Material()
 @NodeDC(1)
 class FormMaterial extends BaseMaterial {
+  formRef = React.createRef();
   static async beforeInstantiate() {
     const modal = () => {
       return new Promise((resolve, reject) => {
@@ -27,18 +45,26 @@ class FormMaterial extends BaseMaterial {
           const [formItem, setFormItem] = useState<FormItemType[]>([]);
           const [form] = Form.useForm();
 
+          const onFill = () => {
+            console.log(form.getFieldsValue());
+          };
+
           const renderFormItems = (item: FormItemType, idx: number) => {
             return (
               <>
                 <FormItem>
                   <Divider type="horizontal" />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}标签`} required>
+                <FormItem name={`item_${idx}_label`} label={`表单项${idx}标签`} required>
                   <Input />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}类型`} required>
+                <FormItem name={`item_${idx}_name`} label={`表单项${idx}字段名`} required>
+                  <Input />
+                </FormItem>
+                <FormItem name={`item_${idx}_type`} label={`表单项${idx}类型`} required>
                   <Radio.Group>
                     <Radio.Button value="input">输入框</Radio.Button>
+                    <Radio.Button value="textarea">大段文本输入框</Radio.Button>
                     <Radio.Button value="numberPicker">数字选择器</Radio.Button>
                     <Radio.Button value="select">选择器</Radio.Button>
                     <Radio.Button value="radio">单选</Radio.Button>
@@ -47,16 +73,19 @@ class FormMaterial extends BaseMaterial {
                     <Radio.Button value="date">日期</Radio.Button>
                   </Radio.Group>
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}校验规则`} required>
+                <FormItem name={`item_${idx}_rule`} label={`表单项${idx}校验规则`}>
                   <Input />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}是否必选`} required>
+                <FormItem name={`item_${idx}_necessary`} label={`表单项${idx}是否必选`} required>
                   <Switch />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}额外信息`} required>
+                <FormItem name={`item_${idx}_extra`} label={`表单项${idx}额外信息`}>
                   <Input />
                 </FormItem>
-                <FormItem name={item.name} label={`表单项${idx}初始值`} required>
+                <FormItem name={`item_${idx}_init`} label={`表单项${idx}初始值`}>
+                  <Input />
+                </FormItem>
+                <FormItem name={`item_${idx}_options`} label={`表单项${idx}选项`}>
                   <Input />
                 </FormItem>
               </>
@@ -72,13 +101,10 @@ class FormMaterial extends BaseMaterial {
               }}
               onOk={() => {
                 setModalVisible(false);
-                resolve({
-                  a: 1,
-                  b: 2,
-                });
+                resolve(form.getFieldsValue());
               }}>
               <Row>
-                <Form form={form}>
+                <Form form={form} onFieldsChange={onFill}>
                   <Form.Item name="name" label="表单名" required>
                     <Input />
                   </Form.Item>
@@ -95,6 +121,27 @@ class FormMaterial extends BaseMaterial {
                       <Radio.Button value="large">Large</Radio.Button>
                     </Radio.Group>
                   </Form.Item>
+                  <FormItem name="path" label="地址" required>
+                    <Input />
+                  </FormItem>
+                  <FormItem name="method" label="方法" required>
+                    <Radio.Group>
+                      <Radio.Button value="get">GET</Radio.Button>
+                      <Radio.Button value="post">POST</Radio.Button>
+                    </Radio.Group>
+                  </FormItem>
+                  <FormItem name="format" label="格式" required>
+                    <Radio.Group>
+                      <Radio.Button value="json">JSON</Radio.Button>
+                      <Radio.Button value="table">表单</Radio.Button>
+                    </Radio.Group>
+                  </FormItem>
+                  <FormItem name="sure" label="确定键文字" required>
+                    <Input />
+                  </FormItem>
+                  <FormItem name="reset" label="是否有重置键" required>
+                    <Switch />
+                  </FormItem>
                   {formItem.map((item, idx) => {
                     return renderFormItems(item, idx);
                   })}
@@ -119,15 +166,135 @@ class FormMaterial extends BaseMaterial {
     };
     return await modal();
   }
+
   @Config()
   private createProps = null;
 
+  @Config()
+  private onSuccess = null;
+
+  @Config()
+  private onError = null;
+
+  private onFinish(form: any) {
+    return () => {
+      const fields = (this.formRef.current as ReturnType<typeof useForm>[0]).getFieldsValue();
+      const ajax = this.getAjax().getClient();
+      if (form.method === 'get') {
+        ajax.get(form.path, {
+          data: fields,
+        });
+      } else {
+        ajax.post(form.path, fields);
+      }
+    };
+  }
+
   instantiate(createProps?: any) {
-    console.log(createProps);
+    const form = {
+      name: '',
+      label: 'left',
+      size: 'normal',
+      sure: '确定',
+      fields: {},
+      reset: false,
+      method: 'get',
+      format: 'json',
+      path: '',
+    };
+    Object.keys(createProps).forEach(key => {
+      const splitedKey = key.split('_');
+      if (splitedKey.length > 1) {
+        const idx = splitedKey[1];
+        const itemKey = splitedKey[2];
+        if (!(form as any).fields[idx]) {
+          (form as any).fields[idx] = {};
+        }
+        (form as any).fields[idx][itemKey] = createProps[key];
+      } else {
+        (form as any)[key] = createProps[key];
+      }
+    });
+
+    const renderFieldItem = (field: {
+      name: string;
+      label: string;
+      type: string;
+      rule: string;
+      necessary: boolean;
+      extra: string;
+      init: string;
+    }) => {
+      let Item: any = null;
+      switch (field.type) {
+        case 'input':
+          Item = <Input></Input>;
+          break;
+        case 'textarea':
+          Item = <TextArea></TextArea>;
+          break;
+        case 'numberPicker':
+          Item = <InputNumber></InputNumber>;
+          break;
+        case 'select':
+          Item = <Select></Select>;
+          break;
+        case 'radio':
+          Item = <Radio></Radio>;
+          break;
+        case 'checkbox':
+          Item = <Checkbox></Checkbox>;
+          break;
+        case 'time':
+          Item = <TimePicker></TimePicker>;
+          break;
+        case 'date':
+          Item = <DatePicker></DatePicker>;
+          break;
+      }
+
+      return (
+        <FormItem
+          rules={[{ pattern: new RegExp(field.rule || ''), message: `不符合规则${field.rule || ''}` }]}
+          name={field.name}
+          label={field.label}
+          required={field.necessary}
+          extra={field.extra}>
+          {Item}
+        </FormItem>
+      );
+    };
+
     return (
       <div>
-        {createProps.a}
-        {createProps.b}
+        <Form
+          onFinish={this.onFinish(form)}
+          ref={this.formRef as any}
+          title={form.name}
+          size={form.size as any}
+          labelAlign={form.label as any}>
+          {Object.keys(form.fields).map(key => {
+            const field = (form.fields as any)[key];
+            return renderFieldItem(field);
+          })}
+          <FormItem>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{
+                marginRight: '12px',
+              }}>
+              {form.sure}
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                (this.formRef.current as any).resetFields();
+              }}>
+              重置
+            </Button>
+          </FormItem>
+        </Form>
       </div>
     );
   }
