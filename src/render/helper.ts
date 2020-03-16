@@ -7,13 +7,8 @@ import AjaxClient from '../core/request';
 
 const wrapMethod = (method: string) => {
   return `
-        (() => function temp(
-            state,
-            method,
-            setState,
-            ajax
-        ) {
-            (${method})()
+        (() => function temp(...args) {
+            (${method})(args)
         })()
     `;
 };
@@ -28,6 +23,8 @@ export const injectMethod = (method: string, changeState: (id: string, value: an
   const compiledMethod = compileMethod(_method);
 
   const { getState, dispatch } = store;
+  const state = null;
+  const ajax = Ajax;
 
   return compiledMethod.bind(null, getState, () => {}, changeState, Ajax);
 };
