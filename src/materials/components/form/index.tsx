@@ -26,7 +26,7 @@ import { useForm } from 'antd/lib/form/util';
 interface FormItemType {
   name: string;
   rule: string;
-  type: 'input' | 'select' | 'radio' | 'switch' | 'time' | 'date';
+  type: 'input' | 'textarea' | 'numberPicker' | 'checkbox' | 'select' | 'radio' | 'switch' | 'time' | 'date';
   options?: string[];
 }
 
@@ -46,7 +46,23 @@ class FormMaterial extends BaseMaterial {
           const [form] = Form.useForm();
 
           const onFill = () => {
-            console.log(form.getFieldsValue());
+            const fields = form.getFieldsValue();
+            Object.keys(fields).forEach(key => {
+              const splitedKey = key.split('_');
+              if (splitedKey.length > 1) {
+                const idx = parseInt(splitedKey[1]);
+                const itemKey = splitedKey[2];
+                if (itemKey === 'type') {
+                  const option = formItem[idx] || {};
+                  (option as any)[itemKey] = fields[key];
+                  setFormItem(items => {
+                    const clonedItems = _.cloneDeep(items);
+                    clonedItems[idx] = option;
+                    return clonedItems;
+                  });
+                }
+              }
+            });
           };
 
           const renderFormItems = (item: FormItemType, idx: number) => {
@@ -85,9 +101,14 @@ class FormMaterial extends BaseMaterial {
                 <FormItem name={`item_${idx}_init`} label={`表单项${idx}初始值`}>
                   <Input />
                 </FormItem>
-                <FormItem name={`item_${idx}_options`} label={`表单项${idx}选项`}>
-                  <Input />
-                </FormItem>
+                {new Set(['select', 'radio', 'checkbox']).has(item.type) && (
+                  <FormItem
+                    help={'格式形如${key}-${value}|${key}-${value}'}
+                    name={`item_${idx}_options`}
+                    label={`表单项${idx}选项`}>
+                    <Input />
+                  </FormItem>
+                )}
               </>
             );
           };
@@ -181,9 +202,22 @@ class FormMaterial extends BaseMaterial {
       const fields = (this.formRef.current as ReturnType<typeof useForm>[0]).getFieldsValue();
       const ajax = this.getAjax().getClient();
       if (form.method === 'get') {
-        ajax.get(form.path, {
-          data: fields,
-        });
+        ajax
+          .get(form.path, {
+            data: fields,
+          })
+          .then(res => {
+            if (res.status === 200) {
+              if (_.isFunction((this.props as any).onSuccess)) {
+                (this.props as any).onSuccess();
+              }
+            }
+          })
+          .catch(err => {
+            if (_.isFunction((this.props as any).onError)) {
+              (this.props as any).onError();
+            }
+          });
       } else {
         ajax.post(form.path, fields);
       }
@@ -224,8 +258,35 @@ class FormMaterial extends BaseMaterial {
       necessary: boolean;
       extra: string;
       init: string;
+      options?: string;
     }) => {
       let Item: any = null;
+
+      const fieldOptions = field.options;
+      const options: { name?: string; value?: string }[] = [];
+      if (fieldOptions) {
+        const parseOptions = (str: string) => {
+          try {
+            let optionReg = /\$\{([a-zA-Z0-9\u4e00-\u9fa5]{0,18})\}\$/g;
+            const obj = { name: undefined, value: undefined };
+            str.match(optionReg)?.map((gp, idx) => {
+              if (!((idx + 1) % 2)) {
+                optionReg = /\$\{([a-zA-Z0-9\u4e00-\u9fa5]{0,18})\}\$/g;
+                (obj.value as any) = (optionReg.exec(gp) as any)[1];
+                options.push(_.cloneDeep(obj));
+              } else {
+                optionReg = /\$\{([a-zA-Z0-9\u4e00-\u9fa5]{0,18})\}\$/g;
+                (obj.name as any) = (optionReg.exec(gp) as any)[1];
+              }
+            });
+          } catch (e) {
+            console.log(e);
+            return [];
+          }
+        };
+        parseOptions(fieldOptions);
+      }
+
       switch (field.type) {
         case 'input':
           Item = <Input></Input>;
@@ -237,10 +298,22 @@ class FormMaterial extends BaseMaterial {
           Item = <InputNumber></InputNumber>;
           break;
         case 'select':
-          Item = <Select></Select>;
+          Item = (
+            <Select>
+              {options.map(option => {
+                return <Select.Option value={option?.value || ''}>{option.name}</Select.Option>;
+              })}
+            </Select>
+          );
           break;
         case 'radio':
-          Item = <Radio></Radio>;
+          Item = (
+            <Radio>
+              {options.map(option => {
+                return <Radio.Button value={option?.value || ''}>{option.name}</Radio.Button>;
+              })}
+            </Radio>
+          );
           break;
         case 'checkbox':
           Item = <Checkbox></Checkbox>;

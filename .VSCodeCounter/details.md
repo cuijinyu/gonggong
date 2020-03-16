@@ -1,10 +1,10 @@
 # Details
 
-Date : 2020-03-14 21:41:55
+Date : 2020-03-15 22:42:52
 
 Directory /Users/cuijinyu/Documents/website-builder/website-builder-client
 
-Total : 102 files, 18543 codes, 811 comments, 2625 blanks, all 21979 lines
+Total : 103 files, 18759 codes, 811 comments, 2645 blanks, all 22215 lines
 
 [summary](results.md)
 
@@ -81,22 +81,23 @@ Total : 102 files, 18543 codes, 811 comments, 2625 blanks, all 21979 lines
 | [src/layout/rightBar/index.scss](/src/layout/rightBar/index.scss)                                                                             | SCSS             |      9 |       0 |     2 |     11 |
 | [src/layout/rightBar/index.tsx](/src/layout/rightBar/index.tsx)                                                                               | TypeScript React |     14 |       0 |     3 |     17 |
 | [src/logo.svg](/src/logo.svg)                                                                                                                 | XML              |      7 |       0 |     1 |      8 |
-| [src/materials/components/base.tsx](/src/materials/components/base.tsx)                                                                       | TypeScript React |     37 |       2 |    12 |     51 |
-| [src/materials/components/button/index.tsx](/src/materials/components/button/index.tsx)                                                       | TypeScript React |     22 |       0 |     5 |     27 |
+| [src/materials/components/base.tsx](/src/materials/components/base.tsx)                                                                       | TypeScript React |     41 |       2 |    13 |     56 |
+| [src/materials/components/button/index.tsx](/src/materials/components/button/index.tsx)                                                       | TypeScript React |     24 |       0 |     6 |     30 |
 | [src/materials/components/calendar/index.tsx](/src/materials/components/calendar/index.tsx)                                                   | TypeScript React |     22 |       0 |     5 |     27 |
 | [src/materials/components/card/index.tsx](/src/materials/components/card/index.tsx)                                                           | TypeScript React |     20 |       0 |     4 |     24 |
+| [src/materials/components/chart/index.tsx](/src/materials/components/chart/index.tsx)                                                         | TypeScript React |     23 |       0 |     6 |     29 |
 | [src/materials/components/col/index.tsx](/src/materials/components/col/index.tsx)                                                             | TypeScript React |     32 |       0 |     7 |     39 |
-| [src/materials/components/form/index.tsx](/src/materials/components/form/index.tsx)                                                           | TypeScript React |    130 |       0 |     7 |    137 |
+| [src/materials/components/form/index.tsx](/src/materials/components/form/index.tsx)                                                           | TypeScript React |    289 |       0 |    15 |    304 |
 | [src/materials/components/input/index.tsx](/src/materials/components/input/index.tsx)                                                         | TypeScript React |     35 |       0 |     7 |     42 |
 | [src/materials/components/label/index.tsx](/src/materials/components/label/index.tsx)                                                         | TypeScript React |     21 |       0 |     5 |     26 |
 | [src/materials/components/list/index.tsx](/src/materials/components/list/index.tsx)                                                           | TypeScript React |      0 |       0 |     1 |      1 |
 | [src/materials/components/menu/index.tsx](/src/materials/components/menu/index.tsx)                                                           | TypeScript React |     42 |       0 |     7 |     49 |
 | [src/materials/components/row/index.tsx](/src/materials/components/row/index.tsx)                                                             | TypeScript React |     23 |       0 |     6 |     29 |
 | [src/materials/components/switch/index.tsx](/src/materials/components/switch/index.tsx)                                                       | TypeScript React |     22 |       0 |     5 |     27 |
-| [src/materials/components/table/index.tsx](/src/materials/components/table/index.tsx)                                                         | TypeScript React |     22 |       0 |     5 |     27 |
+| [src/materials/components/table/index.tsx](/src/materials/components/table/index.tsx)                                                         | TypeScript React |     47 |       0 |     8 |     55 |
 | [src/materials/decorators.ts](/src/materials/decorators.ts)                                                                                   | TypeScript       |     64 |       1 |     8 |     73 |
-| [src/materials/index.ts](/src/materials/index.ts)                                                                                             | TypeScript       |     46 |       0 |     3 |     49 |
-| [src/pages/home/index.scss](/src/pages/home/index.scss)                                                                                       | SCSS             |     26 |       0 |     7 |     33 |
+| [src/materials/index.ts](/src/materials/index.ts)                                                                                             | TypeScript       |     48 |       0 |     3 |     51 |
+| [src/pages/home/index.scss](/src/pages/home/index.scss)                                                                                       | SCSS             |     27 |       0 |     8 |     35 |
 | [src/pages/home/index.tsx](/src/pages/home/index.tsx)                                                                                         | TypeScript React |     51 |       1 |     4 |     56 |
 | [src/pages/login/index.tsx](/src/pages/login/index.tsx)                                                                                       | TypeScript React |      5 |       0 |     3 |      8 |
 | [src/pages/project/index.tsx](/src/pages/project/index.tsx)                                                                                   | TypeScript React |      5 |       0 |     3 |      8 |
