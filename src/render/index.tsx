@@ -207,7 +207,7 @@ const Render: React.FC = function() {
           addState({
             id: state.id,
             name: state.name,
-            initValue: state.initValue,
+            initValue: eval(state.initValue),
           }),
         );
       });

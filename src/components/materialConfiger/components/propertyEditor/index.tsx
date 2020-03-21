@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Select, Radio, Input, Button, Drawer, Card, Row, Col, Modal } from 'antd';
 import { useGlobalContext } from '../../../../context/global';
 import AceEditor from 'react-ace';
-
+import _ from 'lodash';
 import 'ace-builds/src-noconflict/mode-javascript';
-import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ext-searchbox';
 import { useConfigerContext } from '../../context';
 
 const { Option } = Select;
@@ -20,7 +22,10 @@ const StaticDataViewer: React.FC<{
     onOk('static', staticValue);
   };
   return (
-    <div>
+    <div
+      style={{
+        marginTop: '14px',
+      }}>
       <div>静态数据</div>
       <div>
         <Input
@@ -30,7 +35,10 @@ const StaticDataViewer: React.FC<{
           }}
         />
       </div>
-      <div>
+      <div
+        style={{
+          marginTop: '14px',
+        }}>
         <Button onClick={appendStaticConfigToElement}>确定</Button>
       </div>
     </div>
@@ -100,7 +108,7 @@ const StateDataViewer: React.FC<{
             <AceEditor
               value={stateInitValue}
               mode={'javascript'}
-              theme={'github'}
+              theme={'monokai'}
               onChange={value => setStateInitValue(value)}
             />
           </div>
@@ -117,8 +125,9 @@ const StateDataViewer: React.FC<{
 
 const MethodDataViewer: React.FC<{
   onOk: onOkType;
-}> = () => {
+}> = ({ onOk }) => {
   const { astTool, ast } = useGlobalContext();
+  const { selectElementId } = useConfigerContext();
   const [methodConfigerVisible, setMethodConfigerVisible] = useState<boolean>(false);
   const [methodName, setMethodName] = useState<string>('');
   const [methodCode, setMethodCode] = useState<string>('');
@@ -126,22 +135,26 @@ const MethodDataViewer: React.FC<{
   const [stateChangerModalVisible, setStateChangerModalVisible] = useState<boolean>(false);
   const [methodModalVisible, setMethodModalVisible] = useState<boolean>(false);
   const [ajaxModalVisible, setAjaxModalVisible] = useState<boolean>(false);
-  const [cursorPosition, setCursorPosition] = useState<{
+
+  const [methods, setMethods] = useState(astTool.getMethodsList());
+  const [states, setStates] = useState(astTool.getStateList());
+  const cursorPosition = useRef<{
     doc: string[];
     column: number;
     row: number;
   }>({
-    doc: [],
+    doc: [''],
     column: 0,
     row: 0,
   });
-  const [methods, setMethods] = useState(astTool.getMethodsList());
-  const [states, setStates] = useState(astTool.getStateList());
-
   useEffect(() => {
     setMethods(astTool.getMethodsList());
     setStates(astTool.getStateList());
   }, [ast]);
+
+  useEffect(() => {
+    console.log(methods);
+  }, [methods]);
 
   const StateModal: React.FC<Partial<{
     onOk: any;
@@ -174,16 +187,16 @@ const MethodDataViewer: React.FC<{
     onOk: any;
     onCancel: any;
     visible: boolean;
-  }>> = ({ onOk, visible }) => {
-    return <Modal visible={visible}></Modal>;
+  }>> = ({ onOk, visible, onCancel }) => {
+    return <Modal visible={visible} onCancel={onCancel}></Modal>;
   };
 
   const AjaxModal: React.FC<Partial<{
     onOk: any;
     onCancel: any;
     visible: boolean;
-  }>> = ({ onOk, visible }) => {
-    return <Modal visible={visible}></Modal>;
+  }>> = ({ onOk, visible, onCancel }) => {
+    return <Modal visible={visible} onCancel={onCancel}></Modal>;
   };
 
   return (
@@ -192,9 +205,19 @@ const MethodDataViewer: React.FC<{
       <div>
         <div>
           {methods.map(method => {
-            <Card>
-              <div>方法名: {method.name}</div>
-            </Card>;
+            return (
+              <Card>
+                <div>方法名: {method.name}</div>
+                <div>
+                  <Button
+                    onClick={() => {
+                      onOk('method', method.id);
+                    }}>
+                    确认
+                  </Button>
+                </div>
+              </Card>
+            );
           })}
         </div>
         <div>
@@ -228,6 +251,9 @@ const MethodDataViewer: React.FC<{
               </Button>
               <StateModal
                 visible={stateModalVisible}
+                onCancel={() => {
+                  setStateModalVisible(false);
+                }}
                 onOk={(id: string) => {
                   console.log(id);
                   setStateModalVisible(false);
@@ -241,7 +267,22 @@ const MethodDataViewer: React.FC<{
                 }}>
                 修改状态
               </Button>
-              <StateModal visible={stateChangerModalVisible} onOk={() => {}} />
+              <StateModal
+                visible={stateChangerModalVisible}
+                onCancel={() => {
+                  setStateChangerModalVisible(false);
+                }}
+                onOk={(stateId: string) => {
+                  setStateChangerModalVisible(false);
+                  const cursorLineArray = _.cloneDeep(cursorPosition.current.doc[cursorPosition.current.row].split(''));
+                  cursorLineArray.splice(cursorPosition.current.column, 0, `setState('${stateId}', )`);
+                  cursorPosition.current.doc[cursorPosition.current.row] = cursorLineArray.join('');
+                  setMethodCode(() => {
+                    const code = cursorPosition.current.doc.join('\n');
+                    return code;
+                  });
+                }}
+              />
             </Col>
             <Col span={6}>
               <Button
@@ -250,7 +291,13 @@ const MethodDataViewer: React.FC<{
                 }}>
                 ajax请求
               </Button>
-              <AjaxModal visible={ajaxModalVisible} onOk={() => {}} />
+              <AjaxModal
+                onCancel={() => {
+                  setAjaxModalVisible(false);
+                }}
+                visible={ajaxModalVisible}
+                onOk={() => {}}
+              />
             </Col>
             <Col span={6}>
               <Button
@@ -259,7 +306,13 @@ const MethodDataViewer: React.FC<{
                 }}>
                 关联方法
               </Button>
-              <MethodModal visible={methodModalVisible} onOk={() => {}} />
+              <MethodModal
+                onCancel={() => {
+                  setMethodModalVisible(false);
+                }}
+                visible={methodModalVisible}
+                onOk={() => {}}
+              />
             </Col>
           </Row>
         </div>
@@ -274,11 +327,11 @@ const MethodDataViewer: React.FC<{
             onChange={value => setMethodCode(value)}
             enableBasicAutocompletion={['getState', 'ajax', 'changeState', 'method']}
             onCursorChange={value => {
-              setCursorPosition({
+              cursorPosition.current = {
                 doc: value.doc.$lines,
                 row: value.cursor.row,
                 column: value.cursor.column,
-              });
+              };
             }}
             setOptions={{
               showLineNumbers: true,
@@ -288,7 +341,18 @@ const MethodDataViewer: React.FC<{
           />
         </div>
         <div>
-          <Button>确认</Button>
+          <Button
+            onClick={() => {
+              if (selectElementId) {
+                const node = astTool.getNodeById(selectElementId);
+                if (node) {
+                  const method = astTool.appendMethod(methodCode, methodName, node);
+                  setMethodConfigerVisible(false);
+                }
+              }
+            }}>
+            确认
+          </Button>
         </div>
       </Drawer>
     </div>
