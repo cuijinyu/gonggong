@@ -196,6 +196,7 @@ const MaterialConfiger = () => {
                   typedConfig = astTool.makeStateConfig(value);
                   break;
                 case 'method':
+                  typedConfig = astTool.makeMethodConfig(value);
                   break;
               }
               const node = astTool.getNodeById(selectElementId);

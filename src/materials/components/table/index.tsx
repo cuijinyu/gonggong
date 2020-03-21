@@ -125,6 +125,6 @@ export default class TableMaterial extends BaseMaterial {
         });
       });
     }
-    return <Table columns={columns} />;
+    return <Table columns={columns} dataSource={((this.props as any).data || this.data) as any} />;
   }
 }
