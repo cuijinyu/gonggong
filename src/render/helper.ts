@@ -5,10 +5,22 @@ import store from './store/renderStore';
 import { isProd } from '../common/utils/prod';
 import AjaxClient from '../core/request';
 
-const wrapMethod = (method: string) => {
+interface injectMethodType {
+  getState: (id: string) => any;
+  setState: (id: string, value: any) => any;
+  ajax: any;
+}
+
+const wrapMethod = (method: string, { getState, setState, ajax }: injectMethodType) => {
+  const getStateName = getState.name;
+  const setStateName = setState.name;
+  const ajaxName = ajax.name;
   return `
         (() => {
           return function temp(...args) {
+              const getState = ${getStateName}
+              const setState = ${setStateName}
+              const ajax = ${ajaxName}
               (${method})(...args)
           }
         })()
@@ -21,12 +33,11 @@ const Ajax = {
 };
 
 export const injectMethod = (method: string, changeState: (id: string, value: any) => any) => {
-  const _method = wrapMethod(method);
   const { getState, dispatch } = store;
   const setState = changeState;
   const state = null;
   const ajax = Ajax;
-  const compiledMethod = compileMethod(_method, {
+  const compiledMethod = compileMethod(method, {
     getState: (id: string) => getState().stateReducer.states.find(state => state.id === id),
     setState,
     ajax,
@@ -55,17 +66,11 @@ export const injectStyleClass = (styleClass: string) => {
   body.appendChild(style);
 };
 
-export const compileMethod = (
-  method: string,
-  {
+export const compileMethod = (method: string, { getState, setState, ajax }: injectMethodType) => {
+  const _method = wrapMethod(method, {
     getState,
     setState,
     ajax,
-  }: {
-    getState: any;
-    setState: any;
-    ajax: any;
-  },
-) => {
+  });
   return eval(method);
 };

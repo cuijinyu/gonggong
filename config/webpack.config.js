@@ -129,7 +129,7 @@ module.exports = function(webpackEnv) {
   };
 
   return {
-    mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
+    mode: isEnvProduction ? 'development' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
     devtool: isEnvProduction
@@ -186,7 +186,8 @@ module.exports = function(webpackEnv) {
       globalObject: 'this',
     },
     optimization: {
-      minimize: isEnvProduction,
+      minimize: false,
+      // isEnvProduction,
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({
@@ -199,26 +200,27 @@ module.exports = function(webpackEnv) {
               // https://github.com/facebook/create-react-app/pull/4234
               ecma: 8,
             },
-            compress: {
-              ecma: 5,
-              warnings: false,
-              // Disabled because of an issue with Uglify breaking seemingly valid code:
-              // https://github.com/facebook/create-react-app/issues/2376
-              // Pending further investigation:
-              // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false,
-              // Disabled because of an issue with Terser breaking valid code:
-              // https://github.com/facebook/create-react-app/issues/5250
-              // Pending further investigation:
-              // https://github.com/terser-js/terser/issues/120
-              inline: 2,
-            },
+            compress: false,
+            // {
+            //   ecma: 5,
+            //   warnings: false,
+            //   // Disabled because of an issue with Uglify breaking seemingly valid code:
+            //   // https://github.com/facebook/create-react-app/issues/2376
+            //   // Pending further investigation:
+            //   // https://github.com/mishoo/UglifyJS2/issues/2011
+            //   comparisons: false,
+            //   // Disabled because of an issue with Terser breaking valid code:
+            //   // https://github.com/facebook/create-react-app/issues/5250
+            //   // Pending further investigation:
+            //   // https://github.com/terser-js/terser/issues/120
+            //   inline: 2,
+            // },
             mangle: {
               safari10: true,
             },
             // Added for profiling in devtools
-            keep_classnames: isEnvProductionProfile,
-            keep_fnames: isEnvProductionProfile,
+            // keep_classnames: isEnvProductionProfile,
+            // keep_fnames: isEnvProductionProfile,
             output: {
               ecma: 5,
               comments: false,
@@ -370,7 +372,8 @@ module.exports = function(webpackEnv) {
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                compact: isEnvProduction,
+                compact: false,
+                // isEnvProduction,
               },
             },
             // Process any JS outside of the app with Babel.
@@ -615,7 +618,9 @@ module.exports = function(webpackEnv) {
           ],
           silent: true,
           // The formatter is invoked directly in WebpackDevServerUtils during development
-          formatter: isEnvProduction ? typescriptFormatter : undefined,
+          formatter: undefined,
+          // isEnvProduction ?
+          // typescriptFormatter : undefined,
         }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
