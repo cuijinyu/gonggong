@@ -36,6 +36,15 @@ export default class InputMaterial extends BaseMaterial<{
   }
 
   instantiate(createProps?: any) {
-    return <Input value={this.props.value} onClick={this.props.onClick} onChange={this.props.onChange as any} />;
+    return (
+      <Input
+        value={this.props.value}
+        onClick={this.props.onClick}
+        onChange={e => {
+          e.persist();
+          this.props.onChange(e) as any;
+        }}
+      />
+    );
   }
 }

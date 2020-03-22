@@ -7,8 +7,10 @@ import AjaxClient from '../core/request';
 
 const wrapMethod = (method: string) => {
   return `
-        (() => function temp(...args) {
-            (${method})(args)
+        (() => {
+          return function temp(...args) {
+              (${method})(...args)
+          }
         })()
     `;
 };
@@ -20,13 +22,18 @@ const Ajax = {
 
 export const injectMethod = (method: string, changeState: (id: string, value: any) => any) => {
   const _method = wrapMethod(method);
-  const compiledMethod = compileMethod(_method);
-
   const { getState, dispatch } = store;
+  const setState = changeState;
   const state = null;
   const ajax = Ajax;
+  const compiledMethod = compileMethod(_method, {
+    getState: (id: string) => getState().stateReducer.states.find(state => state.id === id),
+    setState,
+    ajax,
+  });
 
-  return compiledMethod.bind(null, getState, () => {}, changeState, Ajax);
+  // return compiledMethod.bind(null, getState, () => {}, changeState, Ajax);
+  return compiledMethod.bind(null);
 };
 
 export const chainMethod = (method: string, chainMethodArray: string[]) => {
@@ -48,6 +55,17 @@ export const injectStyleClass = (styleClass: string) => {
   body.appendChild(style);
 };
 
-export const compileMethod = (method: string) => {
+export const compileMethod = (
+  method: string,
+  {
+    getState,
+    setState,
+    ajax,
+  }: {
+    getState: any;
+    setState: any;
+    ajax: any;
+  },
+) => {
   return eval(method);
 };
