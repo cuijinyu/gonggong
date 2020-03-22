@@ -152,10 +152,6 @@ const MethodDataViewer: React.FC<{
     setStates(astTool.getStateList());
   }, [ast]);
 
-  useEffect(() => {
-    console.log(methods);
-  }, [methods]);
-
   const StateModal: React.FC<Partial<{
     onOk: any;
     onCancel: any;
