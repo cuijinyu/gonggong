@@ -29,14 +29,18 @@ class EventManager {
     this.warn('核心事件总线加载成功');
   }
 
-  listen(targetName: string, handler: (...args: any) => any) {
+  listen = (targetName: string, handler: (...args: any) => any) => {
+    if (targetName.indexOf('method:') !== -1) {
+      this.events[targetName] = [handler];
+      return;
+    }
     if (!this.events[targetName]) {
       this.events[targetName] = [];
     }
     this.events[targetName].push(handler);
-  }
+  };
 
-  emit(targetName: string, ...args: any) {
+  emit = (targetName: string, ...args: any) => {
     if (this.events[targetName]) {
       this.events[targetName].forEach(handler => {
         handler.call(this, ...args);
@@ -44,7 +48,7 @@ class EventManager {
     } else {
       console.warn(`warn: 请为该事件绑定方法`);
     }
-  }
+  };
 }
 
 export default new EventManager();

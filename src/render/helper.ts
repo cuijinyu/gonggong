@@ -4,6 +4,7 @@ import _ from 'lodash';
 import store from './store/renderStore';
 import { isProd } from '../common/utils/prod';
 import AjaxClient from '../core/request';
+import eventManager from '../eventManager';
 
 interface injectMethodType {
   getState: (id: string) => any;
@@ -11,18 +12,14 @@ interface injectMethodType {
   ajax: any;
 }
 
-const wrapMethod = (method: string, { getState, setState, ajax }: injectMethodType) => {
-  const getStateName = getState.name;
-  const setStateName = setState.name;
-  const ajaxName = ajax.name;
+const wrapMethod = (method: MethodType, { getState, setState, ajax }: injectMethodType) => {
   return `
         (() => {
-          return function temp(...args) {
-              const getState = ${getStateName}
-              const setState = ${setStateName}
-              const ajax = ${ajaxName}
-              (${method})(...args)
+          function temp(...args) {
+            (${method.code})(...args)
           }
+          listen('method:${method.id}', temp);
+          return temp
         })()
     `;
 };
@@ -32,7 +29,12 @@ const Ajax = {
   isProd: isProd(),
 };
 
-export const injectMethod = (method: string, changeState: (id: string, value: any) => any) => {
+interface MethodType {
+  code: string;
+  id: string;
+}
+
+export const injectMethod = (method: MethodType, changeState: (id: string, value: any) => any) => {
   const { getState, dispatch } = store;
   const setState = changeState;
   const state = null;
@@ -43,18 +45,7 @@ export const injectMethod = (method: string, changeState: (id: string, value: an
     ajax,
   });
 
-  // return compiledMethod.bind(null, getState, () => {}, changeState, Ajax);
-  return compiledMethod.bind(null);
-};
-
-export const chainMethod = (method: string, chainMethodArray: string[]) => {
-  const wrapMethodChain = (method: string, method1: string, method2: string) => {
-    return `
-            (
-                ${method}()
-            )()
-        `;
-  };
+  return compiledMethod;
 };
 
 export const pageJump = () => {};
@@ -66,11 +57,18 @@ export const injectStyleClass = (styleClass: string) => {
   body.appendChild(style);
 };
 
-export const compileMethod = (method: string, { getState, setState, ajax }: injectMethodType) => {
+export const compileMethod = (method: MethodType, { getState, setState, ajax }: injectMethodType) => {
   const _method = wrapMethod(method, {
     getState,
     setState,
     ajax,
   });
-  return eval(method);
+  const listen = eventManager.listen;
+  const emit = eventManager.emit;
+  try {
+    return eval(_method);
+  } catch (e) {
+    console.error('Error: method error', e);
+    return () => {};
+  }
 };

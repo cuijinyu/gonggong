@@ -184,7 +184,26 @@ const MethodDataViewer: React.FC<{
     onCancel: any;
     visible: boolean;
   }>> = ({ onOk, visible, onCancel }) => {
-    return <Modal visible={visible} onCancel={onCancel}></Modal>;
+    return (
+      <Modal visible={visible} onCancel={onCancel}>
+        {methods.map(method => {
+          return (
+            <Card>
+              <div>name: {method.name}</div>
+              <div>id: {method.id}</div>
+              <div>
+                <Button
+                  onClick={() => {
+                    onOk(method.id);
+                  }}>
+                  确认
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </Modal>
+    );
   };
 
   const AjaxModal: React.FC<Partial<{
@@ -193,6 +212,16 @@ const MethodDataViewer: React.FC<{
     visible: boolean;
   }>> = ({ onOk, visible, onCancel }) => {
     return <Modal visible={visible} onCancel={onCancel}></Modal>;
+  };
+
+  const insertCodeToPosition = (_code: string) => {
+    const cursorLineArray = _.cloneDeep(cursorPosition.current.doc[cursorPosition.current.row].split(''));
+    cursorLineArray.splice(cursorPosition.current.column, 0, _code);
+    cursorPosition.current.doc[cursorPosition.current.row] = cursorLineArray.join('');
+    setMethodCode(() => {
+      const code = cursorPosition.current.doc.join('\n');
+      return code;
+    });
   };
 
   return (
@@ -270,13 +299,7 @@ const MethodDataViewer: React.FC<{
                 }}
                 onOk={(stateId: string) => {
                   setStateChangerModalVisible(false);
-                  const cursorLineArray = _.cloneDeep(cursorPosition.current.doc[cursorPosition.current.row].split(''));
-                  cursorLineArray.splice(cursorPosition.current.column, 0, `setState('${stateId}', )`);
-                  cursorPosition.current.doc[cursorPosition.current.row] = cursorLineArray.join('');
-                  setMethodCode(() => {
-                    const code = cursorPosition.current.doc.join('\n');
-                    return code;
-                  });
+                  insertCodeToPosition(`setState('${stateId}', )`);
                 }}
               />
             </Col>
@@ -307,7 +330,10 @@ const MethodDataViewer: React.FC<{
                   setMethodModalVisible(false);
                 }}
                 visible={methodModalVisible}
-                onOk={() => {}}
+                onOk={(methodId: string) => {
+                  setMethodModalVisible(false);
+                  insertCodeToPosition(`emit('method:${methodId}')`);
+                }}
               />
             </Col>
           </Row>

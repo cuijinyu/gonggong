@@ -91,6 +91,7 @@ interface MHOCPropsType {
   method?: {
     [key: string]: {
       method: string;
+      id: string;
     };
   };
   changeState?: any;
@@ -204,7 +205,18 @@ class Material extends Component<
     const renderProps: any = {};
     if (nextProps.method) {
       Object.keys(nextProps.method).forEach(k => {
-        renderProps[k] = injectMethod(nextProps.method ? nextProps.method[k].method : '', nextProps.changeState);
+        renderProps[k] = injectMethod(
+          nextProps.method
+            ? {
+                code: nextProps.method[k].method,
+                id: nextProps.method[k].id,
+              }
+            : {
+                code: '',
+                id: '',
+              },
+          nextProps.changeState,
+        );
       });
     }
     return {
