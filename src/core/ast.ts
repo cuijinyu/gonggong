@@ -525,41 +525,41 @@ class AstParser {
     return methods;
   }
 
-  // 联通多个方法，在渲染引擎中使用闭包完成
-  public chainTwoMethod(firstMethodId: string, secondMethodId: string) {
-    const firstMethod = this.getMethodById(firstMethodId);
-    const secondMethod = this.getMethodById(secondMethodId);
-    if (firstMethod && secondMethod) {
-      // 如果两个方法都存在，才进行下一步操作
-      if (!firstMethod.emit) firstMethod.emit = [];
+  // TODO:联通多个方法，在渲染引擎中使用闭包完成
+  // public chainTwoMethod(firstMethodId: string, secondMethodId: string) {
+  //   const firstMethod = this.getMethodById(firstMethodId);
+  //   const secondMethod = this.getMethodById(secondMethodId);
+  //   if (firstMethod && secondMethod) {
+  //     // 如果两个方法都存在，才进行下一步操作
+  //     if (!firstMethod.emit) firstMethod.emit = [];
 
-      if (!secondMethod.listen) secondMethod.listen = [];
+  //     if (!secondMethod.listen) secondMethod.listen = [];
 
-      firstMethod.emit.push(secondMethodId);
-      secondMethod.listen.push(firstMethodId);
-      this.save('增加方法关联');
-      return true;
-    }
-    return false;
-  }
+  //     firstMethod.emit.push(secondMethodId);
+  //     secondMethod.listen.push(firstMethodId);
+  //     this.save('增加方法关联');
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  public removeChainBtTwoMethod(firstMethodId: string, secondMethodId: string) {
-    const firstMethod = this.getMethodById(firstMethodId);
-    const secondMethod = this.getMethodById(secondMethodId);
-    if (firstMethod && secondMethod) {
-      if (firstMethod.emit) {
-        const idx = firstMethod.emit.findIndex(id => id === secondMethodId);
-        firstMethod.emit.splice(idx, 1);
-      }
-      if (secondMethod.listen) {
-        const idx = secondMethod.listen.findIndex(id => id === firstMethodId);
-        secondMethod.listen.splice(idx, 1);
-      }
-      this.save('删除方法关联');
-      return true;
-    }
-    return false;
-  }
+  // public removeChainBtTwoMethod(firstMethodId: string, secondMethodId: string) {
+  //   const firstMethod = this.getMethodById(firstMethodId);
+  //   const secondMethod = this.getMethodById(secondMethodId);
+  //   if (firstMethod && secondMethod) {
+  //     if (firstMethod.emit) {
+  //       const idx = firstMethod.emit.findIndex(id => id === secondMethodId);
+  //       firstMethod.emit.splice(idx, 1);
+  //     }
+  //     if (secondMethod.listen) {
+  //       const idx = secondMethod.listen.findIndex(id => id === firstMethodId);
+  //       secondMethod.listen.splice(idx, 1);
+  //     }
+  //     this.save('删除方法关联');
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   public getStateById(id: string) {
     if (!this.astTree.states) this.astTree.states = [];
