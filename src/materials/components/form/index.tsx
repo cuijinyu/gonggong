@@ -207,15 +207,13 @@ class FormMaterial extends BaseMaterial {
             data: fields,
           })
           .then(res => {
-            if (res.status === 200) {
-              if (_.isFunction((this.props as any).onSuccess)) {
-                (this.props as any).onSuccess();
-              }
+            if (_.isFunction((this.props as any).onSuccess)) {
+              (this.props as any).onSuccess(res.data);
             }
           })
           .catch(err => {
             if (_.isFunction((this.props as any).onError)) {
-              (this.props as any).onError();
+              (this.props as any).onError(err);
             }
           });
       } else {

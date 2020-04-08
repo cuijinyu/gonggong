@@ -40,7 +40,7 @@ export default () => {
             type="primary"
             size="large"
             onClick={() => {
-              history.push('/layout');
+              history.push('/login');
             }}>
             尝试一下
           </Button>

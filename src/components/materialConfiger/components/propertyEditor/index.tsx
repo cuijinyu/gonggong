@@ -54,15 +54,41 @@ const StateDataViewer: React.FC<{
   const [stateName, setStateName] = useState<string>('');
   const [stateInitValue, setStateInitValue] = useState<any>();
 
+  const configerWorkMode = useRef<'add' | 'config'>('add');
+  const selectStateId = useRef<string>('');
+
   const createState = () => {
-    astTool.appendState({
-      name: stateName,
-      initValue: stateInitValue,
-    });
-    setStateConfigerVisible(false);
-    setStateName('');
-    setStateInitValue('');
+    if (configerWorkMode.current === 'add') {
+      astTool.appendState({
+        name: stateName,
+        initValue: stateInitValue,
+      });
+      setStateConfigerVisible(false);
+      setStateName('');
+      setStateInitValue('');
+    } else {
+      const state = astTool.getStateById(selectStateId.current);
+      if (state) {
+        astTool.changeStateById(selectStateId.current, {
+          name: stateName,
+          newStateInitValue: stateInitValue,
+        });
+      }
+      setStateConfigerVisible(false);
+      setStateName('');
+      setStateInitValue('');
+    }
   };
+
+  useEffect(() => {
+    if (configerWorkMode.current === 'config') {
+      const state = astTool.getStateById(selectStateId.current);
+      if (state) {
+        setStateName(state.name);
+        setStateInitValue(state.initValue);
+      }
+    }
+  }, [stateConfigerVisible]);
 
   return (
     <div>
@@ -82,13 +108,27 @@ const StateDataViewer: React.FC<{
                     }}>
                     选取属性
                   </Button>
+                  <Button
+                    onClick={() => {
+                      setStateConfigerVisible(true);
+                      configerWorkMode.current = 'config';
+                      selectStateId.current = state.id;
+                    }}>
+                    修改
+                  </Button>
                 </div>
               </Card>
             );
           })}
         </div>
         <div>
-          <Button onClick={() => setStateConfigerVisible(true)}>添加状态</Button>
+          <Button
+            onClick={() => {
+              setStateConfigerVisible(true);
+              configerWorkMode.current = 'add';
+            }}>
+            添加状态
+          </Button>
         </div>
       </div>
       <Drawer visible={stateConfigerVisible} onClose={() => setStateConfigerVisible(false)} title="状态编辑">
@@ -240,6 +280,7 @@ const MethodDataViewer: React.FC<{
                     }}>
                     确认
                   </Button>
+                  <Button>修改</Button>
                 </div>
               </Card>
             );

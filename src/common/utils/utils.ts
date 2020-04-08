@@ -16,4 +16,16 @@ export default {
   uuid() {
     return shortId();
   },
+
+  getCookieByKey(key: string) {
+    const cookie = document.cookie;
+    const cookieArray = cookie.split(';');
+    for (let i = 0; i < cookieArray.length; i++) {
+      const [cookieKey, cookieValue] = cookieArray[i].trim().split('=');
+      if (key === cookieKey) {
+        return cookieValue;
+      }
+    }
+    return undefined;
+  },
 };

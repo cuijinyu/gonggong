@@ -11,6 +11,7 @@ import Backend from 'react-dnd-html5-backend';
 import EventManager from './eventManager';
 import ProjectPage from './pages/project';
 import { Dropdown, Menu } from 'antd';
+import Register from './pages/register';
 
 setProd(false);
 
@@ -26,6 +27,7 @@ const App: React.FC = () => {
           <BrowserRouter>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
             <Route exact path="/layout" component={Layout} />
             <Route exact path="/project" component={ProjectPage} />
           </BrowserRouter>

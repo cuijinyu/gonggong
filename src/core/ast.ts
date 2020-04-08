@@ -203,6 +203,8 @@ type PageType = {
 
   // 页面组件列表
   components?: AstNodeType[];
+
+  baseLayout?: any;
 };
 
 export type CustomLayout = {
@@ -467,6 +469,15 @@ class AstParser {
     return null;
   }
 
+  public changeMethodById(id: string, newMethodCode: any) {
+    const filterMethod = this.getMethodById(id);
+    if (filterMethod) {
+      filterMethod.methodCode = newMethodCode;
+      return true;
+    }
+    return false;
+  }
+
   public getRelatedMethods(node: AstNodeType) {
     if (this.isUsefulNodeType(node)) return node.methods.map(id => this.getMethodById(id));
 
@@ -525,7 +536,7 @@ class AstParser {
     return methods;
   }
 
-  // TODO:联通多个方法，在渲染引擎中使用闭包完成
+  // 联通多个方法，在渲染引擎中使用闭包完成
   // public chainTwoMethod(firstMethodId: string, secondMethodId: string) {
   //   const firstMethod = this.getMethodById(firstMethodId);
   //   const secondMethod = this.getMethodById(secondMethodId);
@@ -572,6 +583,25 @@ class AstParser {
     return null;
   }
 
+  public changeStateById(
+    id: string,
+    {
+      name,
+      newStateInitValue,
+    }: {
+      name: string;
+      newStateInitValue: any;
+    },
+  ) {
+    const filterState = this.getStateById(id);
+    if (filterState) {
+      filterState.initValue = newStateInitValue;
+      this.save('修改state');
+      return true;
+    }
+    return false;
+  }
+
   public getRelatedStates(node: AstNodeType) {
     if (node.states)
       return node.states.map(state => {
@@ -616,7 +646,6 @@ class AstParser {
       this.astTree.states.splice(stateIdx, 1);
       this.save('删除了某个state');
       return true;
-      // this.save(`删除state，state的id为${id}`);
     }
   }
 

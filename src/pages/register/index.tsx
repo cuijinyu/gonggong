@@ -1,20 +1,19 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Form, Input, Button, Checkbox, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { login } from '../../service';
+import { register } from '../../service';
 
-const Login: FC = () => {
+const Register = () => {
   const history = useHistory();
   const onFinish = (values: any) => {
-    login({
+    register({
       name: values.username,
       password: values.password,
     })
       .then(res => {
         if (res.data.success === true) {
-          alert('登录成功');
-          history.push('/project');
+          alert('注册成功');
         }
       })
       .catch(err => {
@@ -36,15 +35,15 @@ const Login: FC = () => {
             <a
               className="login-form-forgot"
               onClick={() => {
-                history.push('/register');
+                history.push('/login');
               }}>
-              现在注册
+              现在登录
             </a>
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Log in
+              注册
             </Button>
           </Form.Item>
         </Form>
@@ -52,5 +51,4 @@ const Login: FC = () => {
     </div>
   );
 };
-
-export default Login;
+export default Register;
