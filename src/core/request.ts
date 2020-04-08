@@ -11,7 +11,7 @@ type repInter = Parameters<typeof Axios.interceptors.response.use>[0];
 
 class Ajax {
   private client: clientType;
-  private isProdMode: boolean = false;
+  private isProdMode: boolean = isProd();
   private reqInters: reqInter[] = [];
   private repInters: repInter[] = [];
 
@@ -29,9 +29,11 @@ class Ajax {
       return req;
     });
 
-    notification.open({
-      message: '请求引擎加载成功',
-    });
+    if (!this.isProdMode) {
+      notification.open({
+        message: '请求引擎加载成功',
+      });
+    }
   }
 
   private reInitClient() {
@@ -63,4 +65,25 @@ class Ajax {
   }
 }
 
-export default new Ajax();
+const AjaxInstance = new Ajax();
+
+export class BaseRequest {
+  constructor({ idPackable = false, pack = () => {}, unpack = () => {} }) {}
+  private isPackable = false;
+  private id = null;
+  private requestUrl = '';
+  private requestMethod = 'GET';
+  private withCredentials = false;
+  private ajaxClient = AjaxInstance;
+  private request() {
+    this.ajaxClient.getClient().request({
+      method: this.requestMethod as any,
+      url: this.requestUrl,
+      withCredentials: this.withCredentials,
+    });
+  }
+  public pack() {}
+  public unpack() {}
+}
+
+export default AjaxInstance;
