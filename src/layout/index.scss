@@ -19,6 +19,7 @@ body {
     @include e(middleContent) {
       flex: 1;
       display: flex;
+      max-height: calc(100% - 33px);
       flex-direction: column;
     }
   }
