@@ -1,4 +1,4 @@
-import React, { useContext, FC, useState } from 'react';
+import React, { useContext, FC, useState, useEffect } from 'react';
 import AstParser, { AstNodeType } from '../core/ast';
 import EventManager from '../eventManager';
 
@@ -16,6 +16,9 @@ const GlobalContextProvider: FC = ({ children }) => {
   const [astTool, setAstTool] = useState<AstParser>(new AstParser(ast, setAst, at => setAstTool(at)));
   astTool.registerAllParserEvents(EventManager);
   const [eBus] = useState<typeof EventManager>(EventManager);
+  useEffect(() => {
+    console.log(JSON.parse(ast));
+  }, [ast]);
   return (
     <GlobalContext.Provider
       value={{

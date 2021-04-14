@@ -57,6 +57,7 @@ class FormMaterial extends BaseMaterial {
                   (option as any)[itemKey] = fields[key];
                   setFormItem(items => {
                     const clonedItems = _.cloneDeep(items);
+                    // @ts-ignore
                     clonedItems[idx] = option;
                     return clonedItems;
                   });
