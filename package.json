@@ -62,7 +62,7 @@
     "react-ace": "^8.0.0",
     "react-app-polyfill": "^1.0.5",
     "react-color": "^2.18.0",
-    "react-dev-utils": "^10.0.0",
+    "react-dev-utils": "^11.0.4",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.12.0",
